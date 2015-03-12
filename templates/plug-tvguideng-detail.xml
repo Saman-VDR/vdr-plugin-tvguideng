@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE displayplugin SYSTEM "../../../dtd/displayplugin.dtd">
+
+<displayplugin x="0" y="0" width="100%" height="100%" fadetime="0" scaletvx="0" scaletvy="0" scaletvwidth="100%" scaletvheight="100%">
+
+    <viewelement name="background">
+    </viewelement>
+
+    <!-- Available Variables scrollbar:
+    {height}                  height of scrollbar in tenth of a percent of total height
+    {offset}                  offset in tenth of a percent of total height
+    -->
+    <scrollbar>
+    </scrollbar>
+
+    <!-- Available Variables Footer:
+    {red1}                    true if red button is button 1
+    {red2}                    true if red button is button 2
+    {red3}                    true if red button is button 3
+    {red4}                    true if red button is button 4
+    {green1}                  true if green button is button 1
+    {green2}                  true if green button is button 2
+    {green3}                  true if green button is button 3
+    {green4}                  true if green button is button 4
+    {yellow1}                 true if yellow button is button 1
+    {yellow2}                 true if yellow button is button 2
+    {yellow3}                 true if yellow button is button 3
+    {yellow4}                 true if yellow button is button 4
+    {blue1}                   true if blue button is button 1
+    {blue2}                   true if blue button is button 2
+    {blue3}                   true if blue button is button 3
+    {blue4}                   true if blue button is button 4
+    {red}                     label of red button
+    {green}                   label of green button
+    {yellow}                  label of yellow button
+    {blue}                    label of blue button
+    -->
+    <viewelement name="footer">
+    </viewelement>
+
+    <!-- Available Variables time:
+    {time}                   timestring in hh:mm
+    {sec}                    current seconds
+    {min}                    current minutes
+    {hour}                   current hours
+    {hmins}                  current "hourminutes" to display an hour hand
+    -->
+    <viewelement name="time">
+    </viewelement>
+
+
+    <!-- Available Variables in detailheader elements:
+    {title}                   title of event
+    {shorttext}               shorttext of event
+    {start}                   event start time in hh::mm
+    {stop}                    event stop time
+    {day}                     Day of event as three letter abrivation
+    {date}                    date of current event in dd.mm.yy
+    {daynumeric}              day as number
+    {month}                   month as number
+    {year}                    year as number
+    {running}                 true if event is currently running
+    {elapsed}                 elapsed time of event, if not running 0
+    {duration}                duration of event
+    {durationhours}           duration, full hours
+    {durationminutes}         duration, rest of minutes
+    {vps}                     vps description string
+    {channelname}             Channelname of event
+    {channelnumber}           Channelnumber of event
+    {channellogoexists}       true if a channel logo exists 
+    {channelid}               ChannelID as path to display channel logo
+    {ismovie}                 true if event is scraped as a movie
+    {isseries}                true if event is scraped as a series
+    {posteravailable}         true if a poster is available
+    {posterwidth}             width of scraped poster
+    {posterheight}            height of scraped poster
+    {posterpath}              absolute path of scraped poster
+    {banneravailable}         true if a banner is available
+    {bannerwidth}             width of banner
+    {bannerheight}            height of banner
+    {bannerpath}              path of banner
+    {epgpicavailable}         true if a epg picture is available
+    {epgpicpath}              path of epg picture
+    -->
+    <viewelement name="header">
+    </viewelement>
+
+    <!-- Available Variables in tab elements:
+    {title}                   title of event
+    {shorttext}               shorttext of event
+    {description}             description of event
+    {start}                   event start time in hh::mm
+    {stop}                    event stop time
+    {day}                     Day of event as three letter abrivation
+    {date}                    date of current event in dd.mm.yy
+    {daynumeric}              day as number
+    {month}                   month as number
+    {year}                    year as number
+    {running}                 true if event is currently running
+    {elapsed}                 elapsed time of event, if not running 0
+    {duration}                duration of event
+    {durationhours}           duration, full hours
+    {durationminutes}         duration, rest of minutes
+    {vps}                     vps description string
+    {channellogoexists}       true if a channel logo exists 
+    {channelid}               ChannelID as path to display channel logo
+    {hasreruns}               true if reruns of this event are found
+    {reruns[]}                array with reruns
+    {reruns[title]}           title of rerun
+    {reruns[shorttext]}       shorttext of rerun
+    {reruns[date]}            date of rerun in dd:mm
+    {reruns[day]}             short dayname of rerun
+    {reruns[start]}           start time of rerun in hh:mm
+    {reruns[stop]}            stop time of rerun in hh:mm
+    {reruns[channelname]}     name of channel on which rerun occurs
+    {reruns[channelnumber]}   number of channel on which rerun occurs
+    {reruns[channelid]}       id of channel on which rerun occurs to display channel logo
+    {reruns[channellogoexists]} true if channel logo exists
+    {epgpic1avaialble}        true if first epg picture is available
+    {epgpic2avaialble}        true if first epg picture is available
+    {epgpic3avaialble}        true if first epg picture is available
+    {epgpic1path}             path of first epg picture
+    {epgpic2path}             path of second epg picture
+    {epgpic3path}             path of third epg picture
+    
+    {ismovie}                 true if event is scraped as a movie
+    Available variables for movies:
+    {movietitle}              movie title from themoviedb
+    {movieoriginalTitle}      movie original title from themoviedb
+    {movietagline}            movie tagline from themoviedb
+    {movieoverview}           movie overview from themoviedb
+    {movieadult}              true if movie is rated as adult
+    {moviebudget}             movie budget from themoviedb in $
+    {movierevenue}            movie revenue from themoviedb in $
+    {moviegenres}             movie genres from themoviedb
+    {moviehomepage}           movie homepage from themoviedb
+    {moviereleasedate}        movie release date from themoviedb
+    {movieruntime}            movie runtime from themoviedb
+    {moviepopularity}         movie popularity from themoviedb
+    {movievoteaverage}        movie vote average from themoviedb
+    {posterwidth}             width of scraped poster
+    {posterheight}            height of scraped poster
+    {posterpath}              absolute path of scraped poster
+    {fanartwidth}             width of scraped fanart
+    {fanartheight}            height of scraped fanart
+    {fanartpath}              absolute path of scraped fanart
+    {movieiscollection}       true if movie is part of a collection
+    {moviecollectionName}     name of movie collection
+    {collectionposterwidth}   width of scraped collection poster
+    {collectionposterheight}  height of scraped collection poster
+    {collectionposterpath}    absolute path of scraped collection poster
+    {collectionfanartwidth}   width of scraped collection fanart
+    {collectionfanartheight}  height of scraped collection fanart
+    {collectionfanartpath}    absolute path of scraped collection fanart
+    {actors[]}                array with movie actors
+    {actors[name]}            real name of actor
+    {actors[role]}            actor role
+    {actors[thumb]}           absolute path of scraped actor thumb
+    {actors[thumbwidth]}      width of scraped actor thumb
+    {actors[thumbheight]}     height of scraped actor thumb
+
+    {isseries}                true if event is scraped as a series
+    Available variables for series:
+    {seriesname}              name of series
+    {seriesoverview}          series overview
+    {seriesfirstaired}        first aired date 
+    {seriesnetwork}           network which produces series
+    {seriesgenre}             series genre
+    {seriesrating}            series thetvdb rating
+    {seriesstatus}            status of series (running / finished)
+    {episodetitle}            title of episode
+    {episodenumber}           number of episode
+    {episodeseason}           season of episode
+    {episodefirstaired}       first aired date of episode
+    {episodegueststars}       guest stars of episode
+    {episodeoverview}         episode overview
+    {episoderating}           user rating for episode
+    {episodeimagewidth}       episode image width
+    {episodeimageheight}      episode image height
+    {episodeimagepath}        episode image path
+    {seasonposterwidth}       episode season poster width
+    {seasonposterheight}      episode season poster height
+    {seasonposterpath}        episode season poster path
+    {seriesposter1width}      width of 1st poster
+    {seriesposter1height}     height of 1st poster
+    {seriesposter1path}       path of 1st poster
+    {seriesposter2width}      width of 2nd poster
+    {seriesposter2height}     height of 2nd poster
+    {seriesposter2path}       path of 2nd poster
+    {seriesposter3width}      width of 3rd poster
+    {seriesposter3height}     height of 3rd poster
+    {seriesposter3path}       path of 3rd poster
+    {seriesfanart1width}      width of 1st fanart
+    {seriesfanart1height}     height of 1st fanart
+    {seriesfanart1path}       path of 1st fanart
+    {seriesfanart2width}      width of 2nd fanart
+    {seriesfanart2height}     height of 2nd fanart
+    {seriesfanart2path}       path of 2nd fanart
+    {seriesfanart3width}      width of 3rd fanart
+    {seriesfanart3height}     height of 3rd fanart
+    {seriesfanart3path}       path of 3rd fanart
+    {seriesbanner1width}      width of 1st banner
+    {seriesbanner1height}     height of 1st banner
+    {seriesbanner1path}       path of 1st banner
+    {seriesbanner2width}      width of 2nd banner
+    {seriesbanner2height}     height of 2nd banner
+    {seriesbanner2path}       path of 2nd banner
+    {seriesbanner3width}      width of 3rd banner
+    {seriesbanner3height}     height of 3rd banner
+    {seriesbanner3path}       path of 3rd fanart
+    {actors[]}                array with movie actors
+    {actors[name]}            real name of actor
+    {actors[role]}            actor role
+    {actors[thumb]}           absolute path of scraped actor thumb
+    {actors[thumbwidth]}      width of scraped actor thumb
+    {actors[thumbheight]}     height of scraped actor thumb
+    -->
+
+    <!-- a tab is one scrolling area, just position and draw as inside a normal area -->
+    <!-- just define as many tabs as needed -->
+
+    <!-- TAB EPGINFO -->
+    <tab name="EPG Info" x="0" y="0" width="100%" height="100%" layer="1" scrollheight="{areaheight}/4">
+    </tab>
+
+    <!-- Available Variables tablabels:
+    {currenttab}            name of currently active tab
+    {prevtab}               name of prev tab
+    {nexttab}               name of next tab
+    {tabs[]}                array with available tab labels
+    {tabs[title]}           title of tab
+    {tabs[current]}         true if tab is displayed currently
+    -->
+    <tablabels>
+    </tablabels>
+
+</displayplugin>

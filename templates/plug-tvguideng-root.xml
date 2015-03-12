@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE displayplugin SYSTEM "../../../dtd/displayplugin.dtd">
+
+<displayplugin x="0" y="0" width="100%" height="100%" fadetime="0" scaletvx="0" scaletvy="0" scaletvwidth="100%" scaletvheight="100%">
+
+    <viewelement name="background_hor">
+    </viewelement>
+
+    <viewelement name="background_ver">
+    </viewelement>
+
+    <!-- Tokens available in Header
+    {isdummy}                 true if active element is a dummy element
+    {title}                   title of event of active grid
+    {shorttext}               shorttext of event of active grid
+    {description}             detailed description of event of active grid
+    {start}                   event start time in hh::mm
+    {stop}                    event stop time
+    {day}                     day of event of active grid
+    {date}                    date of  event  of active grid in dd.mm.yy
+    {daynumeric}              day as number
+    {month}                   month as number
+    {year}                    year as number
+    {running}                 true if event is currently running
+    {elapsed}                 elapsed time of event, if not running 0
+    {duration}                duration of event
+    {durationhours}           duration, full hours
+    {durationminutes}         duration, rest of minutes
+    {channelname}             Channel Name
+    {channelnumber}           Channel Number
+    {channelid}               ChannelID as path to display channel logo
+    {channellogoexists}       true if channel logo exists
+    {hasposter}               true if a scraped poster is available for this element
+    {posterwidth}             width of scraped poster
+    {posterheight}            height of scraped poster
+    {posterpath}              absolute path of scraped poster
+    -->
+    <viewelement name="header">
+    </viewelement>
+
+    <!-- Available Variables Footer:
+    {red1}                    true if red button is button 1
+    {red2}                    true if red button is button 2
+    {red3}                    true if red button is button 3
+    {red4}                    true if red button is button 4
+    {green1}                  true if green button is button 1
+    {green2}                  true if green button is button 2
+    {green3}                  true if green button is button 3
+    {green4}                  true if green button is button 4
+    {yellow1}                 true if yellow button is button 1
+    {yellow2}                 true if yellow button is button 2
+    {yellow3}                 true if yellow button is button 3
+    {yellow4}                 true if yellow button is button 4
+    {blue1}                   true if blue button is button 1
+    {blue2}                   true if blue button is button 2
+    {blue3}                   true if blue button is button 3
+    {blue4}                   true if blue button is button 4
+    {red}                     label of red button
+    {green}                   label of green button
+    {yellow}                  label of yellow button
+    {blue}                    label of blue button
+    -->
+    <viewelement name="footer">
+    </viewelement>
+
+    <!-- Available Variables time:
+    {time}                   timestring in hh:mm
+    {sec}                    current seconds
+    {min}                    current minutes
+    {hour}                   current hours
+    {hmins}                  current "hourminutes" to display an hour hand
+    {day}                    day in digits
+    {dayleadingzero}         day in digits with leading 0
+    {dayname}                Full name of the day
+    {daynameshort}           Short 3 char name of the day
+    {month}                  month in digits with leading 0
+    {monthname}              Full name of the month
+    {monthnameshort}         3 letter abbrivation of month name
+    {year}                   year in yyyy
+    -->
+    <viewelement name="time">
+    </viewelement>
+
+    <!-- Tokens available in datetimeline
+    {weekday}                weekday of current display
+    {date}                   date of current display
+    -->
+    <viewelement name="datetimeline_hor">
+    </viewelement>
+
+    <viewelement name="datetimeline_ver">
+    </viewelement>
+
+    <!-- Tokens available in timeindicator
+    {percenttotal}            position of current time indicator in tenth of a percent of complete time shown
+    -->
+    <viewelement name="timeindicator_hor">
+    </viewelement>
+
+    <viewelement name="timeindicator_ver">
+    </viewelement>
+
+    <!-- Tokens available in timeline
+    {timestring}             time of grid in hh:mm
+    -->
+    <grid name="timeline_hor" x="0" y="0" width="100%" height="100%">
+    </grid>
+
+    <grid name="timeline_ver" x="0" y="0" width="100%" height="100%">
+    </grid>
+
+    <!-- Tokens available in channels
+    {name}                   name of channel
+    {number}                 number of channel
+    {channelid}              id of channel to display channel logo
+    {channellogoexists}       true if channel logo exists
+    -->
+    <grid name="channels_hor" x="0" y="0" width="100%" height="100%">
+    </grid>
+
+    <grid name="channels_ver" x="0" y="0" width="100%" height="100%">
+    </grid>
+
+    <!-- Tokens available in channelgroups
+    {color}                  alternates grid by grid from true to false
+    {group}                  name of channel group
+    -->
+    <grid name="channelgroups_hor" x="0" y="0" width="100%" height="100%">
+    </grid>
+
+    <grid name="channelgroups_ver" x="0" y="0" width="100%" height="100%">
+    </grid>
+
+    <!-- Tokens available in schedules
+    {color}                  alternates grid by grid from true to false
+    {dummy}                  true if grid is a dummy grid
+    {timer}                  true if a timer is set for the according event
+    {switchtimer}            true if a switchtimer is set for the according event
+    {title}                  title of grid 
+    {shorttext}              shorttext of grid 
+    {start}                  start time in hh:mm
+    {stop}                   stop time in hh:dd
+    -->
+    <grid name="schedules_hor" x="0" y="0" width="100%" height="100%">
+    </grid>
+
+    <grid name="schedules_ver" x="0" y="0" width="100%" height="100%">
+    </grid>
+
+    <!-- Tokens available in channeljump
+    {channel}                current user input for channel jump
+    -->
+    <viewelement name="channeljump">
+    </viewelement>
+
+</displayplugin>

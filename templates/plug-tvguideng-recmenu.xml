@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE displayplugin SYSTEM "../../../dtd/displayplugin.dtd">
+
+<displayplugin x="0" y="0" width="100%" height="100%" fadetime="0" scaletvx="0" scaletvy="0" scaletvwidth="100%" scaletvheight="100%">
+    <!-- Available Variables Background:
+    {menuwidth}     menuwidth in percent of screenwidth
+    {menuheight}    menuheight in percent of screenheight
+    {hasscrollbar}  true if menu needs a scrollbar
+    -->
+    <viewelement name="background">
+    </viewelement>
+
+    <!-- Available Variables Scrollbar:
+    {menuwidth}     menuwidth in percent of screenwidth
+    {posy}          y position of scrollbar start in percent of screenheight
+    {totalheight}   height of complete scrollbar in percent of screenheight
+    {height}        height in tenth of a percent of total height
+    {offset}        offset in tenth of a percent
+    -->
+    <viewelement name="scrollbar">
+    </viewelement>
+
+    <grid name="recmenu" x="0" y="0" width="100%" height="100%">
+        <!-- Background 
+        {current}       true if item is currently selected
+        -->
+        <!-- info item 
+        {info}          true
+        {lines}         number of lines to display (max. 4)
+        {line1}         text of line 1
+        {line2}         text of line 1
+        {line3}         text of line 1
+        {line4}         text of line 1
+        -->
+        <!-- button
+        {button}        true
+        {buttontext}    text to display on button
+        -->
+        <!-- yes / no button
+        {buttonyesno}   true
+        {yes}           true if button is set to yes
+        {textyes}       text to display on yes button
+        {textno}        text to display on no button
+        -->
+        <!-- Int Selector
+        {intselector}   true
+        {text}          title of selector
+        {value}         current value of selector, integer
+        -->
+        <!-- Bool Selector 
+        {boolselector}  true
+        {text}          title of selector
+        {value}         current value of selector, true or false
+        -->
+        <!-- String Selector 
+        {stringselector}  true
+        {text}          title of selector
+        {value}         current value of selector, string
+        -->
+        <!-- Text Input 
+        {textinput}     true
+        {editmode}      true if currently in edit mode
+        {text}          title of selector
+        {value}         current value of selector, string
+        -->
+        <!-- Time Selector 
+        {timeselector}  true
+        {text}          title of selector
+        {value}         current value of selector, hh:mm
+        -->
+        <!-- Day Selector 
+        {dayselector}   true
+        {text}          title of selector
+        {value}         current value of selector, dd.mm
+        -->
+        <!-- Channel Selector 
+        {channelselector}    true
+        {text}               title of selector
+        {channelnumber}      number of currently selected channel, 0 for "all channels"
+        {channelname}        name of channel or "all channels"
+        {channelid}          id of channel
+        {channellogoexisis}  true if channel logo exists
+        -->
+        <!-- Weekday Selector 
+        {weekdayselector}    true
+        {text}               title of selector
+        {dayselected}        number of currently selected day (0 - 6)
+        {day0abbr} ... {day6abbr}  localized one character abbrevation for weekdays from Monday to Sunday
+        {day0set}  ... {day6set}   true if according weekday from Monday to Sunday is set
+        -->
+        <!-- Directory Selector 
+        {directoryselector}  true
+        {text}               title of selector
+        {folder}             current folder of selector, string
+        -->
+        <!-- Timerconflict Header 
+        {timerconflictheader}    true
+        {text}                   title of Timerconflict Header
+        {conflictstart}          start of conflict in hh:mm
+        {conflictstop}           end of conflict in hh:mm
+        {overlapstart}           start of overlap in hh:mm
+        {overlapstop}            end of overlap in hh:mm
+        {overlapstartpercent}    start of overlap in percent of total conflict time width
+        {overlapwidthpercent}    width of overlap in percent of total conflict time width
+        -->
+        <!-- Timerconflict 
+        {timerconflict}          true
+        {timertitle}             title of timer
+        {channelname}            name of channel
+        {channelid}              channel ID
+        {transponder}            transponder of channel
+        {starttime}              start of timer in hh:mm
+        {stoptime}               end of timer in hh:mm
+        {date}                   date of timer in dd.mm.yy
+        {weekday}                weekday of timer, 3 letter abrivation
+        {infoactive}             true if info icon is active
+        {deleteactive}           true if delete icon is active
+        {editactive}             true if edit icon is active
+        {searchactive}           true if search icon is active
+        {timerstartpercent}      start of timer in percent of total conflict time width
+        {timerwidthpercent}      end of timer in percent of total conflict time width
+        {overlapstartpercent}    start of overlap in percent of total conflict time width
+        {overlapwidthpercent}    width of overlap in percent of total conflict time width
+        -->
+        <!-- Event 
+        {event}              true
+        {title}              title of event
+        {shorttext}          shorttext of event
+        {starttime}          start of event in hh:mm
+        {stoptime}           end of event in hh:mm
+        {date}               date of event in dd.mm.yy
+        {weekday}            weekday of event, 3 letter abrivation
+        {channelnumber}      number of channel
+        {channelname}        name of channel
+        {channelid}          id of channel
+        {channellogoexisis}  true if channel logo exists
+        {hastimer}           true if event has a timer
+        -->
+        <!-- Recording 
+        {recording}              true
+        {recname}                title of recording
+        {recstarttime}           start of recording in hh:mm
+        {recdate}                date of recording in dd.mm.yy
+        {recduration}            duration of recording in min
+        {channelnumber}          number of channel
+        {channelname}            name of channel
+        {channelid}              id of channel
+        {channellogoexisis}      true if channel logo exists
+        -->
+        <!-- Searchtimer 
+        {searchtimer}            true
+        {timeractive}            true if searchtimer is active
+        {searchstring}           searchtimer search string
+        {activetimers}           number of active timers caused by this searchtimer
+        {recordingsdone}         number of recordings done by this searchtimer
+        {searchactive}           true if search icon is active
+        {editactive}             true if edit icon is active
+        {deleteactive}           true if delete icon is active
+        -->
+        <!-- Timeline Header 
+        {timelineheader}            true
+        {date}                      date of current day in weekdayname dd.mm.yyyy
+        {timerset}                  true if timer info is set
+        {channelname}               name of channel of timer
+        {channelid}                 channel ID of channel of timer
+        {channellogoexisis}         true if channel logo exists
+        {channelnumber}             number of channel of timer
+        {channeltransponder}        transponder of channel of timer
+        {timerstart}                start of timer in hh:mm
+        {timerstop}                 end of timer in hh:mm
+        {eventtitle}                title of according event
+        {eventshorttext}            short text of according event
+        {eventstart}                start time of according event
+        {eventstop}                 end time of according event
+        -->
+        <!-- Timeline Timer 
+        {timelinetimer}             true
+        {timerstart}                start of timer in tenth percent of complete 24h width
+        {timerwidth}                width of timer in tenth percent of complete 24h width
+        -->
+        <!-- Favorites 
+        {favorite}                  true
+        {favdesc}                   description of favorite
+        -->
+    </grid>
+</displayplugin>

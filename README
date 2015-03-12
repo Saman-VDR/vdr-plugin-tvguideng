@@ -1,0 +1,182 @@
+This is a "plugin" for the Video Disk Recorder (VDR).
+
+Written by:                  Louis Braun <louis DOT braun AT gmx DOT de>
+
+Project's homepage:          http://projects.vdr-developer.org/projects/plg-tvguideng
+
+Latest version available at: git://projects.vdr-developer.org/vdr-plugin-tvguideng.git
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+See the file COPYING for more information.
+
+Requirements
+------------
+
+- Clone Git Repository: git clone git://projects.vdr-developer.org/vdr-plugin-tvguideng.git
+- VDR version >= 2.0.0
+- Skindesigner Plugin Version >= 0.3.0
+   
+   IMPORTANT: this Plugin will NOT WORK WITHOUT installed skindesigner Plugin. The
+   used Skindesigner Skin has to provide Templates for TVGuideNG, otherwise the Plugin
+   will not work.
+
+- Installed epgsearch Plugin for extended search & recording features.
+- Installed remotetimers Plugin for creating timers on a vdr server remotely from a 
+  vdr client.
+
+
+Description
+-----------
+
+"TvGuideNG" is a highly customizable 2D EPG viewer plugin. The "Search & Recordings"
+Menü provided by the red button allows to search in the EPG and manage timers,
+search timers, series timers and switch timers in an convenient way.  
+
+Installation
+------------
+
+Just install the Plugin as usual. The Plugin has no start parameters
+
+Usage
+-----
+
+Remote Control Keys:
+
+Up/Down/Left/Right:    Navigation in the EPG grid
+Ok:                    Detailed EPG View of the selected grid
+                       2nd Ok closes the detailed view
+Red:                   Search & Recording Menu
+Green / Yellow:	       Jump channels back / forward
+Blue:                  Depends on configured Mode:
+                       Default: Favorites Menu, Switch to channel in 
+                       detailed EPG View
+                       Optional: Switch to currently selected channel
+                       Optional: Open detailed EPG view (OK switches
+                       then to channel)
+
+Numeric Keys: If Setup Option "Functionality of numeric Keys" is configured
+to "Jump to specific channel", the numeric keys are used for channel number
+input. If "Timely Jump" is configured, the keys are used as follows:
+
+1 / 3:                 Big jump (default 3h) back / forward in time
+4 / 6:                 huge jump (default 24h) back / forward in time
+7 / 9:                 jump to previous / next prime time (8pm)
+
+Exit:                  closes plugin
+
+In Search & Recording menu the following options are available:
+
+- Instant Record: create a timer for the currently selected program. An
+  check for timer conflicts will be performed, if a timer conflict occurs,
+  the involved timers can be adapted to solve the conflict. Alternatively
+  reruns can be searched and used to solve timer conflicts. 
+- Delete / Edit Timer: if a timer already exists for the currently selected
+  broadcast, this timer can be deleted or edited.
+- Timer Timeline: displays active timers per day
+- Create Search Timer: create an search timer with epgsearch. The most
+  important options can be defined directly in the menu, expert options
+  are available via the "advanced options" button.
+- Manage Search Timers: edit, delete and check results of search timers  
+- Create Series Timer: create a periodical timer for a dedicated time on
+  dedicated days.
+- Create Switch Timer: create a switch timer for the currently selected
+  program.
+- Search: search with epgsearch
+- Check for Timer Conflicts: check for timer conflicts with epgsearch.
+- Search in Recordings: check if a recording already exists for the currently
+  selected program.
+
+The search & recordings menu is intended to present a convenient interface
+to different VDR core recording features and additional epgsearch features.
+The main goal is to reach better usability for "non expert users".
+
+The navigation through the search & recording menu can be done easily with
+up/down, left/right and the ok key. In scrolling lists, with left/right
+(after the first/last option of the displayed list element is selected) you
+jump to the next page of the list. Pressing up on the first / down on the 
+last list item jumpps to the end / start of the list.
+
+In the Plugin Setup Menu in Section "Recording Menus and Favorites" you can
+choose three alternatives for the option "Folder for instant Recordings":
+- "Always use root video folder": the recording will always be placed in the
+  video root folder
+- "Select from folder list": before creating a timer, you'll get asked in which
+  directory the recording should be placed. If the epgsearch plugin is not 
+  available, the entries from VDRs <VDRCONFIG>/folders.conf will be used. If
+  the epgsearch plugin is available, the more sophisticated epgsearch mechanism
+  will be used to identify the possible folders (folders from 
+  <VDRCONFIG>/folders.conf and epgsearchfolders.conf and all already existing 
+  folders in the video directory).
+- "Use fixed folder": the configured folder will always be used. If this string
+  is a epgsearch variable ("%variable%"), epgsearch will be used to replace 
+  the variable with a concrete folder. All values defined in the epgsearch config
+  file "epgsearchuservars.conf" can be used. These variables use the definitions
+  from "epgsearchcats.conf". For a detailed description see the epgsearch Manual.
+  With that and a with an EPG with detailed information about movies and series 
+  it is possible to create sophisticated paths for timers automatically (for 
+  instance with series season and episode in the filename).   
+
+For a search timer also all folders and the defined dedicated folder can be used.
+
+Favorites Menu: if configured, the blue key provides a favorite menu. In this
+menu the current scheduling ("What's on now") and the next upcomming Shows 
+("What's on next") can be listed. Via the Plugin Setup Menu up to four user 
+defined times can be configured with a dedicated description (for instance 
+"Primetime" for 8:15 pm). These user defined times are also shown as options in 
+the favorites menu. Finally all search timers with the option "use as favorite" 
+enabled are displayed in the favorites menu. By selecting this entry, all hits
+for this search timer are shown.
+
+Setup Options
+-------------
+
+* General Settings:
+
+- Show Main Menu Entry
+  Display "tvguide" in main menu
+- Replace VDR Schedules Menu
+  If set to "yes", the original VDR schedules menu will be replaced by tvguide
+- Display Mode
+  Choose between horizontal or vertical display of the channels. All further
+  width / height settings are dependend of this setting
+- Number of Channels to display
+- Time to display in hours: period of time to display in main EPG view
+- Channel Jump Mode (Keys Green / Yellow)
+  select between jumping x channels back/forward or to the previous / next 
+  channel group
+- Keys Blue and OK
+  Blue: Favorites in normal view, channel switch in det. EPG View, Ok: det. EPG View
+  or 
+  Blue: Channel Switch, Ok: Detailed EPG 
+  or
+  Blue: Detailed EPG, Ok: Channel Switch
+- Close TVGuide after channel switch: If set to "no", tvguide will not be closed
+  after a channel switch.
+- Functionality of numeric Keys: see chapter Usage / Remote Control Keys
+- Hide last Channel Group
+  If set to yes, the channels of the last channel group will not be displayed
+- Big Step (Keys 1 / 3) in hours
+  Hours to jump vertically with keys 1 / 3
+- Huge Step (Keys 4 / 6) in hours
+  Hours to jump vertically with keys 4 / 6
+
+
+- Folder for instant Recordings: (see chapter "Usage" for detailed description)
+  - Always use root video folder
+  - Select from folder list
+  - Use fixed folder
+- Use Remotetimers: Timers are handled not locally but on a VDR Server defined
+  with the remotetimers plugin.
+- Use "What's on now" in favorites
+- Use "What's on next" in favorites
+- Use user defined time 1 (to 4) in favorites
+  - Description (1 - 4)
+  - Time (1 - 4)
+- Limit channels in favorites: if set to yes, only the configured channel range
+  is used to display favorite results (except for search timer favorites)
+  - start channel
+  - stop channel
+  
