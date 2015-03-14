@@ -1,9 +1,10 @@
 #include <time.h>
 #include <vdr/tools.h>
+#include "config.h"
 #include "timemanager.h"
 
 cTimeManager::cTimeManager(void) {
-    displayHours = 4;
+    displayHours = config.displayHours;
     displaySeconds = displayHours * 3600;
     timeFormat = e24Hours;
 }

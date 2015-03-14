@@ -345,7 +345,6 @@ void cChannelEpg::DrawHeader(cViewGrid *channelsGrid) {
 
 void cChannelEpg::DrawGrids(cViewGrid *epgGrid) {
     int displaySeconds = timeManager->GetDisplaySeconds();
-    
     double x, y, width, height;
     if (config.displayMode == eHorizontal) {
         x = 0.0;

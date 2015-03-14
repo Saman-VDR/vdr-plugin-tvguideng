@@ -54,10 +54,6 @@ void cChannelgroups::Init(void) {
     if (channelGroups.size() > 0) {
         channelGroups[channelGroups.size()-1].SetChannelStop(lastChannelNumber);
     }
-
-    for (vector<cChannelGroup>::iterator it = channelGroups.begin(); it != channelGroups.end(); it++) {
-        (*it).Debug();
-    }
 }
 
 void cChannelgroups::Clear(void) {
