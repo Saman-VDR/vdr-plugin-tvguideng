@@ -6,4 +6,5 @@ VDR Plugin 'tvguideng' Revision History
 - Initial revision.
 
 Version 0.0.2
+
 - fixed bug that timemanager does not use configured display time
