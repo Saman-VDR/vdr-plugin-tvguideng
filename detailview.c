@@ -261,6 +261,7 @@ bool cDetailView::DrawTime(void) {
     int hour = now->tm_hour;
     int hourMinutes = hour%12 * 5 + min / 12;
 
+    watch->Clear();
     watch->ClearTokens();
     watch->AddIntToken("sec", sec);
     watch->AddIntToken("min", min);
