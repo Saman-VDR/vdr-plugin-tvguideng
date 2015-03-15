@@ -102,7 +102,10 @@ void cEpgGrid::CreateChannels(const cChannel *startChannel, int activeChannel) {
     if (!foundEnough) {
         int numCurrent = channels.Count();
         int numBack = channelsPerPage - numCurrent;
-        int newChannelNumber = channels.First()->GetChannelNumber() - numBack;
+        cChannelEpg *first = channels.First();
+        int newChannelNumber = 1;
+        if (first)
+            newChannelNumber = first->GetChannelNumber() - numBack;
         const cChannel *newStart = Channels.GetByNumber(newChannelNumber);
         CreateChannels(newStart, pos+1);
     }

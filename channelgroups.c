@@ -5,8 +5,8 @@
 
 cChannelGroup::cChannelGroup(string name, int id) {
     this->id = id;
-    channelStart = 0;
-    channelStop = 0;
+    channelStart = -1;
+    channelStop = -1;
     this->name = name;
 }
 
@@ -54,6 +54,19 @@ void cChannelgroups::Init(void) {
     if (channelGroups.size() > 0) {
         channelGroups[channelGroups.size()-1].SetChannelStop(lastChannelNumber);
     }
+    //cleanup empty groups
+    bool foundDelete = false;
+    do {
+        for (vector<cChannelGroup>::iterator it = channelGroups.begin(); it != channelGroups.end(); it++) {
+            cChannelGroup group = *it;
+            if (group.StartChannel() == 0 || group.StartChannel() == -1) {
+                channelGroups.erase(it);
+                foundDelete = true;
+                break;
+            }
+            foundDelete = false;
+        }
+    } while (foundDelete);
 }
 
 void cChannelgroups::Clear(void) {
