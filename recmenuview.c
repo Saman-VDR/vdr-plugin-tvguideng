@@ -76,17 +76,21 @@ void cRecMenuView::Close(void) {
     active = false;
 }
 
-void cRecMenuView::Hide(void) { 
-    if (recMenuViewBuffer)
-        recMenuViewBuffer->Deactivate(true); 
-    else
+void cRecMenuView::Hide(bool full) { 
+    if (recMenuViewBuffer) {
+        recMenuViewBuffer->Deactivate(true);
+        if (full) 
+            recMenuView->Deactivate(true);
+    } else
         recMenuView->Deactivate(true);
 }
 
-void cRecMenuView::Activate(void) { 
-    if (recMenuViewBuffer)
+void cRecMenuView::Activate(bool full) { 
+    if (recMenuViewBuffer) {
         recMenuViewBuffer->Activate();
-    else
+        if (full)
+            recMenuView->Activate();
+    } else
         recMenuView->Activate();
 }
 

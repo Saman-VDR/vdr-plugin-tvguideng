@@ -33,8 +33,8 @@ public:
     void DisplayRecMenu(const cEvent *event);
     void DisplayFavorites(void);
     void Close(void);
-    void Hide(void);
-    void Activate(void);
+    void Hide(bool full = false);
+    void Activate(bool full = false);
     eOSState ProcessKey(eKeys Key);
     void Flush(void) { activeMenu->Flush(); };
     const cEvent *GetEvent(void) { return displayEvent; };

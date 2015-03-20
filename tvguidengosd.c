@@ -122,7 +122,6 @@ eOSState cTVGuideOSD::ProcessKey(eKeys Key) {
             detailView->Flush();
         }
     } else {
-
         //EPG Grid is active
         switch (Key & ~k_Repeat) {
             case kBack:     
@@ -432,7 +431,7 @@ void cTVGuideOSD::DetailView(const cEvent *e) {
         return;
     epgGrid->Deactivate(true);
     if (recMenuView->Active())
-        recMenuView->Hide();
+        recMenuView->Hide(true);
     cOsdView *dV = GetOsdView(viRootView, viDetailView);
     detailView = new cDetailView(dV, e);
     detailView->Draw();
@@ -446,7 +445,7 @@ void cTVGuideOSD::CloseDetailedView(void) {
     epgGrid->Activate();
     epgGrid->Flush();
     if (recMenuView->Active()) {
-        recMenuView->Activate();
+        recMenuView->Activate(true);
         recMenuView->Flush();        
     }
 }
