@@ -4,6 +4,7 @@
 // --- cRecMenu  -------------------------------------------------------------
 
 cRecMenu::cRecMenu() {
+    hidden = false;
     menuWidth = 50;
     menuHeight = 0;
     maxMenuHeight = 98;
@@ -36,6 +37,8 @@ cRecMenu::~cRecMenu(void) {
         recMenuGrid->Clear();
         delete recMenuGrid;
     }
+    if (hidden)
+        osdView->Activate();
 }
 
 /********************************************************************
@@ -280,8 +283,11 @@ void cRecMenu::InitMenuItems(void) {
         current = menuItems.Next(current);
     }
     DrawBackground();
-    if (scrolling)
+    Flush();
+    if (scrolling) {
         DrawScrollbar();
+        Flush();
+    }
 }
 
 int cRecMenu::GetHeight(void) {

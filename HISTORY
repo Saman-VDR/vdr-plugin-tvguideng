@@ -9,4 +9,6 @@ Version 0.0.2
 
 - fixed bug that timemanager does not use configured display time
 - fixed crash if a channel group is empty
+- fixed display of background if recmenu was hidden
+
 

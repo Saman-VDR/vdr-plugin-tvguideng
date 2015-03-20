@@ -9,6 +9,7 @@
 
 class cRecMenu {
 private:
+    bool hidden;
     int menuWidth;
     int menuHeight;
     int maxMenuHeight;
@@ -51,8 +52,8 @@ public:
     void Init(cOsdView *osdView);
     void DrawBackground(void);
     void Draw(void);
-    void Hide(void) { osdView->Deactivate(true); };
-    void Show(void) { osdView->Activate(); };
+    void Hide(void) { hidden = true; osdView->Deactivate(true); };
+    void Show(void) { hidden = false; osdView->Activate(); };
     void Flush(void) { osdView->Display(); };
     virtual eRecMenuState ProcessKey(eKeys Key);
 };
