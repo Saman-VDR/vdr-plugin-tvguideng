@@ -261,6 +261,11 @@ bool cDetailView::DrawTime(void) {
     int hour = now->tm_hour;
     int hourMinutes = hour%12 * 5 + min / 12;
 
+    char monthname[20];
+    char monthshort[10];
+    strftime(monthshort, sizeof(monthshort), "%b", now);
+    strftime(monthname, sizeof(monthname), "%B", now);
+    
     watch->Clear();
     watch->ClearTokens();
     watch->AddIntToken("sec", sec);
@@ -268,6 +273,12 @@ bool cDetailView::DrawTime(void) {
     watch->AddIntToken("hour", hour);
     watch->AddIntToken("hmins", hourMinutes);
     watch->AddStringToken("time", *TimeString(t));
+    watch->AddStringToken("monthname", monthname);
+    watch->AddStringToken("monthnameshort", monthshort);
+    watch->AddStringToken("month", *cString::sprintf("%02d", now->tm_mon + 1));
+    watch->AddStringToken("dayleadingzero", *cString::sprintf("%02d", now->tm_mday));
+    watch->AddStringToken("dayname", *WeekDayNameFull(now->tm_wday));
+    watch->AddStringToken("daynameshort", *WeekDayName(now->tm_wday));
     watch->Display();
 
     lastSecond = sec;

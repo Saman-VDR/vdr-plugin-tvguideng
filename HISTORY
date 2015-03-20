@@ -15,4 +15,5 @@ Version 0.0.2
 - fixed translations
 - added dedicated hor. and ver. viewelements for header, 
   footer and time
+- completed tokens for time viewelement in detailed view
 

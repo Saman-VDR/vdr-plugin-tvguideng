@@ -44,6 +44,14 @@
     {min}                    current minutes
     {hour}                   current hours
     {hmins}                  current "hourminutes" to display an hour hand
+    {day}                    day in digits
+    {dayleadingzero}         day in digits with leading 0
+    {dayname}                Full name of the day
+    {daynameshort}           Short 3 char name of the day
+    {month}                  month in digits with leading 0
+    {monthname}              Full name of the month
+    {monthnameshort}         3 letter abbrivation of month name
+    {year}                   year in yyyy
     -->
     <viewelement name="time">
     </viewelement>
