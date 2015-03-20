@@ -17,9 +17,9 @@ cEpgGrid::cEpgGrid(cOsdView *rootView, cTimeManager *timeManager) {
     back = rootView->GetViewElement(config.displayMode == eHorizontal ? verBackgroundHor : verBackgroundVer);
     back->Display();
 
-    header = rootView->GetViewElement(verHeader);
-    footer = rootView->GetViewElement(verFooter);
-    watch = rootView->GetViewElement(verTime);
+    header = rootView->GetViewElement(config.displayMode == eHorizontal ? verHeaderHor : verHeaderVer);
+    footer = rootView->GetViewElement(config.displayMode == eHorizontal ? verFooterHor : verFooterVer);
+    watch = rootView->GetViewElement(config.displayMode == eHorizontal ? verTimeHor : verTimeVer);
 
     channelsGrid = rootView->GetViewGrid(config.displayMode == eHorizontal ? vgChannelsHor : vgChannelsVer);
     epgGrid = rootView->GetViewGrid(config.displayMode == eHorizontal ? vgSchedulesHor : vgSchedulesVer);

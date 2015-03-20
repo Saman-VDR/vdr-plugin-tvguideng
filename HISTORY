@@ -13,5 +13,6 @@ Version 0.0.2
 - fixed bug that recmenu was not hide when displaying detailed view
   in some cases
 - fixed translations
-
+- added dedicated hor. and ver. viewelements for header, 
+  footer and time
 

@@ -67,9 +67,12 @@ bool cPluginTvguideng::Start(void) {
     reg.SetView(viRootView, "root.xml");
     reg.SetViewElement(viRootView, verBackgroundHor, "background_hor");
     reg.SetViewElement(viRootView, verBackgroundVer, "background_ver");
-    reg.SetViewElement(viRootView, verHeader, "header");
-    reg.SetViewElement(viRootView, verTime, "time");
-    reg.SetViewElement(viRootView, verFooter, "footer");
+    reg.SetViewElement(viRootView, verHeaderHor, "header_hor");
+    reg.SetViewElement(viRootView, verHeaderVer, "header_ver");
+    reg.SetViewElement(viRootView, verTimeHor, "time_hor");
+    reg.SetViewElement(viRootView, verTimeVer, "time_ver");
+    reg.SetViewElement(viRootView, verFooterHor, "footer_hor");
+    reg.SetViewElement(viRootView, verFooterVer, "footer_ver");
     reg.SetViewElement(viRootView, verDateTimelineHor, "datetimeline_hor");
     reg.SetViewElement(viRootView, verDateTimelineVer, "datetimeline_ver");
     reg.SetViewElement(viRootView, verTimeIndicatorHor, "timeindicator_hor");

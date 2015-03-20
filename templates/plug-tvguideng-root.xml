@@ -35,9 +35,11 @@
     {posterheight}            height of scraped poster
     {posterpath}              absolute path of scraped poster
     -->
-    <viewelement name="header">
+    <viewelement name="header_hor">
     </viewelement>
 
+    <viewelement name="header_ver">
+    </viewelement>
     <!-- Available Variables Footer:
     {red1}                    true if red button is button 1
     {red2}                    true if red button is button 2
@@ -60,9 +62,11 @@
     {yellow}                  label of yellow button
     {blue}                    label of blue button
     -->
-    <viewelement name="footer">
+    <viewelement name="footer_hor">
     </viewelement>
 
+    <viewelement name="footer_ver">
+    </viewelement>
     <!-- Available Variables time:
     {time}                   timestring in hh:mm
     {sec}                    current seconds
@@ -78,9 +82,11 @@
     {monthnameshort}         3 letter abbrivation of month name
     {year}                   year in yyyy
     -->
-    <viewelement name="time">
+    <viewelement name="time_hor">
     </viewelement>
 
+    <viewelement name="time_ver">
+    </viewelement>
     <!-- Tokens available in datetimeline
     {weekday}                weekday of current display
     {date}                   date of current display
