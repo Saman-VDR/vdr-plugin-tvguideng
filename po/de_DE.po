@@ -127,7 +127,7 @@ msgid "timers involved"
 msgstr "Timer beteiligt"
 
 msgid "Ignore Conflicts"
-msgstr ""
+msgstr "Konflikte ignorieren"
 
 msgid "Ignore Conflict"
 msgstr "Konflikt ignorieren"

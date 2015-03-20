@@ -12,5 +12,6 @@ Version 0.0.2
 - fixed display of background if recmenu was hidden
 - fixed bug that recmenu was not hide when displaying detailed view
   in some cases
+- fixed translations
 
 
