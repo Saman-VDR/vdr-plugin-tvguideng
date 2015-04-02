@@ -2,16 +2,16 @@
 #define __TVGUIDE_RECMENUVIEW_H
 
 #include "config.h"
-#include "libskindesigner/osdelements.h"
+#include <libskindesignerapi/skindesignerosdbase.h>
 #include "recmanager.h"
 #include "recmenus.h"
 
 class cRecMenuView {
 private:
     bool active;
-    cOsdView *recMenuView;
-    cOsdView *recMenuViewBuffer;
-    cOsdView *recMenuViewBuffer2;
+    skindesignerapi::cOsdView *recMenuView;
+    skindesignerapi::cOsdView *recMenuViewBuffer;
+    skindesignerapi::cOsdView *recMenuViewBuffer2;
     const cEvent *event;
     const cEvent *displayEvent;
     cRecManager *recManager;
@@ -29,7 +29,7 @@ private:
 public:
     cRecMenuView(void);
     virtual ~cRecMenuView(void);
-    void Init(cOsdView *recMenuView, cOsdView *recMenuViewBuffer, cOsdView *recMenuViewBuffer2);
+    void Init(skindesignerapi::cOsdView *recMenuView, skindesignerapi::cOsdView *recMenuViewBuffer, skindesignerapi::cOsdView *recMenuViewBuffer2);
     void DisplayRecMenu(const cEvent *event);
     void DisplayFavorites(void);
     void Close(void);

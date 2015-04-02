@@ -2,19 +2,19 @@
 #define __TVGUIDE_DETAILVIEW_H
 
 #include "config.h"
-#include "libskindesigner/osdelements.h"
+#include <libskindesignerapi/skindesignerosdbase.h>
 
 class cDetailView {
 private:
     bool init;
     int lastSecond;
-    cOsdView *detailView;
+    skindesignerapi::cOsdView *detailView;
     const cEvent *event;
-    cViewElement *back;
-    cViewElement *header;
-    cViewElement *footer;
-    cViewElement *watch;
-    cViewTab *tabs;
+    skindesignerapi::cViewElement *back;
+    skindesignerapi::cViewElement *header;
+    skindesignerapi::cViewElement *footer;
+    skindesignerapi::cViewElement *watch;
+    skindesignerapi::cViewTab *tabs;
     void DrawBackground(void);
     void DrawHeader(void);
     void DrawFooter(void);
@@ -23,7 +23,7 @@ private:
     void SetScraperTokens(void);
     void SetEpgPictures(int eventId);
 public:
-    cDetailView(cOsdView *detailView, const cEvent *event);
+    cDetailView(skindesignerapi::cOsdView *detailView, const cEvent *event);
     virtual ~cDetailView(void);
     void Draw(void);
     void Left(void);

@@ -31,7 +31,7 @@ void cTVGuideOSD::Show(void) {
         esyslog("tvguideng: skindesigner not available");
     }
 
-    cOsdView *rootView = GetOsdView(viRootView);
+    skindesignerapi::cOsdView *rootView = GetOsdView(viRootView);
     if (!rootView) {
         esyslog("tvguideng: used skindesigner skin does not support tvguideng");
         return;
@@ -432,7 +432,7 @@ void cTVGuideOSD::DetailView(const cEvent *e) {
     epgGrid->Deactivate(true);
     if (recMenuView->Active())
         recMenuView->Hide(true);
-    cOsdView *dV = GetOsdView(viRootView, viDetailView);
+    skindesignerapi::cOsdView *dV = GetOsdView(viRootView, viDetailView);
     detailView = new cDetailView(dV, e);
     detailView->Draw();
     detailView->DrawTime();
@@ -455,9 +455,9 @@ void cTVGuideOSD::KeyRed(void) {
     if (!e)
         return;
     epgGrid->Deactivate(false);
-    cOsdView *recView = GetOsdView(viRootView, viRecMenu);
-    cOsdView *recViewBuffer = GetOsdView(viRootView, viRecMenu);
-    cOsdView *recViewBuffer2 = GetOsdView(viRootView, viRecMenu);
+    skindesignerapi::cOsdView *recView = GetOsdView(viRootView, viRecMenu);
+    skindesignerapi::cOsdView *recViewBuffer = GetOsdView(viRootView, viRecMenu);
+    skindesignerapi::cOsdView *recViewBuffer2 = GetOsdView(viRootView, viRecMenu);
     recMenuView->Init(recView, recViewBuffer, recViewBuffer2);
     recMenuView->DisplayRecMenu(e);
     recMenuView->Flush();
@@ -465,9 +465,9 @@ void cTVGuideOSD::KeyRed(void) {
 
 void cTVGuideOSD::Favorites(void) {
     epgGrid->Deactivate(false);
-    cOsdView *recView = GetOsdView(viRootView, viRecMenu);
-    cOsdView *recViewBuffer = GetOsdView(viRootView, viRecMenu);
-    cOsdView *recViewBuffer2 = GetOsdView(viRootView, viRecMenu);
+    skindesignerapi::cOsdView *recView = GetOsdView(viRootView, viRecMenu);
+    skindesignerapi::cOsdView *recViewBuffer = GetOsdView(viRootView, viRecMenu);
+    skindesignerapi::cOsdView *recViewBuffer2 = GetOsdView(viRootView, viRecMenu);
     recMenuView->Init(recView, recViewBuffer, recViewBuffer2);
     recMenuView->DisplayFavorites();
     recMenuView->Flush();

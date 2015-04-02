@@ -4,7 +4,7 @@
 #include "services/scraper2vdr.h"
 #include "services/epgsearch.h"
 
-cDetailView::cDetailView(cOsdView *detailView, const cEvent *event) {
+cDetailView::cDetailView(skindesignerapi::cOsdView *detailView, const cEvent *event) {
     init = true;
     lastSecond = -1;
     this->detailView = detailView;

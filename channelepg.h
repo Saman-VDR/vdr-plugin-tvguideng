@@ -3,7 +3,7 @@
 
 #include <set>
 #include <vdr/tools.h>
-#include "libskindesigner/osdelements.h"
+#include <libskindesignerapi/skindesignerosdbase.h>
 #include "config.h"
 #include "gridelement.h"
 #include "epgelement.h"
@@ -27,7 +27,7 @@ private:
     bool hasTimer;
     bool hasSwitchTimer;
     cGridElement *AddEpgGrid(const cEvent *event, cGridElement *after = NULL);
-    cGridElement *AddDummyGrid(time_t start, time_t end, cGridElement *after = NULL);
+    void AddDummyGrid(time_t start, time_t end, cGridElement *after = NULL);
 public:
     cChannelEpg(int position, const cChannel *channel, cTimeManager *timeManager);
     virtual ~cChannelEpg(void);
@@ -51,10 +51,10 @@ public:
     void SetSwitchTimer() {hasSwitchTimer = SwitchTimers.ChannelInSwitchList(channel);};
     bool HasSwitchTimer() { return hasSwitchTimer; };
     void ClearGrids(void);
-    void DrawHeader(cViewGrid *channelsGrid);
-    void DrawGrids(cViewGrid *epgGrid);
-    void DeleteOutdated(cViewGrid *epgGrid);
-    void DeleteGridViews(cViewGrid *epgGrid);
+    void DrawHeader(skindesignerapi::cViewGrid *channelsGrid);
+    void DrawGrids(skindesignerapi::cViewGrid *epgGrid);
+    void DeleteOutdated(skindesignerapi::cViewGrid *epgGrid);
+    void DeleteGridViews(skindesignerapi::cViewGrid *epgGrid);
     void Debug(void);
 };
 

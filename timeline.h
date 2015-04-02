@@ -3,7 +3,7 @@
 
 #include <set>
 #include <vdr/tools.h>
-#include "libskindesigner/osdelements.h"
+#include <libskindesignerapi/skindesignerosdbase.h>
 #include "config.h"
 #include "timemanager.h"
 
@@ -26,9 +26,9 @@ public:
 
 class cTimeline {
 private:
-    cViewGrid *timelineGrid;
-    cViewElement *timelineDate;
-    cViewElement *timeIndicator;
+    skindesignerapi::cViewGrid *timelineGrid;
+    skindesignerapi::cViewElement *timelineDate;
+    skindesignerapi::cViewElement *timeIndicator;
     cTimeManager *timeManager;
     cList<cTimelineElement> grids;
     int steps;
@@ -38,7 +38,7 @@ private:
     void DrawDate(void);
     void DrawTimeIndicator(void);
 public:
-    cTimeline(cViewGrid *timelineGrid, cViewElement *timelineDate, cViewElement *timeIndicator, cTimeManager *timeManager);
+    cTimeline(skindesignerapi::cViewGrid *timelineGrid, skindesignerapi::cViewElement *timelineDate, skindesignerapi::cViewElement *timeIndicator, cTimeManager *timeManager);
     virtual ~cTimeline(void);
     void Init(void);
     void Clear(void);

@@ -81,7 +81,7 @@ typedef struct
 void afuzzy_init(const char *p, int kerr, int UseFilter, AFUZZY *fuzzy);
 void afuzzy_free(AFUZZY *fuzzy);
 int afuzzy_checkSUB(const char *t, AFUZZY *fuzzy);
-static int afuzzy_checkFLT(const char *t, AFUZZY *fuzzy);
+int afuzzy_checkFLT(const char *t, AFUZZY *fuzzy);
 #endif
 
 #endif // __TVGUIDE_HELPERS_H

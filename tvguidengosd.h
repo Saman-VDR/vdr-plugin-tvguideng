@@ -3,8 +3,8 @@
 
 #include <vdr/osdbase.h>
 #include <vdr/plugin.h>
-#include "libskindesigner/skindesignerosdbase.h"
-#include "libskindesigner/osdelements.h"
+#include <libskindesignerapi/skindesignerapi.h>
+#include <libskindesignerapi/skindesignerosdbase.h>
 #include "config.h"
 #include "timemanager.h"
 #include "epggrid.h"
@@ -58,7 +58,7 @@ enum eViewElementsRecMenu {
     vemScrollbar
 };
 
-class cTVGuideOSD : public cSkindesignerOsdObject {
+class cTVGuideOSD : public skindesignerapi::cSkindesignerOsdObject {
 private:
     cTimeManager *timeManager;
     cEpgGrid *epgGrid;

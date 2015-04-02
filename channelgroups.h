@@ -3,7 +3,7 @@
 
 #include <set>
 #include <vdr/tools.h>
-#include "libskindesigner/osdelements.h"
+#include <libskindesignerapi/skindesignerosdbase.h>
 #include "config.h"
 
 // --- cChannelGroup  -------------------------------------------------------------
@@ -31,11 +31,11 @@ public:
 
 class cChannelgroups {
 private:
-    cViewGrid *channelgroupGrid;
+    skindesignerapi::cViewGrid *channelgroupGrid;
     vector<cChannelGroup> channelGroups;
     double SetGroup(int groupId, int fields, double offset);
 public:
-    cChannelgroups(cViewGrid *channelgroupGrid);
+    cChannelgroups(skindesignerapi::cViewGrid *channelgroupGrid);
     virtual ~cChannelgroups(void);
     void Init(void);
     void Clear(void);

@@ -7,7 +7,7 @@
  */
 
 #include <vdr/plugin.h>
-#include "libskindesigner/services.h"
+#include <libskindesignerapi/skindesignerapi.h>
 #define DEFINE_CONFIG 1
 #include "config.h"
 #include "setup.h"
@@ -62,48 +62,45 @@ bool cPluginTvguideng::Initialize(void) {
 }
 
 bool cPluginTvguideng::Start(void) {
-    RegisterPlugin reg;
-    reg.name = "tvguideng";
-    reg.SetView(viRootView, "root.xml");
-    reg.SetViewElement(viRootView, verBackgroundHor, "background_hor");
-    reg.SetViewElement(viRootView, verBackgroundVer, "background_ver");
-    reg.SetViewElement(viRootView, verHeaderHor, "header_hor");
-    reg.SetViewElement(viRootView, verHeaderVer, "header_ver");
-    reg.SetViewElement(viRootView, verTimeHor, "time_hor");
-    reg.SetViewElement(viRootView, verTimeVer, "time_ver");
-    reg.SetViewElement(viRootView, verFooterHor, "footer_hor");
-    reg.SetViewElement(viRootView, verFooterVer, "footer_ver");
-    reg.SetViewElement(viRootView, verDateTimelineHor, "datetimeline_hor");
-    reg.SetViewElement(viRootView, verDateTimelineVer, "datetimeline_ver");
-    reg.SetViewElement(viRootView, verTimeIndicatorHor, "timeindicator_hor");
-    reg.SetViewElement(viRootView, verTimeIndicatorVer, "timeindicator_ver");
-    reg.SetViewElement(viRootView, verChannelJump, "channeljump");
-    reg.SetViewGrid(viRootView, vgChannelsHor, "channels_hor");
-    reg.SetViewGrid(viRootView, vgChannelsVer, "channels_ver");
-    reg.SetViewGrid(viRootView, vgSchedulesHor, "schedules_hor");
-    reg.SetViewGrid(viRootView, vgSchedulesVer, "schedules_ver");
-    reg.SetViewGrid(viRootView, vgTimelineHor, "timeline_hor");
-    reg.SetViewGrid(viRootView, vgTimelineVer, "timeline_ver");
-    reg.SetViewGrid(viRootView, vgChannelGroupsHor, "channelgroups_hor");
-    reg.SetViewGrid(viRootView, vgChannelGroupsVer, "channelgroups_ver");
+    skindesignerapi::cPluginStructure plugStruct;
+    plugStruct.name = "tvguideng";
+    plugStruct.SetView(viRootView, "root.xml");
+    plugStruct.SetViewElement(viRootView, verBackgroundHor, "background_hor");
+    plugStruct.SetViewElement(viRootView, verBackgroundVer, "background_ver");
+    plugStruct.SetViewElement(viRootView, verHeaderHor, "header_hor");
+    plugStruct.SetViewElement(viRootView, verHeaderVer, "header_ver");
+    plugStruct.SetViewElement(viRootView, verTimeHor, "time_hor");
+    plugStruct.SetViewElement(viRootView, verTimeVer, "time_ver");
+    plugStruct.SetViewElement(viRootView, verFooterHor, "footer_hor");
+    plugStruct.SetViewElement(viRootView, verFooterVer, "footer_ver");
+    plugStruct.SetViewElement(viRootView, verDateTimelineHor, "datetimeline_hor");
+    plugStruct.SetViewElement(viRootView, verDateTimelineVer, "datetimeline_ver");
+    plugStruct.SetViewElement(viRootView, verTimeIndicatorHor, "timeindicator_hor");
+    plugStruct.SetViewElement(viRootView, verTimeIndicatorVer, "timeindicator_ver");
+    plugStruct.SetViewElement(viRootView, verChannelJump, "channeljump");
+    plugStruct.SetViewGrid(viRootView, vgChannelsHor, "channels_hor");
+    plugStruct.SetViewGrid(viRootView, vgChannelsVer, "channels_ver");
+    plugStruct.SetViewGrid(viRootView, vgSchedulesHor, "schedules_hor");
+    plugStruct.SetViewGrid(viRootView, vgSchedulesVer, "schedules_ver");
+    plugStruct.SetViewGrid(viRootView, vgTimelineHor, "timeline_hor");
+    plugStruct.SetViewGrid(viRootView, vgTimelineVer, "timeline_ver");
+    plugStruct.SetViewGrid(viRootView, vgChannelGroupsHor, "channelgroups_hor");
+    plugStruct.SetViewGrid(viRootView, vgChannelGroupsVer, "channelgroups_ver");
     //Detail View
-    reg.SetSubView(viRootView, viDetailView, "detail.xml");
-    reg.SetViewElement(viDetailView, vedBackground, "background");
-    reg.SetViewElement(viDetailView, vedHeader, "header");
-    reg.SetViewElement(viDetailView, vedFooter, "footer");
-    reg.SetViewElement(viDetailView, vedTime, "time");
+    plugStruct.SetSubView(viRootView, viDetailView, "detail.xml");
+    plugStruct.SetViewElement(viDetailView, vedBackground, "background");
+    plugStruct.SetViewElement(viDetailView, vedHeader, "header");
+    plugStruct.SetViewElement(viDetailView, vedFooter, "footer");
+    plugStruct.SetViewElement(viDetailView, vedTime, "time");
     //Search & Recording Menus
-    reg.SetSubView(viRootView, viRecMenu, "recmenu.xml");
-    reg.SetViewElement(viRecMenu, vemBackground, "background");
-    reg.SetViewElement(viRecMenu, vemScrollbar, "scrollbar");
-    reg.SetViewGrid(viRecMenu, vgRecordingMenu, "recmenu");
-    static cPlugin *pSkinDesigner = cPluginManager::GetPlugin("skindesigner");
-    if (pSkinDesigner) {
-        pSkinDesigner->Service("RegisterPlugin", &reg);
-    } else {
+    plugStruct.SetSubView(viRootView, viRecMenu, "recmenu.xml");
+    plugStruct.SetViewElement(viRecMenu, vemBackground, "background");
+    plugStruct.SetViewElement(viRecMenu, vemScrollbar, "scrollbar");
+    plugStruct.SetViewGrid(viRecMenu, vgRecordingMenu, "recmenu");
+
+    if (!skindesignerapi::SkindesignerAPI::RegisterPlugin(&plugStruct)) {
         esyslog("tvguideng: skindesigner not available");
     }
-
     return true;
 }
 

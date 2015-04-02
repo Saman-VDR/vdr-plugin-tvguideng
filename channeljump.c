@@ -1,7 +1,7 @@
 #include <vdr/channels.h>
 #include "channeljump.h"
 
-cChannelJump::cChannelJump(cViewElement *channelJump, int lastValidChannel) {
+cChannelJump::cChannelJump(skindesignerapi::cViewElement *channelJump, int lastValidChannel) {
     this->channelJump = channelJump;
     channel = 0;
     maxChannels = lastValidChannel;
@@ -41,7 +41,7 @@ cString cChannelJump::BuildChannelString(void) {
 }
 
  bool cChannelJump::TimeOut(void) {
- 	if ((cTimeMs::Now() - startTime) > timeout)
+ 	if ((int)(cTimeMs::Now() - startTime) > timeout)
 	 	return true;
 	return false;
  }

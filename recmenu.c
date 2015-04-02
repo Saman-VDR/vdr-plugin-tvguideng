@@ -45,7 +45,7 @@ cRecMenu::~cRecMenu(void) {
 * Public Functions
 ********************************************************************/
 
-void cRecMenu::Init(cOsdView *osdView) {
+void cRecMenu::Init(skindesignerapi::cOsdView *osdView) {
     this->osdView = osdView;
     recMenuGrid = osdView->GetViewGrid(vgRecordingMenu);
     scrollBar = osdView->GetViewElement(vemScrollbar);
@@ -153,6 +153,7 @@ int cRecMenu::GetNumActive(void) {
             return num;
         num++;
     }
+    return 0;
 }
 
 bool cRecMenu::ScrollUp(bool retry) {

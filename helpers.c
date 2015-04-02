@@ -176,7 +176,7 @@ std::vector<std::string>& splitstring::split(char delim, int rep) {
     std::string work = data();
     std::string buf = "";
     int i = 0;
-    while (i < work.length()) {
+    while (i < (int)work.length()) {
         if (work[i] != delim)
             buf += work[i];
         else if (rep == 1) {
@@ -495,7 +495,7 @@ int afuzzy_checkSUB(const char *t, AFUZZY *fuzzy)
     return 0;
 }
 
-static int afuzzy_checkFLT(const char *t, AFUZZY *fuzzy)
+int afuzzy_checkFLT(const char *t, AFUZZY *fuzzy)
 {
     register Uint FilterR = 0;
     register Uint FilterR1;

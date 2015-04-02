@@ -55,7 +55,7 @@ cRecMenuItemInfo::cRecMenuItemInfo(string line1, int numLines, string line2, str
 cRecMenuItemInfo::~cRecMenuItemInfo(void) {
 }
 
-void cRecMenuItemInfo::SetTokens(cViewGrid *menu) {
+void cRecMenuItemInfo::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
     menu->AddIntToken("info", 1);
     menu->AddIntToken("lines", numLines);
@@ -78,7 +78,7 @@ cRecMenuItemButton::cRecMenuItemButton(string text, eRecMenuState action, bool a
 cRecMenuItemButton::~cRecMenuItemButton(void) {
 }
 
-void cRecMenuItemButton::SetTokens(cViewGrid *menu) {
+void cRecMenuItemButton::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
     menu->AddIntToken("button", 1);
     menu->AddStringToken("buttontext", text);
@@ -114,7 +114,7 @@ cRecMenuItemButtonYesNo::cRecMenuItemButtonYesNo(string textYes,
 cRecMenuItemButtonYesNo::~cRecMenuItemButtonYesNo(void) {
 }
 
-void cRecMenuItemButtonYesNo::SetTokens(cViewGrid *menu) {
+void cRecMenuItemButtonYesNo::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
     menu->AddIntToken("buttonyesno", 1);
     menu->AddIntToken("yes", yesActive);
@@ -174,7 +174,7 @@ cRecMenuItemInt::cRecMenuItemInt(string text,
 cRecMenuItemInt::~cRecMenuItemInt(void) {
 }
 
-void cRecMenuItemInt::SetTokens(cViewGrid *menu) {
+void cRecMenuItemInt::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
     menu->AddIntToken("intselector", 1);
     menu->AddIntToken("value", currentVal);
@@ -240,7 +240,7 @@ cRecMenuItemBool::cRecMenuItemBool(string text,
 cRecMenuItemBool::~cRecMenuItemBool(void) {
 }
 
-void cRecMenuItemBool::SetTokens(cViewGrid *menu) {
+void cRecMenuItemBool::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
     menu->AddIntToken("boolselector", 1);
     menu->AddIntToken("value", yes);
@@ -288,7 +288,7 @@ cRecMenuItemSelect::cRecMenuItemSelect(string text,
 cRecMenuItemSelect::~cRecMenuItemSelect(void) {
 }
 
-void cRecMenuItemSelect::SetTokens(cViewGrid *menu) {
+void cRecMenuItemSelect::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
     menu->AddIntToken("stringselector", 1);
     menu->AddStringToken("text", text);    
@@ -296,7 +296,6 @@ void cRecMenuItemSelect::SetTokens(cViewGrid *menu) {
 }
 
 eRecMenuState cRecMenuItemSelect::ProcessKey(eKeys Key) {
-    int oldValue = currentVal;
     switch (Key & ~k_Repeat) {
         case kLeft:
             currentVal--;
@@ -501,7 +500,7 @@ void cRecMenuItemText::SetText(void) {
     }
 }
 
-void cRecMenuItemText::SetTokens(cViewGrid *menu) {
+void cRecMenuItemText::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
     menu->AddIntToken("textinput", 1);
     menu->AddIntToken("editmode", InEditMode());
@@ -712,7 +711,7 @@ cRecMenuItemTime::cRecMenuItemTime(string text,
 cRecMenuItemTime::~cRecMenuItemTime(void) {
 }
 
-void cRecMenuItemTime::SetTokens(cViewGrid *menu) {
+void cRecMenuItemTime::SetTokens(skindesignerapi::cViewGrid *menu) {
     char buf[10];
     switch (pos) {
         case 1:  snprintf(buf, sizeof(buf), "%01d-:--", hh / 10); break;
@@ -821,7 +820,7 @@ cRecMenuItemDay::cRecMenuItemDay(string text,
 cRecMenuItemDay::~cRecMenuItemDay(void) {
 }
 
-void cRecMenuItemDay::SetTokens(cViewGrid *menu) {
+void cRecMenuItemDay::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
     menu->AddIntToken("dayselector", 1);
     menu->AddStringToken("text", text);
@@ -875,7 +874,7 @@ cRecMenuItemChannelChooser::cRecMenuItemChannelChooser(string text,
 cRecMenuItemChannelChooser::~cRecMenuItemChannelChooser(void) {
 }
 
-void cRecMenuItemChannelChooser::SetTokens(cViewGrid *menu) {
+void cRecMenuItemChannelChooser::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
     menu->AddIntToken("channelselector", 1);
     menu->AddStringToken("text", text);
@@ -986,7 +985,7 @@ cRecMenuItemDayChooser::cRecMenuItemDayChooser(string text,
 cRecMenuItemDayChooser::~cRecMenuItemDayChooser(void) {
 }
 
-void cRecMenuItemDayChooser::SetTokens(cViewGrid *menu) {
+void cRecMenuItemDayChooser::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
     menu->AddIntToken("weekdayselector", 1);
     menu->AddStringToken("text", text);
@@ -1066,7 +1065,7 @@ cRecMenuItemSelectDirectory::cRecMenuItemSelectDirectory(string text,
     this->currentVal = GetInitial();
 }
 
-void cRecMenuItemSelectDirectory::SetTokens(cViewGrid *menu) {
+void cRecMenuItemSelectDirectory::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
     menu->AddIntToken("directoryselector", 1);
     menu->AddStringToken("text", text);
@@ -1074,7 +1073,6 @@ void cRecMenuItemSelectDirectory::SetTokens(cViewGrid *menu) {
 }
 
 eRecMenuState cRecMenuItemSelectDirectory::ProcessKey(eKeys Key) {
-    int oldValue = currentVal;
     switch (Key & ~k_Repeat) {
         case kLeft:
             currentVal--;
@@ -1135,7 +1133,7 @@ cRecMenuItemTimerConflictHeader::cRecMenuItemTimerConflictHeader(time_t conflict
 cRecMenuItemTimerConflictHeader::~cRecMenuItemTimerConflictHeader(void) {
 }
 
-void cRecMenuItemTimerConflictHeader::SetTokens(cViewGrid *menu) {
+void cRecMenuItemTimerConflictHeader::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
     menu->AddIntToken("timerconflictheader", 1);
     menu->AddStringToken("text", tr("Timer Conflict"));
@@ -1179,7 +1177,7 @@ cRecMenuItemTimer::cRecMenuItemTimer(const cTimer *timer,
 cRecMenuItemTimer::~cRecMenuItemTimer(void) {
 }
 
-void cRecMenuItemTimer::SetTokens(cViewGrid *menu) {
+void cRecMenuItemTimer::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
     menu->AddIntToken("timerconflict", 1);
     
@@ -1273,7 +1271,7 @@ cRecMenuItemEvent::cRecMenuItemEvent(const cEvent *event,
 cRecMenuItemEvent::~cRecMenuItemEvent(void) {
 }
 
-void cRecMenuItemEvent::SetTokens(cViewGrid *menu) {
+void cRecMenuItemEvent::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
     menu->AddIntToken("event", 1);
     
@@ -1299,7 +1297,6 @@ void cRecMenuItemEvent::SetTokens(cViewGrid *menu) {
 }
 
 eRecMenuState cRecMenuItemEvent::ProcessKey(eKeys Key) {
-    bool consumed = false;
     switch (Key & ~k_Repeat) {
         case kOk:
             return action;
@@ -1322,7 +1319,7 @@ cRecMenuItemRecording::cRecMenuItemRecording(cRecording *recording, bool active)
     this->active = active;
 }
 
-void cRecMenuItemRecording::SetTokens(cViewGrid *menu) {
+void cRecMenuItemRecording::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
     menu->AddIntToken("recording", 1);
     if (!recording)
@@ -1372,7 +1369,7 @@ cRecMenuItemSearchTimer::cRecMenuItemSearchTimer(cTVGuideSearchTimer timer,
 cRecMenuItemSearchTimer::~cRecMenuItemSearchTimer(void) {
 }
 
-void cRecMenuItemSearchTimer::SetTokens(cViewGrid *menu) {
+void cRecMenuItemSearchTimer::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
     menu->AddIntToken("searchtimer", 1);
     menu->AddIntToken("timeractive", timer.Active());
@@ -1426,7 +1423,7 @@ cRecMenuItemTimelineHeader::cRecMenuItemTimelineHeader(time_t day) {
 cRecMenuItemTimelineHeader::~cRecMenuItemTimelineHeader(void) {
 }
 
-void cRecMenuItemTimelineHeader::SetTokens(cViewGrid *menu) {
+void cRecMenuItemTimelineHeader::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
     menu->AddIntToken("timelineheader", 1);
     string daydate = *DateString(day);
@@ -1487,7 +1484,7 @@ cRecMenuItemTimelineTimer::cRecMenuItemTimelineTimer(cTimer *timer, time_t start
 cRecMenuItemTimelineTimer::~cRecMenuItemTimelineTimer(void) {
 }
 
-void cRecMenuItemTimelineTimer::SetTokens(cViewGrid *menu) {
+void cRecMenuItemTimelineTimer::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
     menu->AddIntToken("timelinetimer", 1);
 
@@ -1530,7 +1527,7 @@ cRecMenuItemFavorite::cRecMenuItemFavorite(cTVGuideSearchTimer favorite,
     this->active = active;
 }
 
-void cRecMenuItemFavorite::SetTokens(cViewGrid *menu) {
+void cRecMenuItemFavorite::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
     menu->AddIntToken("favorite", 1);
     menu->AddStringToken("favdesc", favorite.SearchString());
@@ -1555,7 +1552,7 @@ cRecMenuItemFavoriteStatic::cRecMenuItemFavoriteStatic(string text, eRecMenuStat
     this->active = active;
 }
 
-void cRecMenuItemFavoriteStatic::SetTokens(cViewGrid *menu) {
+void cRecMenuItemFavoriteStatic::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
     menu->AddIntToken("favorite", 1);
     menu->AddStringToken("favdesc", text);

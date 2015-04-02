@@ -100,7 +100,7 @@ cRecMenuAskFolder::cRecMenuAskFolder(const cEvent *event, eRecMenuState nextActi
 string cRecMenuAskFolder::GetFolder(void) {
     std::string folder = "";
     int folderActive = GetNumActive();
-    if (folderActive > 0 && folderActive < folders.size() + 1)
+    if (folderActive > 0 && folderActive < (int)folders.size() + 1)
         folder = folders[folderActive - 1];
     return folder;
 }
@@ -460,7 +460,7 @@ cRecMenuSearchTimerTemplates::cRecMenuSearchTimerTemplates(cTVGuideSearchTimer s
 TVGuideEPGSearchTemplate cRecMenuSearchTimerTemplates::GetTemplate(void) {
     TVGuideEPGSearchTemplate templ;
     int tmplActive = GetNumActive() - 1;
-    if (tmplActive >= 0 && tmplActive < templates.size())
+    if (tmplActive >= 0 && tmplActive < (int)templates.size())
         templ = templates[tmplActive];
     return templ;
 }
@@ -698,7 +698,7 @@ cRecMenuSearchTimerResults::cRecMenuSearchTimerResults(string searchString, cons
         string line3 = *cString::sprintf("%s \"%s\"", message3.c_str(), templateName.c_str());
         infoItem = new cRecMenuItemInfo(line1, 3, line2, line3);
     } else {
-        string line1 = *cString::sprintf("%d %s:", numResults, (numResults>1)?(message1.c_str()):(message2.c_str()), searchString.c_str());
+        string line1 = *cString::sprintf("%d %s:", numResults, (numResults>1)?(message1.c_str()):(message2.c_str()));
         string line2 = *cString::sprintf("\"%s\"", searchString.c_str());
         infoItem = new cRecMenuItemInfo(line1, 2, line2);
     }

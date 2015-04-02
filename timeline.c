@@ -27,7 +27,7 @@ bool cTimelineElement::IsFullHour(void) {
 
 // --- cTimeline  -------------------------------------------------------------
 
-cTimeline::cTimeline(cViewGrid *timelineGrid, cViewElement *timelineDate, cViewElement *timeIndicator, cTimeManager *timeManager) {
+cTimeline::cTimeline(skindesignerapi::cViewGrid *timelineGrid, skindesignerapi::cViewElement *timelineDate, skindesignerapi::cViewElement *timeIndicator, cTimeManager *timeManager) {
     this->timelineGrid = timelineGrid;
     this->timelineDate = timelineDate;
     this->timeIndicator = timeIndicator;
@@ -76,8 +76,6 @@ void cTimeline::ScrollForward(int stepMinutes) {
 }
 
 void cTimeline::ScrollBack(int stepMinutes) {
-    time_t startTime = timeManager->GetStart();
-    time_t endTime = timeManager->GetEnd();
     int numSteps = stepMinutes / 30;
     for (int i=0; i<numSteps; i++) {
         cTimelineElement *e = grids.Last();

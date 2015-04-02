@@ -19,7 +19,7 @@ void cChannelGroup::Debug(void) {
 
 // --- cChannelgroups  -------------------------------------------------------------
 
-cChannelgroups::cChannelgroups(cViewGrid *channelgroupGrid) {
+cChannelgroups::cChannelgroups(skindesignerapi::cViewGrid *channelgroupGrid) {
     this->channelgroupGrid = channelgroupGrid;
 }
 
@@ -144,25 +144,25 @@ int cChannelgroups::GetGroup(const cChannel *channel) {
 }
 
 string cChannelgroups::GetPrevGroupName(int group) {
-    if (group <= 0 || group > channelGroups.size())
+    if (group <= 0 || group > (int)channelGroups.size())
         return "";
     return channelGroups[group-1].GetName();
 }
 
 string cChannelgroups::GetNextGroupName(int group) {
-    if (group < 0 || group >= channelGroups.size() - 1)
+    if (group < 0 || group >= (int)channelGroups.size() - 1)
         return "";
     return channelGroups[group+1].GetName();
 }
 
 int cChannelgroups::GetPrevGroupFirstChannel(int group) {
-    if (group <= 0 || group > channelGroups.size())
+    if (group <= 0 || group > (int)channelGroups.size())
         return -1;
     return channelGroups[group-1].StartChannel();
 }
 
 int cChannelgroups::GetNextGroupFirstChannel(int group) {
-    if (group < 0 || group >= channelGroups.size())
+    if (group < 0 || group >= (int)channelGroups.size())
         return -1;
     return channelGroups[group+1].StartChannel();
 }

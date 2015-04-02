@@ -193,7 +193,7 @@ void cChannelEpg::AddNewGridsAtStart(void) {
             if (firstGrid->EndTime() >= timeManager->GetEnd())
                 firstGrid->SetEndTime(timeManager->GetEnd());
         } else {
-            cGridElement *grid = AddDummyGrid(timeManager->GetStart(), firstGrid->StartTime(), firstGrid);
+            AddDummyGrid(timeManager->GetStart(), firstGrid->StartTime(), firstGrid);
         }
     }
 }
@@ -225,7 +225,7 @@ void cChannelEpg::AddNewGridsAtEnd(void) {
         if (event->StartTime() > timeManager->GetEnd()) {
             break;
         }
-        cGridElement *grid = AddEpgGrid(event);
+        AddEpgGrid(event);
         if (event->EndTime() > timeManager->GetEnd()) {
             dummyNeeded = false;
             break;
@@ -238,7 +238,7 @@ void cChannelEpg::AddNewGridsAtEnd(void) {
             if (lastGrid->StartTime() <= timeManager->GetStart())
                 lastGrid->SetStartTime(timeManager->GetStart());
         } else {
-            cGridElement *grid = AddDummyGrid(lastGrid->EndTime(), timeManager->GetEnd());
+            AddDummyGrid(lastGrid->EndTime(), timeManager->GetEnd());
         }
     }
 }
@@ -311,7 +311,7 @@ void cChannelEpg::SetTimers(void) {
     }
 }
 
-void cChannelEpg::DrawHeader(cViewGrid *channelsGrid) {
+void cChannelEpg::DrawHeader(skindesignerapi::cViewGrid *channelsGrid) {
 
     double x, y, width, height;
     
@@ -343,7 +343,7 @@ void cChannelEpg::DrawHeader(cViewGrid *channelsGrid) {
     }
 }
 
-void cChannelEpg::DrawGrids(cViewGrid *epgGrid) {
+void cChannelEpg::DrawGrids(skindesignerapi::cViewGrid *epgGrid) {
     int displaySeconds = timeManager->GetDisplaySeconds();
     double x, y, width, height;
     if (config.displayMode == eHorizontal) {
@@ -405,13 +405,13 @@ void cChannelEpg::DrawGrids(cViewGrid *epgGrid) {
     }
 }
 
-void cChannelEpg::DeleteOutdated(cViewGrid *epgGrid) {
+void cChannelEpg::DeleteOutdated(skindesignerapi::cViewGrid *epgGrid) {
     for (set<long>::iterator it = deletedElements.begin(); it != deletedElements.end(); it++) {
         epgGrid->Delete(*it);
     }
 }
 
-void cChannelEpg::DeleteGridViews(cViewGrid *epgGrid) {
+void cChannelEpg::DeleteGridViews(skindesignerapi::cViewGrid *epgGrid) {
     for (cGridElement *ge = grids.First(); ge; ge = grids.Next(ge)) {
         epgGrid->Delete(ge->Id());
     }
@@ -426,13 +426,12 @@ cGridElement *cChannelEpg::AddEpgGrid(const cEvent *event, cGridElement *after) 
     return grid;
 }
 
-cGridElement *cChannelEpg::AddDummyGrid(time_t start, time_t end, cGridElement *after) {
+void cChannelEpg::AddDummyGrid(time_t start, time_t end, cGridElement *after) {
     cGridElement *dummy = new cDummyElement(start, end, this);
     if (!after)
         grids.Add(dummy);
     else
         grids.Ins(dummy, after);
-    return dummy;
 }
 
 void cChannelEpg::Debug(void) {

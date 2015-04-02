@@ -16,7 +16,7 @@ protected:
     bool hasSwitchTimer;
     cChannelEpg *owner;
     bool Intersects(cGridElement *neighbor);
-    virtual time_t Duration(void) {};
+    virtual time_t Duration(void) { return 0; };
     bool dummy;
 public:
     cGridElement(cChannelEpg *owner);
@@ -27,8 +27,8 @@ public:
     void SetActive(void) {active = true;};
     void SetInActive(void) {active = false;};
     bool Match(time_t t);
-    virtual time_t StartTime(void) {};
-    virtual time_t EndTime(void) {};
+    virtual time_t StartTime(void) { return 0; };
+    virtual time_t EndTime(void) { return 0; };
     virtual void SetStartTime(time_t start) {};
     virtual void SetEndTime(time_t end) {};
     int CalcOverlap(cGridElement *neighbor);
@@ -41,7 +41,7 @@ public:
     bool IsFirst(void);
     bool IsDummy(void) { return dummy; };
     const cChannel *Channel(void);
-    virtual const char *Title(void) {};
+    virtual const char *Title(void) { return ""; };
     virtual const char *ShortText(void) { return ""; };
     virtual const cEvent *Event(void) { return NULL; };
     cChannelEpg *Owner(void);

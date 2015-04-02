@@ -31,7 +31,7 @@ cRecMenuView::~cRecMenuView() {
         delete recMenuViewBuffer2;
 }
 
-void cRecMenuView::Init(cOsdView *recMenuView, cOsdView *recMenuViewBuffer, cOsdView *recMenuViewBuffer2) {
+void cRecMenuView::Init(skindesignerapi::cOsdView *recMenuView, skindesignerapi::cOsdView *recMenuViewBuffer, skindesignerapi::cOsdView *recMenuViewBuffer2) {
     active = true;
     this->recMenuView = recMenuView;
     this->recMenuViewBuffer = recMenuViewBuffer;

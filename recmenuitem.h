@@ -9,7 +9,7 @@ using namespace std;
 #include <sstream>
 #include <vdr/plugin.h>
 #include <vdr/tools.h>
-#include "libskindesigner/osdelements.h"
+#include <libskindesignerapi/skindesignerosdbase.h>
 #include "searchtimer.h"
 
 enum eRecMenuState {
@@ -104,11 +104,11 @@ public:
     long Id(void) { return id; };
     bool Selectable(void) { return selectable; }
     bool IsNew(void);
-    bool SetNew(void) { init = true; };
+    void SetNew(void) { init = true; };
     bool Active(void) { return active; }
     int GetHeight(void) { return height; };
     string GetText(void) { return text; };
-    virtual void SetTokens(cViewGrid *menu) {};
+    virtual void SetTokens(skindesignerapi::cViewGrid *menu) {};
     virtual eRecMenuState ProcessKey(eKeys Key) { return rmsNotConsumed; };
 };
 
@@ -124,7 +124,7 @@ public:
     cRecMenuItemInfo(string line1, int numLines = 1, string line2 = "", string line3 = "", string line4 = "");
     virtual ~cRecMenuItemInfo(void);
     string GetText(void) { return text; };
-    void SetTokens(cViewGrid *menu);
+    void SetTokens(skindesignerapi::cViewGrid *menu);
 };
 
 // --- cRecMenuItemButton  -------------------------------------------------------
@@ -135,7 +135,7 @@ public:
     cRecMenuItemButton(string text, eRecMenuState action, bool active);
     virtual ~cRecMenuItemButton(void);
     string GetText(void) { return text; };
-    void SetTokens(cViewGrid *menu);
+    void SetTokens(skindesignerapi::cViewGrid *menu);
     eRecMenuState ProcessKey(eKeys Key);
 };
 
@@ -153,7 +153,7 @@ public:
                             eRecMenuState actionNo,
                             bool active);
     virtual ~cRecMenuItemButtonYesNo(void);
-    void SetTokens(cViewGrid *menu);
+    void SetTokens(skindesignerapi::cViewGrid *menu);
     eRecMenuState ProcessKey(eKeys Key);
 };
 
@@ -174,7 +174,7 @@ public:
                     int *callback = NULL,
                     eRecMenuState action = rmsNotConsumed);
     virtual ~cRecMenuItemInt(void);
-    void SetTokens(cViewGrid *menu);
+    void SetTokens(skindesignerapi::cViewGrid *menu);
     eRecMenuState ProcessKey(eKeys Key);
 };
 
@@ -190,7 +190,7 @@ public:
                      bool *callback = NULL,
                      eRecMenuState action = rmsNotConsumed);
     virtual ~cRecMenuItemBool(void);
-    void SetTokens(cViewGrid *menu);
+    void SetTokens(skindesignerapi::cViewGrid *menu);
     eRecMenuState ProcessKey(eKeys Key);
 };
 
@@ -209,7 +209,7 @@ public:
                        int *callback = NULL,
                        eRecMenuState action = rmsNotConsumed);
     virtual ~cRecMenuItemSelect(void);
-    void SetTokens(cViewGrid *menu);
+    void SetTokens(skindesignerapi::cViewGrid *menu);
     eRecMenuState ProcessKey(eKeys Key);
 };
 
@@ -247,7 +247,7 @@ public:
                      bool active = false,
                      char *callback = NULL);
     virtual ~cRecMenuItemText(void);
-    void SetTokens(cViewGrid *menu);
+    void SetTokens(skindesignerapi::cViewGrid *menu);
     eRecMenuState ProcessKey(eKeys Key);
 };
 
@@ -267,7 +267,7 @@ public:
                     int *callback = NULL,
                     eRecMenuState action = rmsNotConsumed);
     virtual ~cRecMenuItemTime(void);
-    void SetTokens(cViewGrid *menu);
+    void SetTokens(skindesignerapi::cViewGrid *menu);
     eRecMenuState ProcessKey(eKeys Key);
 };
 
@@ -283,7 +283,7 @@ public:
                     time_t *callback = NULL,
                     eRecMenuState action = rmsNotConsumed);
     virtual ~cRecMenuItemDay(void);
-    void SetTokens(cViewGrid *menu);
+    void SetTokens(skindesignerapi::cViewGrid *menu);
     eRecMenuState ProcessKey(eKeys Key);
 };
 
@@ -302,7 +302,7 @@ public:
                                 int *callback = NULL,
                                 eRecMenuState action = rmsNotConsumed);
     virtual ~cRecMenuItemChannelChooser(void);
-    void SetTokens(cViewGrid *menu);
+    void SetTokens(skindesignerapi::cViewGrid *menu);
     eRecMenuState ProcessKey(eKeys Key);
 };
 
@@ -320,7 +320,7 @@ public:
                             bool active = false,
                             int *callback = NULL);
     virtual ~cRecMenuItemDayChooser(void);
-    void SetTokens(cViewGrid *menu);
+    void SetTokens(skindesignerapi::cViewGrid *menu);
     eRecMenuState ProcessKey(eKeys Key);
 };
 
@@ -343,7 +343,7 @@ public:
                                 eRecMenuState action = rmsNotConsumed,
                                 bool isSearchTimer = false);
     virtual ~cRecMenuItemSelectDirectory(void) {};
-    void SetTokens(cViewGrid *menu);
+    void SetTokens(skindesignerapi::cViewGrid *menu);
     eRecMenuState ProcessKey(eKeys Key);
 };
 
@@ -359,7 +359,7 @@ public:
                                     time_t conflictStop,
                                     time_t overlapStart,
                                     time_t overlapStop);
-    void SetTokens(cViewGrid *menu);
+    void SetTokens(skindesignerapi::cViewGrid *menu);
     virtual ~cRecMenuItemTimerConflictHeader(void);
 };
 
@@ -387,7 +387,7 @@ public:
                       time_t overlapStop,
                       bool active);
     virtual ~cRecMenuItemTimer(void);
-    void SetTokens(cViewGrid *menu);
+    void SetTokens(skindesignerapi::cViewGrid *menu);
     eRecMenuState ProcessKey(eKeys Key);
 };
 
@@ -403,7 +403,7 @@ public:
                       eRecMenuState action2, 
                       bool active);
     virtual ~cRecMenuItemEvent(void);
-    void SetTokens(cViewGrid *menu);
+    void SetTokens(skindesignerapi::cViewGrid *menu);
     eRecMenuState ProcessKey(eKeys Key);
     const cEvent *GetEvent(void) { return event; };
 };
@@ -415,7 +415,7 @@ private:
 public:
     cRecMenuItemRecording(cRecording *recording, bool active);
     virtual ~cRecMenuItemRecording(void) {};
-    void SetTokens(cViewGrid *menu);
+    void SetTokens(skindesignerapi::cViewGrid *menu);
 };
 
 // --- cRecMenuItemSearchTimer  -------------------------------------------------------
@@ -434,7 +434,7 @@ public:
                             bool active);
     virtual ~cRecMenuItemSearchTimer(void);
     cTVGuideSearchTimer GetTimer(void) { return timer; };
-    void SetTokens(cViewGrid *menu);
+    void SetTokens(skindesignerapi::cViewGrid *menu);
     eRecMenuState ProcessKey(eKeys Key);
 };
 
@@ -446,7 +446,7 @@ private:
 public:
     cRecMenuItemTimelineHeader(time_t day);
     virtual ~cRecMenuItemTimelineHeader(void);
-    void SetTokens(cViewGrid *menu);
+    void SetTokens(skindesignerapi::cViewGrid *menu);
     void SetDay(time_t day) { this->day = day; };
     void SetCurrentTimer(cTimer *timer) { this->timer = timer; };
     void UnsetCurrentTimer(void) { timer = NULL; };
@@ -461,7 +461,7 @@ private:
 public:
     cRecMenuItemTimelineTimer(cTimer *timer, time_t start, time_t stop, bool active);
     virtual ~cRecMenuItemTimelineTimer(void);
-    void SetTokens(cViewGrid *menu);
+    void SetTokens(skindesignerapi::cViewGrid *menu);
     cTimer *GetTimer(void);
     eRecMenuState ProcessKey(eKeys Key);
 };
@@ -476,7 +476,7 @@ public:
                          eRecMenuState action1,
                          bool active);
     virtual ~cRecMenuItemFavorite(void) {};
-    void SetTokens(cViewGrid *menu);
+    void SetTokens(skindesignerapi::cViewGrid *menu);
     cTVGuideSearchTimer GetFavorite(void) { return favorite; };
     eRecMenuState ProcessKey(eKeys Key);
 };
@@ -488,7 +488,7 @@ private:
 public:
     cRecMenuItemFavoriteStatic(string text, eRecMenuState action, bool active);
     virtual ~cRecMenuItemFavoriteStatic(void) {};
-    void SetTokens(cViewGrid *menu);
+    void SetTokens(skindesignerapi::cViewGrid *menu);
     eRecMenuState ProcessKey(eKeys Key);
 };
 

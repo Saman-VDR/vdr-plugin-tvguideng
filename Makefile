@@ -47,15 +47,14 @@ SOFILE = libvdr-$(PLUGIN).so
 
 ### Includes and Defines (add further entries here):
 
-INCLUDES +=
+INCLUDES += $(shell pkg-config --cflags libskindesignerapi)
+LIBS += $(shell pkg-config --libs libskindesignerapi)
 
 DEFINES += -DPLUGIN_NAME_I18N='"$(PLUGIN)"'
 
 ### The object files (add further files here):
 
 OBJS = $(PLUGIN).o \
-       libskindesigner/skindesignerosdbase.o \
-       libskindesigner/osdelements.o \
        helpers.o \
        config.o \
        setup.o \
@@ -126,7 +125,7 @@ install-i18n: $(I18Nmsgs)
 ### Targets:
 
 $(SOFILE): $(OBJS)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -shared $(OBJS) -o $@
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -shared $(OBJS) $(LIBS) -o $@
 
 install-lib: $(SOFILE)
 	install -D $^ $(DESTDIR)$(LIBDIR)/$^.$(APIVERSION)

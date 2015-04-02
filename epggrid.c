@@ -3,7 +3,7 @@
 #include "helpers.h"
 #include "services/scraper2vdr.h"
 
-cEpgGrid::cEpgGrid(cOsdView *rootView, cTimeManager *timeManager) {
+cEpgGrid::cEpgGrid(skindesignerapi::cOsdView *rootView, cTimeManager *timeManager) {
     lastSecond = -1;
     channelGroupLast = -1;
     active = NULL;
@@ -24,12 +24,12 @@ cEpgGrid::cEpgGrid(cOsdView *rootView, cTimeManager *timeManager) {
     channelsGrid = rootView->GetViewGrid(config.displayMode == eHorizontal ? vgChannelsHor : vgChannelsVer);
     epgGrid = rootView->GetViewGrid(config.displayMode == eHorizontal ? vgSchedulesHor : vgSchedulesVer);
 
-    cViewElement *timelineDate = rootView->GetViewElement(config.displayMode == eHorizontal ? verDateTimelineHor : verDateTimelineVer);
-    cViewElement *timeIndicator = rootView->GetViewElement(config.displayMode == eHorizontal ? verTimeIndicatorHor : verTimeIndicatorVer);
-    cViewGrid *timelineGrid = rootView->GetViewGrid(config.displayMode == eHorizontal ? vgTimelineHor : vgTimelineVer);
+    skindesignerapi::cViewElement *timelineDate = rootView->GetViewElement(config.displayMode == eHorizontal ? verDateTimelineHor : verDateTimelineVer);
+    skindesignerapi::cViewElement *timeIndicator = rootView->GetViewElement(config.displayMode == eHorizontal ? verTimeIndicatorHor : verTimeIndicatorVer);
+    skindesignerapi::cViewGrid *timelineGrid = rootView->GetViewGrid(config.displayMode == eHorizontal ? vgTimelineHor : vgTimelineVer);
     timeline = new cTimeline(timelineGrid, timelineDate, timeIndicator, timeManager);
 
-    cViewGrid *channelgroupsGrid = rootView->GetViewGrid(config.displayMode == eHorizontal ? vgChannelGroupsHor : vgChannelGroupsVer);
+    skindesignerapi::cViewGrid *channelgroupsGrid = rootView->GetViewGrid(config.displayMode == eHorizontal ? vgChannelGroupsHor : vgChannelGroupsVer);
     channelGroups = new cChannelgroups(channelgroupsGrid);
     channelGroups->Init();    
 }
@@ -681,7 +681,7 @@ bool cEpgGrid::DrawTime(void) {
 }
 
 cChannelJump *cEpgGrid::GetChannelJumper(void) {
-    cViewElement *channelJump = rootView->GetViewElement(verChannelJump);
+    skindesignerapi::cViewElement *channelJump = rootView->GetViewElement(verChannelJump);
     int lastValidChannel = GetLastValidChannel();
     return new cChannelJump(channelJump, lastValidChannel);
 }

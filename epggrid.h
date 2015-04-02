@@ -6,7 +6,7 @@
 #include "timeline.h"
 #include "channelgroups.h"
 #include "channeljump.h"
-#include "libskindesigner/osdelements.h"
+#include <libskindesignerapi/skindesignerosdbase.h>
 
 class cEpgGrid {
 private:
@@ -14,14 +14,14 @@ private:
     int channelsPerPage;
     int channelGroupLast;
     long oldActiveGridId;
-    cOsdView *rootView;
+    skindesignerapi::cOsdView *rootView;
     cTimeManager *timeManager;
-    cViewElement *back;
-    cViewElement *header;
-    cViewElement *watch;
-    cViewElement *footer;
-    cViewGrid *channelsGrid;
-    cViewGrid *epgGrid;
+    skindesignerapi::cViewElement *back;
+    skindesignerapi::cViewElement *header;
+    skindesignerapi::cViewElement *watch;
+    skindesignerapi::cViewElement *footer;
+    skindesignerapi::cViewGrid *channelsGrid;
+    skindesignerapi::cViewGrid *epgGrid;
     cTimeline *timeline;
     cChannelgroups *channelGroups;
     cList<cChannelEpg> channels;
@@ -34,7 +34,7 @@ private:
     const cChannel *SeekChannelBack(int num);
     void ClearOutdatedChannelHeaders(void);
 public:
-    cEpgGrid(cOsdView *rootView, cTimeManager *timeManager);
+    cEpgGrid(skindesignerapi::cOsdView *rootView, cTimeManager *timeManager);
     virtual ~cEpgGrid(void);
     void Deactivate(bool hide) { lastSecond = -1; rootView->Deactivate(hide); };
     void Activate(void) { DrawTime(); rootView->Activate(); };

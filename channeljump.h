@@ -1,20 +1,20 @@
 #ifndef __TVGUIDE_CHANNELJUMP_H
 #define __TVGUIDE_CHANNELJUMP_H
 
-#include "libskindesigner/osdelements.h"
+#include <libskindesignerapi/skindesignerosdbase.h>
 
 // --- cChannelJump  -------------------------------------------------------------
 
 class cChannelJump {
 private:
-    cViewElement *channelJump;
+    skindesignerapi::cViewElement *channelJump;
     int channel;
     int maxChannels;
     int startTime;
     int timeout;
     cString BuildChannelString(void);
 public:
-    cChannelJump(cViewElement *channelJump, int lastValidChannel);
+    cChannelJump(skindesignerapi::cViewElement *channelJump, int lastValidChannel);
     virtual ~cChannelJump(void);
     void Set(int key);
     bool TimeOut(void);

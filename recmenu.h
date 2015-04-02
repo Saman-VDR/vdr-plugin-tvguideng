@@ -2,7 +2,7 @@
 #define __TVGUIDE_RECMENU_H
 
 #include <list>
-#include "libskindesigner/osdelements.h"
+#include <libskindesignerapi/skindesignerosdbase.h>
 #include "recmenuitem.h"
 
 // --- cRecMenu  -------------------------------------------------------------
@@ -13,10 +13,10 @@ private:
     int menuWidth;
     int menuHeight;
     int maxMenuHeight;
-    cOsdView *osdView;
-    cViewElement *back;
-    cViewElement *scrollBar;
-    cViewGrid *recMenuGrid;
+    skindesignerapi::cOsdView *osdView;
+    skindesignerapi::cViewElement *back;
+    skindesignerapi::cViewElement *scrollBar;
+    skindesignerapi::cViewGrid *recMenuGrid;
     cList<cRecMenuItem> menuItems;
     cRecMenuItem *start;
     cRecMenuItem *stop;
@@ -49,7 +49,7 @@ protected:
 public:
     cRecMenu(void);
     virtual ~cRecMenu(void);
-    void Init(cOsdView *osdView);
+    void Init(skindesignerapi::cOsdView *osdView);
     void DrawBackground(void);
     void Draw(void);
     void Hide(void) { hidden = true; osdView->Deactivate(true); };
