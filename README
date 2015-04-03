@@ -17,7 +17,8 @@ Requirements
 
 - Clone Git Repository: git clone git://projects.vdr-developer.org/vdr-plugin-tvguideng.git
 - VDR version >= 2.0.0
-- Skindesigner Plugin Version >= 0.3.0
+- libSkindesignerAPI (see skindesigner README for installation procedure)
+- Skindesigner Plugin Version >= 0.4.0
    
    IMPORTANT: this Plugin will NOT WORK WITHOUT installed skindesigner Plugin. The
    used Skindesigner Skin has to provide Templates for TVGuideNG, otherwise the Plugin
