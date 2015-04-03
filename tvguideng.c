@@ -64,6 +64,7 @@ bool cPluginTvguideng::Initialize(void) {
 bool cPluginTvguideng::Start(void) {
     skindesignerapi::cPluginStructure plugStruct;
     plugStruct.name = "tvguideng";
+    plugStruct.libskindesignerAPIVersion = LIBSKINDESIGNERAPIVERSION;
     plugStruct.SetView(viRootView, "root.xml");
     plugStruct.SetViewElement(viRootView, verBackgroundHor, "background_hor");
     plugStruct.SetViewElement(viRootView, verBackgroundVer, "background_ver");

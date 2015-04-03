@@ -47,10 +47,11 @@ SOFILE = libvdr-$(PLUGIN).so
 
 ### Includes and Defines (add further entries here):
 
+DEFINES += -DPLUGIN_NAME_I18N='"$(PLUGIN)"'
+
 INCLUDES += $(shell pkg-config --cflags libskindesignerapi)
 LIBS += $(shell pkg-config --libs libskindesignerapi)
-
-DEFINES += -DPLUGIN_NAME_I18N='"$(PLUGIN)"'
+DEFINES += -DLIBSKINDESIGNERAPIVERSION='"$(shell pkg-config --modversion libskindesignerapi)"'
 
 ### The object files (add further files here):
 
