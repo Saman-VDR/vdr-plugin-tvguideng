@@ -27,7 +27,8 @@ private:
     bool scrolling;
     bool SeekForward(bool page);
     bool SeekBack(bool page);
-    void AdjustActive(bool down);
+    void SetFirst(void);
+    void SetLast(void);
     void DrawScrollbar(void);
     void DrawHeader(void);
     void DrawFooter(void);
@@ -42,8 +43,9 @@ protected:
     bool ScrollDown(bool retry);
     bool PageUp(void);
     bool PageDown(void);
-    void ClearMenuItems(void);
+    void ClearMenuItems(bool deleteItems);
     void InitMenuItems(void);
+    void InitMenuItemsLast(void);
     int GetWidth(void) { return menuWidth; };
     int GetHeight(void);
 public:

@@ -97,13 +97,15 @@ eRecMenuState cRecMenu::ProcessKey(eKeys Key) {
     } else if (state == rmsNotConsumed) {
         switch (Key & ~k_Repeat) {
             case kUp:
-                if (ScrollUp(false))
-                    Draw();
+                if (!ScrollUp(false))
+                    SetLast();
+                Draw();
                 state = rmsConsumed;
                 break;
             case kDown:
-                if (ScrollDown(false))
-                    Draw();
+                if (!ScrollDown(false))
+                    SetFirst();
+                Draw();
                 state = rmsConsumed;
                 break;
             case kLeft:
@@ -207,9 +209,9 @@ bool cRecMenu::ScrollDown(bool retry) {
     } else {
         SeekForward(false);
         if (!retry)
-            ScrollDown(true);
+            return ScrollDown(true);
     }
-    if (footer) {
+    if (footer && active != footer) {
         recMenuGrid->SetCurrent(active->Id(), false);
         active->SetInactive();
         active = footer;
@@ -253,13 +255,25 @@ bool cRecMenu::PageDown(void) {
     return scrolled;
 }
 
-void cRecMenu::ClearMenuItems(void) {
-    menuItems.Clear();
+void cRecMenu::ClearMenuItems(bool deleteItems) {
+    if (deleteItems) {
+        menuItems.Clear();
+        active = NULL;
+    } else {
+        for (cRecMenuItem *current = menuItems.First(); current; current = menuItems.Next(current)) {
+            current->SetNew();
+        }
+    }
+    itemCount = 0;
     back->Clear();
     scrollBar->Clear();
     recMenuGrid->Clear();
+    if (header)
+        header->SetNew();
     if (footer)
         footer->SetNew();
+    if (active)
+        active->SetInactive();
     active = NULL;
 }
 
@@ -282,6 +296,34 @@ void cRecMenu::InitMenuItems(void) {
         stop = current;
         menuHeight += itemHeight;
         current = menuItems.Next(current);
+    }
+    DrawBackground();
+    Flush();
+    if (scrolling) {
+        DrawScrollbar();
+        Flush();
+    }
+}
+
+void cRecMenu::InitMenuItemsLast(void) {
+    if (menuItems.Count() == 0)
+        return;
+    scrolling = false;
+    menuHeight = 0;
+    stop = menuItems.Last();
+    active = stop;
+    active->SetActive();
+    cRecMenuItem *current = stop; 
+    while (current) {
+        int itemHeight = current->GetHeight();
+        if (menuHeight + itemHeight > maxMenuHeight) {
+            scrolling = true;
+            break;
+        }
+        itemCount++;
+        start = current;
+        menuHeight += itemHeight;
+        current = menuItems.Prev(current);
     }
     DrawBackground();
     Flush();
@@ -360,6 +402,35 @@ bool cRecMenu::SeekBack(bool page) {
     if (jump > 0)
         return true;
     return false;
+}
+
+void cRecMenu::SetFirst(void) {
+    if (!scrolling) {
+        recMenuGrid->SetCurrent(active->Id(), false);
+        active->SetInactive();
+        active = start;
+        active->SetActive();
+        return;
+    }
+    ClearMenuItems(false);
+    menuItems.First()->SetActive();
+    InitMenuItems();
+}
+
+void cRecMenu::SetLast(void) {
+    if (!scrolling) {
+        recMenuGrid->SetCurrent(active->Id(), false);
+        active->SetInactive();
+        if (footer) {
+            active = footer;
+        } else {
+            active = stop;
+        }
+        active->SetActive();
+        return;
+    }
+    ClearMenuItems(false);
+    InitMenuItemsLast();
 }
 
 void cRecMenu::DrawBackground(void) {

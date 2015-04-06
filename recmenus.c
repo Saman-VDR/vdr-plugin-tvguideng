@@ -953,7 +953,7 @@ void cRecMenuTimeline::PrevDay(void) {
         return;
     timeStart -= 3600*24;
     timeStop -= 3600*24;
-    ClearMenuItems();
+    ClearMenuItems(true);
     GetTimersForDay();
     SetTimers();
     InitMenuItems();
@@ -965,7 +965,7 @@ void cRecMenuTimeline::PrevDay(void) {
 void cRecMenuTimeline::NextDay(void) {
     timeStart += 3600*24;
     timeStop += 3600*24;
-    ClearMenuItems();
+    ClearMenuItems(true);
     GetTimersForDay();
     SetTimers();
     InitMenuItems();
