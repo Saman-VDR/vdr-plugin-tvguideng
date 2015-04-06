@@ -24,4 +24,4 @@ Version 0.0.3
 Version 0.1.0
 
 - added wraparound scrolling in recording menus
-
+- fixed bug that red button also works in detailed view

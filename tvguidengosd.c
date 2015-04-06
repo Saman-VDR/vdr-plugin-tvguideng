@@ -115,7 +115,12 @@ eOSState cTVGuideOSD::ProcessKey(eKeys Key) {
             case kBlue:
                 state = ChannelSwitch();
                 break;
-            default:        
+            case kRed:
+                CloseDetailedView();
+                state = osContinue; 
+                KeyRed();
+                break;
+            default:
                 break;
         }
         if (detailView && state != osEnd && detailView->DrawTime()) {
