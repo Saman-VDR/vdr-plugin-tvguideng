@@ -29,4 +29,7 @@ Version 0.1.0
 Version 0.1.1
 
 - fixed missing delete of channel group grid
+- adapted makefile for LCLBLD
+
+Version 0.1.2
 
