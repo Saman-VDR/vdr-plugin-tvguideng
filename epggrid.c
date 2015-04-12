@@ -40,6 +40,7 @@ cEpgGrid::~cEpgGrid(void) {
     delete footer;
     channels.Clear();
     delete channelsGrid;
+    delete channelGroups;
     delete epgGrid;
     delete timeline;
     delete watch;

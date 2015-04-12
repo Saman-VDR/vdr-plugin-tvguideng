@@ -27,3 +27,6 @@ Version 0.1.0
 - fixed bug that red button also works in detailed view
 
 Version 0.1.1
+
+- fixed missing delete of channel group grid
+
