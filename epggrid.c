@@ -38,6 +38,9 @@ cEpgGrid::~cEpgGrid(void) {
     delete back;
     delete header;
     delete footer;
+    for (cChannelEpg *channelEpg = channels.First(); channelEpg; channelEpg = channels.Next(channelEpg)) {
+        channelEpg->DeleteGridViews(epgGrid);
+    }
     channels.Clear();
     delete channelsGrid;
     delete channelGroups;
