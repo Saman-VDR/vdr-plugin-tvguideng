@@ -272,6 +272,8 @@ bool cDetailView::DrawTime(void) {
     watch->AddIntToken("min", min);
     watch->AddIntToken("hour", hour);
     watch->AddIntToken("hmins", hourMinutes);
+    watch->AddIntToken("year", now->tm_year + 1900);
+    watch->AddIntToken("day", now->tm_mday);
     watch->AddStringToken("time", *TimeString(t));
     watch->AddStringToken("monthname", monthname);
     watch->AddStringToken("monthnameshort", monthshort);
