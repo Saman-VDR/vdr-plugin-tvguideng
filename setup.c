@@ -47,6 +47,7 @@ void cTvGuideSetup::Setup(void) {
     Add(new cMenuEditBoolItem(tr("Close TVGuide after channel switch"), &tmpConfig.closeOnSwitch));
     Add(new cMenuEditStraItem(tr("Functionality of numeric Keys"), &tmpConfig.numKeyMode, 2,  numMode));
     Add(new cMenuEditStraItem(tr("Keys Blue and OK"), &tmpConfig.blueKeyMode, 3,  blueMode));
+    Add(new cMenuEditBoolItem(tr("\"Intelligent\" channel switch mode"), &tmpConfig.intelligentSwitch));
     Add(new cMenuEditIntItem(tr("Maximum number of reruns to display"), &tmpConfig.rerunAmount, 1, 100));
     Add(new cMenuEditIntItem(tr("Minimum timely distance of rerun (in hours)"), &tmpConfig.rerunDistance, 0, 1000));
     Add(new cMenuEditIntItem(tr("Limit Channel Numbers for reruns"), &tmpConfig.rerunMaxChannel, 0, 1000, tr("no limit")));

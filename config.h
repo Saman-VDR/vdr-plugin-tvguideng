@@ -52,6 +52,7 @@ public:
     int closeOnSwitch;
     int numKeyMode;
     int blueKeyMode;
+    int intelligentSwitch;
     int rerunAmount;
     int rerunDistance;
     int rerunMaxChannel;

@@ -154,6 +154,10 @@ Setup Options
   Blue: Channel Switch, Ok: Detailed EPG 
   or
   Blue: Detailed EPG, Ok: Channel Switch
+- "Intelligent" channel switch mode: if set to "no", always a channel switch is
+  done. If set to "yes", a channel switch is only done for currently running 
+  events (or for events that start in up to five minutes). For future events 
+  a switch timer is created.  
 - Close TVGuide after channel switch: If set to "no", tvguide will not be closed
   after a channel switch.
 - Functionality of numeric Keys: see chapter Usage / Remote Control Keys

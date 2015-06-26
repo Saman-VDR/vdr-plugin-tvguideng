@@ -113,7 +113,7 @@ eOSState cTVGuideOSD::ProcessKey(eKeys Key) {
                 CloseDetailedView();
                 break;
             case kBlue:
-                state = ChannelSwitch();
+                state = ChannelSwitch(detailView->GetEvent());
                 break;
             case kRed:
                 CloseDetailedView();
@@ -399,7 +399,7 @@ void cTVGuideOSD::KeyYellow(void) {
 
 eOSState cTVGuideOSD::KeyBlue(const cEvent *e) {
     if (config.blueKeyMode == eBlueKeySwitch) {
-        return ChannelSwitch();
+        return ChannelSwitch(e);
     } else if (config.blueKeyMode == eBlueKeyEPG) {
         DetailView(e);
     } else if (config.blueKeyMode == eBlueKeyFavorites) {
@@ -412,23 +412,47 @@ eOSState cTVGuideOSD::KeyOk(const cEvent *e) {
     if (config.blueKeyMode == eBlueKeySwitch) {
         DetailView(e);
     } else if (config.blueKeyMode == eBlueKeyEPG) {
-        return ChannelSwitch();
+        return ChannelSwitch(e);
     } else if (config.blueKeyMode == eBlueKeyFavorites) {
         DetailView(e);
     }
     return osContinue;
 }
 
-eOSState cTVGuideOSD::ChannelSwitch(void) {
-    const cChannel *currentChannel = epgGrid->GetCurrentChannel();
-    if (!currentChannel) {
-        return osContinue;
+eOSState cTVGuideOSD::ChannelSwitch(const cEvent *e) {
+    bool running = false;
+    if (e) {
+        time_t now = time(0);
+        if (((e->StartTime() - 5*60) <= now) && (e->EndTime() >= now))
+            running = true;
     }
-    cDevice::PrimaryDevice()->SwitchChannel(currentChannel, true);
-    if (config.closeOnSwitch) {
-        return osEnd;
+    if (running || !config.intelligentSwitch) {
+        const cChannel *currentChannel = epgGrid->GetCurrentChannel();
+        if (!currentChannel) {
+            return osContinue;
+        }
+        cDevice::PrimaryDevice()->SwitchChannel(currentChannel, true);
+        if (config.closeOnSwitch) {
+            return osEnd;
+        }
+    } else {
+        CreateSwitchTimer(e);
+        epgGrid->SetTimers();
+        epgGrid->DrawGrid();
+        epgGrid->Flush();
     }
     return osContinue;    
+}
+
+void cTVGuideOSD::CreateSwitchTimer(const cEvent *e) {
+    if (!e)
+        return;
+    cSwitchTimer st;
+    st.switchMinsBefore = 2;
+    st.announceOnly = 0;
+    cRecManager recManager;
+    recManager.SetEPGSearchPlugin();
+    recManager.CreateSwitchTimer(e, st);
 }
 
 void cTVGuideOSD::DetailView(const cEvent *e) {

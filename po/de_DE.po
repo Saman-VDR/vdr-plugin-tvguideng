@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vdr-tvguideng 0.0.1\n"
 "Report-Msgid-Bugs-To: <see README>\n"
-"POT-Creation-Date: 2015-03-08 17:24+0200\n"
+"POT-Creation-Date: 2015-06-26 13:48+0200\n"
 "PO-Revision-Date: 2015-03-08 17:49+0200\n"
 "Last-Translator: Louis\n"
 "Language-Team: \n"
@@ -557,6 +557,9 @@ msgstr "Funktion der Nummerntasten"
 
 msgid "Keys Blue and OK"
 msgstr "Tasten Blau und OK"
+
+msgid "\"Intelligent\" channel switch mode"
+msgstr "\"Intelligenter\" Kanalumschalt Modus"
 
 msgid "Maximum number of reruns to display"
 msgstr "Maximale Anzahl dargestellter Wiederholungen"

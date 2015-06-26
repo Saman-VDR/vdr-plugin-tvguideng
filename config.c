@@ -16,6 +16,7 @@ cTVGuideConfig::cTVGuideConfig(void) {
     closeOnSwitch = 0;
     numKeyMode = eChannelJump;
     blueKeyMode = eBlueKeyFavorites;
+    intelligentSwitch = 0;
     //settings for rerun display
     rerunAmount = 10;
     rerunDistance = 2;

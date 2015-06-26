@@ -32,6 +32,7 @@ public:
     void Down(void);
     bool DrawTime(void);
     void Flush(void) { detailView->Display(); };
+    const cEvent *GetEvent(void) { return event; };
 };
 
 #endif //__TVGUIDE_DETAILVIEW_H

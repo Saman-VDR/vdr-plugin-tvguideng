@@ -11,6 +11,7 @@
 #include "channeljump.h"
 #include "detailview.h"
 #include "recmenuview.h"
+#include "recmanager.h"
 
 enum eViews {
     viRootView,
@@ -84,7 +85,8 @@ private:
     void KeyRed(void);
     void DetailView(const cEvent *e);
     void CloseDetailedView(void);
-    eOSState ChannelSwitch(void);
+    eOSState ChannelSwitch(const cEvent *e);
+    void CreateSwitchTimer(const cEvent *e);
     void Favorites(void);
 public:
     cTVGuideOSD(void);
