@@ -13,7 +13,7 @@
 #include "setup.h"
 #include "tvguidengosd.h"
 
-static const char *VERSION        = "0.1.3";
+static const char *VERSION        = "0.1.4";
 static const char *DESCRIPTION    = "TV Guide for Skindesigner Skins";
 static const char *MAINMENUENTRY  = "TV Guide NG";
 
