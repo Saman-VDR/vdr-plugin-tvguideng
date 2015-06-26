@@ -54,6 +54,16 @@ void cRecMenuView::DisplayFavorites(void) {
     DisplayMenu();
 }
 
+void cRecMenuView::DisplayRecSearch(const cEvent *e) {
+    activeMenu = new cRecMenuRecordingSearch(e->Title() ? e->Title() : "");
+    DisplayMenu();
+}
+
+void cRecMenuView::DisplaySearchEPG(const cEvent *e) {
+    activeMenu = new cRecMenuSearch(e->Title() ? e->Title() : "", false);
+    DisplayMenu();
+}
+
 void cRecMenuView::Close(void) {
     if (activeMenu) {
         delete activeMenu;

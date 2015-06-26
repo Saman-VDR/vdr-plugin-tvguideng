@@ -260,7 +260,15 @@ void cTVGuideOSD::ChannelsBack(void) {
 
 void cTVGuideOSD::NumericKey(int key) {
     if (config.numKeyMode == eTimeJump) {
-        NumericKeyTimeJump(key);
+        if (key == 2) {
+            CreateInstantTimer();
+        } else if (key == 5) {
+            DisplaySearchRecordings();
+        } else if (key == 8) {
+            DisplaySearchEPG();
+        } else {
+            NumericKeyTimeJump(key);
+        }
     } else if (config.numKeyMode == eChannelJump) {
         NumericKeyChannelJump(key);
     }
@@ -447,6 +455,8 @@ eOSState cTVGuideOSD::ChannelSwitch(const cEvent *e) {
 void cTVGuideOSD::CreateSwitchTimer(const cEvent *e) {
     if (!e)
         return;
+    if (SwitchTimers.EventInSwitchList(e))
+        return;
     cSwitchTimer st;
     st.switchMinsBefore = 2;
     st.announceOnly = 0;
@@ -499,5 +509,46 @@ void cTVGuideOSD::Favorites(void) {
     skindesignerapi::cOsdView *recViewBuffer2 = GetOsdView(viRootView, viRecMenu);
     recMenuView->Init(recView, recViewBuffer, recViewBuffer2);
     recMenuView->DisplayFavorites();
+    recMenuView->Flush();
+}
+
+void cTVGuideOSD::CreateInstantTimer(void) {
+    const cEvent *e = epgGrid->GetCurrentEvent();
+    if (!e)
+        return;
+    cRecManager recManager;
+    recManager.SetEPGSearchPlugin();
+    if (!e->HasTimer())
+        recManager.createTimer(e, "");
+    else
+        recManager.DeleteTimer(e);
+    epgGrid->SetTimers();
+    epgGrid->DrawGrid();
+    epgGrid->Flush();
+}
+
+void cTVGuideOSD::DisplaySearchRecordings(void) {
+    const cEvent *e = epgGrid->GetCurrentEvent();
+    if (!e)
+        return;
+    epgGrid->Deactivate(false);
+    skindesignerapi::cOsdView *recView = GetOsdView(viRootView, viRecMenu);
+    skindesignerapi::cOsdView *recViewBuffer = GetOsdView(viRootView, viRecMenu);
+    skindesignerapi::cOsdView *recViewBuffer2 = GetOsdView(viRootView, viRecMenu);
+    recMenuView->Init(recView, recViewBuffer, recViewBuffer2);
+    recMenuView->DisplayRecSearch(e);
+    recMenuView->Flush();
+}
+
+void cTVGuideOSD::DisplaySearchEPG(void) {
+    const cEvent *e = epgGrid->GetCurrentEvent();
+    if (!e)
+        return;
+    epgGrid->Deactivate(false);
+    skindesignerapi::cOsdView *recView = GetOsdView(viRootView, viRecMenu);
+    skindesignerapi::cOsdView *recViewBuffer = GetOsdView(viRootView, viRecMenu);
+    skindesignerapi::cOsdView *recViewBuffer2 = GetOsdView(viRootView, viRecMenu);
+    recMenuView->Init(recView, recViewBuffer, recViewBuffer2);
+    recMenuView->DisplaySearchEPG(e);
     recMenuView->Flush();
 }

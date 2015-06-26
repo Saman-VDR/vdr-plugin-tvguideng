@@ -88,6 +88,9 @@ private:
     eOSState ChannelSwitch(const cEvent *e);
     void CreateSwitchTimer(const cEvent *e);
     void Favorites(void);
+    void CreateInstantTimer(void);
+    void DisplaySearchRecordings(void);
+    void DisplaySearchEPG(void);
 public:
     cTVGuideOSD(void);
     virtual ~cTVGuideOSD(void);

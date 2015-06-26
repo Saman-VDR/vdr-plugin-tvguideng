@@ -32,6 +32,8 @@ public:
     void Init(skindesignerapi::cOsdView *recMenuView, skindesignerapi::cOsdView *recMenuViewBuffer, skindesignerapi::cOsdView *recMenuViewBuffer2);
     void DisplayRecMenu(const cEvent *event);
     void DisplayFavorites(void);
+    void DisplayRecSearch(const cEvent *e);
+    void DisplaySearchEPG(const cEvent *e);
     void Close(void);
     void Hide(bool full = false);
     void Activate(bool full = false);
