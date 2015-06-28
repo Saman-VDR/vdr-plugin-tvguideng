@@ -106,6 +106,7 @@ void cTvGuideSetup::Store(void) {
     SetupStore("closeOnSwitch", config.closeOnSwitch);
     SetupStore("numKeyMode", config.numKeyMode);
     SetupStore("blueKeyMode", config.blueKeyMode);
+    SetupStore("intelligentSwitch", config.intelligentSwitch);
     SetupStore("rerunAmount", config.rerunAmount);
     SetupStore("rerunDistance", config.rerunDistance);
     SetupStore("rerunMaxChannel", config.rerunMaxChannel);

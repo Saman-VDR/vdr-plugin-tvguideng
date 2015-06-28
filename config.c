@@ -59,6 +59,7 @@ bool cTVGuideConfig::SetupParse(const char *Name, const char *Value) {
     else if (!strcasecmp(Name, "closeOnSwitch"))             closeOnSwitch = atoi(Value);
     else if (!strcasecmp(Name, "numKeyMode"))                numKeyMode = atoi(Value);
     else if (!strcasecmp(Name, "blueKeyMode"))               blueKeyMode = atoi(Value);
+    else if (!strcasecmp(Name, "intelligentSwitch"))         intelligentSwitch = atoi(Value);
     else if (!strcasecmp(Name, "rerunAmount"))               rerunAmount = atoi(Value);
     else if (!strcasecmp(Name, "rerunDistance"))             rerunDistance = atoi(Value);
     else if (!strcasecmp(Name, "rerunMaxChannel"))           rerunMaxChannel = atoi(Value);
