@@ -86,6 +86,7 @@ void cTvGuideSetup::Setup(void) {
         Add(new cMenuEditChanItem(tr("Start Channel"), &tmpConfig.favStartChannel));
         Add(new cMenuEditChanItem(tr("Stop Channel"), &tmpConfig.favStopChannel));
     }
+    Add(new cMenuEditIntItem(tr("Minutes a switchtimer switches before start of a show"), &tmpConfig.switchMinsBefore, 0, 10));
 
     SetCurrent(Get(current));
     Display();
@@ -130,6 +131,7 @@ void cTvGuideSetup::Store(void) {
     SetupStore("favLimitChannels", config.favLimitChannels);
     SetupStore("favStartChannel", config.favStartChannel);
     SetupStore("favStopChannel", config.favStopChannel);
+    SetupStore("switchMinsBefore", config.switchMinsBefore);
 }
 
 eOSState cTvGuideSetup::ProcessKey(eKeys Key) {

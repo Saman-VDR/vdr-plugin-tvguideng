@@ -2,6 +2,7 @@
 #define __TVGUIDE_SWITCHTIMER_H
 
 #include <vdr/plugin.h>
+#include "config.h"
 
 class cSwitchTimer : public cListObject {
 public:

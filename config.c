@@ -42,6 +42,7 @@ cTVGuideConfig::cTVGuideConfig(void) {
     favStartChannel = 0;
     favStopChannel = 0;
     useSubtitleRerun = 1;
+    switchMinsBefore = 2;
 }
 
 bool cTVGuideConfig::SetupParse(const char *Name, const char *Value) {
@@ -83,6 +84,7 @@ bool cTVGuideConfig::SetupParse(const char *Name, const char *Value) {
     else if (!strcasecmp(Name, "favLimitChannels"))          favLimitChannels = atoi(Value);
     else if (!strcasecmp(Name, "favStartChannel"))           favStartChannel = atoi(Value);
     else if (!strcasecmp(Name, "favStopChannel"))            favStopChannel = atoi(Value);
+    else if (!strcasecmp(Name, "switchMinsBefore"))          switchMinsBefore = atoi(Value);
     else return false;
 
     return true;

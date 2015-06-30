@@ -738,7 +738,7 @@ cRecMenuSearchTimerNothingFound::cRecMenuSearchTimerNothingFound(string searchSt
 // --- cRecMenuSwitchTimer  ---------------------------------------------------------
 cRecMenuSwitchTimer::cRecMenuSwitchTimer(void) {
     SetMenuWidth(60);
-    switchMinsBefore = 2;
+    switchMinsBefore = config.switchMinsBefore;
     announceOnly = 0;
     
     AddHeader(new cRecMenuItemInfo(tr("Configure Options for Switchtimer")));

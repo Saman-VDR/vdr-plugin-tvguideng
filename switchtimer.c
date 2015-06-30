@@ -6,7 +6,7 @@ cSwitchTimers SwitchTimers;
 cSwitchTimer::cSwitchTimer(void) {
     eventID = 0;
     startTime = 0;
-    switchMinsBefore = 2;
+    switchMinsBefore = config.switchMinsBefore;
     announceOnly = 0;
 }
 

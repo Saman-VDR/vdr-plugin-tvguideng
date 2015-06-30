@@ -77,6 +77,7 @@ public:
     int favStartChannel;
     int favStopChannel;
     int useSubtitleRerun;
+    int switchMinsBefore;
     bool SetupParse(const char *Name, const char *Value);
 };
 

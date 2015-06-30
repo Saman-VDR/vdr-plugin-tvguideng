@@ -458,8 +458,6 @@ void cTVGuideOSD::CreateSwitchTimer(const cEvent *e) {
     if (SwitchTimers.EventInSwitchList(e))
         return;
     cSwitchTimer st;
-    st.switchMinsBefore = 2;
-    st.announceOnly = 0;
     cRecManager recManager;
     recManager.SetEPGSearchPlugin();
     recManager.CreateSwitchTimer(e, st);
