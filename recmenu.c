@@ -150,7 +150,7 @@ void cRecMenu::AddFooter(cRecMenuItem *footer) {
 
 int cRecMenu::GetNumActive(void) {
     int num = 0;
-    for (cRecMenuItem *current = start; current; current = menuItems.Next(current)) {
+    for (cRecMenuItem *current = menuItems.First(); current; current = menuItems.Next(current)) {
         if (current == active)
             return num;
         num++;
