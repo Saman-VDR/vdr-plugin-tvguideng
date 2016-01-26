@@ -10,6 +10,7 @@ using namespace std;
 #include <vdr/plugin.h>
 #include <vdr/tools.h>
 #include <libskindesignerapi/skindesignerosdbase.h>
+#include "definitions.h"
 #include "searchtimer.h"
 
 enum eRecMenuState {

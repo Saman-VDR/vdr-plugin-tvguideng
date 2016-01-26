@@ -548,6 +548,7 @@ void cRecMenuSearchTimerEdit::CreateMenuItems(void) {
     AddMenuItem(new cRecMenuItemBool(tr("Active"), timerActive, false, &timerActive, rmsSearchTimerSave));
     vector<string> searchModes;
     searchTimer.GetSearchModes(&searchModes);
+    esyslog("tvguideng: num search modes %ld", searchModes.size());
     AddMenuItem(new cRecMenuItemSelect(tr("Search Mode"), searchModes, mode, false, &mode, rmsSearchTimerSave));
     AddMenuItem(new cRecMenuItemBool(tr("Use Title"), useTitle, false, &useTitle, rmsSearchTimerSave));
     AddMenuItem(new cRecMenuItemBool(tr("Use Subtitle"), useSubtitle, false, &useSubtitle, rmsSearchTimerSave));

@@ -4,6 +4,7 @@
 #include <set>
 #include <vdr/tools.h>
 #include <libskindesignerapi/skindesignerosdbase.h>
+#include "definitions.h"
 #include "config.h"
 #include "timemanager.h"
 
@@ -11,12 +12,14 @@
 
 class cTimelineElement : public cListObject {
 private:
+    static long idCounter;
+    long id;
     bool init;
     time_t elementTime;
 public:
     cTimelineElement(time_t elementTime);
     virtual ~cTimelineElement(void);
-    long Id(void) { return elementTime; };
+    long Id(void) { return id; };
     bool IsNew(void);
     bool IsFullHour(void);
     string ToString(void) { return *TimeString(elementTime); };

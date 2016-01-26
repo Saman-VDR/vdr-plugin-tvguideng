@@ -47,9 +47,9 @@ cRecMenu::~cRecMenu(void) {
 
 void cRecMenu::Init(skindesignerapi::cOsdView *osdView) {
     this->osdView = osdView;
-    recMenuGrid = osdView->GetViewGrid(vgRecordingMenu);
-    scrollBar = osdView->GetViewElement(vemScrollbar);
-    back = osdView->GetViewElement(vemBackground);
+    recMenuGrid = osdView->GetViewGrid((int)eViewGridsRecMenu::menu);
+    scrollBar = osdView->GetViewElement((int)eViewElementsRecMenu::scrollbar);
+    back = osdView->GetViewElement((int)eViewElementsRecMenu::background);
     InitMenuItems();
 }
 
@@ -126,6 +126,121 @@ eRecMenuState cRecMenu::ProcessKey(eKeys Key) {
         }
     }
     return state;
+}
+
+void cRecMenu::DefineTokens(eViewElementsRecMenu ve, skindesignerapi::cTokenContainer *tk) {
+    switch (ve) {
+        case eViewElementsRecMenu::background:
+            tk->DefineIntToken("{menuwidth}", (int)eBackgroundRecMenuIT::menuwidth);
+            tk->DefineIntToken("{menuheight}", (int)eBackgroundRecMenuIT::menuheight);
+            tk->DefineIntToken("{hasscrollbar}", (int)eBackgroundRecMenuIT::hasscrollbar);
+            break;
+        case eViewElementsRecMenu::scrollbar:
+            tk->DefineIntToken("{menuwidth}", (int)eScrollbarRecMenuIT::menuwidth);
+            tk->DefineIntToken("{posy}", (int)eScrollbarRecMenuIT::posy);
+            tk->DefineIntToken("{totalheight}", (int)eScrollbarRecMenuIT::totalheight);
+            tk->DefineIntToken("{height}", (int)eScrollbarRecMenuIT::height);
+            tk->DefineIntToken("{offset}", (int)eScrollbarRecMenuIT::offset);
+            break;
+        default:
+            break;
+    }
+}
+
+void cRecMenu::DefineTokens(eViewGridsRecMenu vg, skindesignerapi::cTokenContainer *tk) {
+    tk->DefineIntToken("{info}", (int)eRecMenuIT::info);
+    tk->DefineIntToken("{lines}", (int)eRecMenuIT::lines);
+    tk->DefineIntToken("{button}", (int)eRecMenuIT::button);
+    tk->DefineIntToken("{buttonyesno}", (int)eRecMenuIT::buttonyesno);
+    tk->DefineIntToken("{yes}", (int)eRecMenuIT::yes);
+    tk->DefineIntToken("{intselector}", (int)eRecMenuIT::intselector);
+    tk->DefineIntToken("{intvalue}", (int)eRecMenuIT::value);
+    tk->DefineIntToken("{boolselector}", (int)eRecMenuIT::boolselector);
+    tk->DefineIntToken("{stringselector}", (int)eRecMenuIT::stringselector);
+    tk->DefineIntToken("{textinput}", (int)eRecMenuIT::textinput);
+    tk->DefineIntToken("{editmode}", (int)eRecMenuIT::editmode);
+    tk->DefineIntToken("{timeselector}", (int)eRecMenuIT::timeselector);
+    tk->DefineIntToken("{dayselector}", (int)eRecMenuIT::dayselector);
+    tk->DefineIntToken("{channelselector}", (int)eRecMenuIT::channelselector);
+    tk->DefineIntToken("{channelnumber}", (int)eRecMenuIT::channelnumber);
+    tk->DefineIntToken("{channellogoexisis}", (int)eRecMenuIT::channellogoexisis);
+    tk->DefineIntToken("{weekdayselector}", (int)eRecMenuIT::weekdayselector);
+    tk->DefineIntToken("{dayselected}", (int)eRecMenuIT::dayselected);
+    tk->DefineIntToken("{day0set}", (int)eRecMenuIT::day0set);
+    tk->DefineIntToken("{day1set}", (int)eRecMenuIT::day1set);
+    tk->DefineIntToken("{day2set}", (int)eRecMenuIT::day2set);
+    tk->DefineIntToken("{day3set}", (int)eRecMenuIT::day3set);
+    tk->DefineIntToken("{day4set}", (int)eRecMenuIT::day4set);
+    tk->DefineIntToken("{day5set}", (int)eRecMenuIT::day5set);
+    tk->DefineIntToken("{day6set}", (int)eRecMenuIT::day6set);
+    tk->DefineIntToken("{directoryselector}", (int)eRecMenuIT::directoryselector);
+    tk->DefineIntToken("{timerconflictheader}", (int)eRecMenuIT::timerconflictheader);
+    tk->DefineIntToken("{overlapstartpercent}", (int)eRecMenuIT::overlapstartpercent);
+    tk->DefineIntToken("{overlapwidthpercent}", (int)eRecMenuIT::overlapwidthpercent);
+    tk->DefineIntToken("{timerconflict}", (int)eRecMenuIT::timerconflict);
+    tk->DefineIntToken("{infoactive}", (int)eRecMenuIT::infoactive);
+    tk->DefineIntToken("{deleteactive}", (int)eRecMenuIT::deleteactive);
+    tk->DefineIntToken("{editactive}", (int)eRecMenuIT::editactive);
+    tk->DefineIntToken("{searchactive}", (int)eRecMenuIT::searchactive);
+    tk->DefineIntToken("{timerstartpercent}", (int)eRecMenuIT::timerstartpercent);
+    tk->DefineIntToken("{timerwidthpercent}", (int)eRecMenuIT::timerwidthpercent);
+    tk->DefineIntToken("{event}", (int)eRecMenuIT::event);
+    tk->DefineIntToken("{hastimer}", (int)eRecMenuIT::hastimer);
+    tk->DefineIntToken("{recording}", (int)eRecMenuIT::recording);
+    tk->DefineIntToken("{recduration}", (int)eRecMenuIT::recduration);
+    tk->DefineIntToken("{searchtimer}", (int)eRecMenuIT::searchtimer);
+    tk->DefineIntToken("{timeractive}", (int)eRecMenuIT::timeractive);
+    tk->DefineIntToken("{activetimers}", (int)eRecMenuIT::activetimers);
+    tk->DefineIntToken("{recordingsdone}", (int)eRecMenuIT::recordingsdone);
+    tk->DefineIntToken("{timelineheader}", (int)eRecMenuIT::timelineheader);
+    tk->DefineIntToken("{timerset}", (int)eRecMenuIT::timerset);
+    tk->DefineIntToken("{channeltransponder}", (int)eRecMenuIT::channeltransponder);
+    tk->DefineIntToken("{timelinetimer}", (int)eRecMenuIT::timelinetimer);
+    tk->DefineIntToken("{timerstart}", (int)eRecMenuIT::timerstart);
+    tk->DefineIntToken("{timerwidth}", (int)eRecMenuIT::timerwidth);
+    tk->DefineIntToken("{favorite}", (int)eRecMenuIT::favorite);
+    tk->DefineStringToken("{line1}", (int)eRecMenuST::line1);
+    tk->DefineStringToken("{line2}", (int)eRecMenuST::line2);
+    tk->DefineStringToken("{line3}", (int)eRecMenuST::line3);
+    tk->DefineStringToken("{line4}", (int)eRecMenuST::line4);
+    tk->DefineStringToken("{stringvalue}", (int)eRecMenuST::value);
+    tk->DefineStringToken("{buttontext}", (int)eRecMenuST::buttontext);
+    tk->DefineStringToken("{textyes}", (int)eRecMenuST::textyes);
+    tk->DefineStringToken("{textno}", (int)eRecMenuST::textno);
+    tk->DefineStringToken("{text}", (int)eRecMenuST::text);
+    tk->DefineStringToken("{channelname}", (int)eRecMenuST::channelname);
+    tk->DefineStringToken("{channelid}", (int)eRecMenuST::channelid);
+    tk->DefineStringToken("{transponder}", (int)eRecMenuST::transponder);
+    tk->DefineStringToken("{day0abbr}", (int)eRecMenuST::day0abbr);
+    tk->DefineStringToken("{day1abbr}", (int)eRecMenuST::day1abbr);
+    tk->DefineStringToken("{day2abbr}", (int)eRecMenuST::day2abbr);
+    tk->DefineStringToken("{day3abbr}", (int)eRecMenuST::day3abbr);
+    tk->DefineStringToken("{day4abbr}", (int)eRecMenuST::day4abbr);
+    tk->DefineStringToken("{day5abbr}", (int)eRecMenuST::day5abbr);
+    tk->DefineStringToken("{day6abbr}", (int)eRecMenuST::day6abbr);
+    tk->DefineStringToken("{folder}", (int)eRecMenuST::folder);
+    tk->DefineStringToken("{conflictstart}", (int)eRecMenuST::conflictstart);
+    tk->DefineStringToken("{conflictstop}", (int)eRecMenuST::conflictstop);
+    tk->DefineStringToken("{overlapstart}", (int)eRecMenuST::overlapstart);
+    tk->DefineStringToken("{overlapstop}", (int)eRecMenuST::overlapstop);
+    tk->DefineStringToken("{timertitle}", (int)eRecMenuST::timertitle);
+    tk->DefineStringToken("{starttime}", (int)eRecMenuST::starttime);
+    tk->DefineStringToken("{stoptime}", (int)eRecMenuST::stoptime);
+    tk->DefineStringToken("{date}", (int)eRecMenuST::date);
+    tk->DefineStringToken("{weekday}", (int)eRecMenuST::weekday);
+    tk->DefineStringToken("{title}", (int)eRecMenuST::title);
+    tk->DefineStringToken("{shorttext}", (int)eRecMenuST::shorttext);
+    tk->DefineStringToken("{recname}", (int)eRecMenuST::recname);
+    tk->DefineStringToken("{recstarttime}", (int)eRecMenuST::recstarttime);
+    tk->DefineStringToken("{recdate}", (int)eRecMenuST::recdate);
+    tk->DefineStringToken("{searchstring}", (int)eRecMenuST::searchstring);
+    tk->DefineStringToken("{timerstart}", (int)eRecMenuST::timerstart);
+    tk->DefineStringToken("{timerstop}", (int)eRecMenuST::timerstop);
+    tk->DefineStringToken("{eventtitle}", (int)eRecMenuST::eventtitle);
+    tk->DefineStringToken("{eventshorttext}", (int)eRecMenuST::eventshorttext);
+    tk->DefineStringToken("{eventstart}", (int)eRecMenuST::eventstart);
+    tk->DefineStringToken("{eventstop}", (int)eRecMenuST::eventstop);
+    tk->DefineStringToken("{favdesc}", (int)eRecMenuST::favdesc);
 }
 
 /********************************************************************
@@ -437,9 +552,9 @@ void cRecMenu::SetLast(void) {
 void cRecMenu::DrawBackground(void) {
     back->Clear();
     back->ClearTokens();
-    back->AddIntToken("menuwidth", menuWidth + 2);
-    back->AddIntToken("menuheight", GetHeight() + 2);
-    back->AddIntToken("hasscrollbar", scrolling);
+    back->AddIntToken((int)eBackgroundRecMenuIT::menuwidth, menuWidth + 2);
+    back->AddIntToken((int)eBackgroundRecMenuIT::menuheight, GetHeight() + 2);
+    back->AddIntToken((int)eBackgroundRecMenuIT::hasscrollbar, scrolling);
     back->Display();
 }
 
@@ -456,15 +571,15 @@ void cRecMenu::DrawScrollbar(void) {
     int offset = (double)startPos / (double)menuItems.Count() * 1000;
     scrollBar->Clear();
     scrollBar->ClearTokens();
-    scrollBar->AddIntToken("menuwidth", menuWidth + 2);
+    scrollBar->AddIntToken((int)eScrollbarRecMenuIT::menuwidth, menuWidth + 2);
     int y = (100 - GetHeight())/2;
     if (header)
         y += header->GetHeight();
 
-    scrollBar->AddIntToken("posy", y);
-    scrollBar->AddIntToken("totalheight", menuHeight);
-    scrollBar->AddIntToken("height", scrollBarHeight);
-    scrollBar->AddIntToken("offset", offset);
+    scrollBar->AddIntToken((int)eScrollbarRecMenuIT::posy, y);
+    scrollBar->AddIntToken((int)eScrollbarRecMenuIT::totalheight, menuHeight);
+    scrollBar->AddIntToken((int)eScrollbarRecMenuIT::height, scrollBarHeight);
+    scrollBar->AddIntToken((int)eScrollbarRecMenuIT::offset, offset);
     scrollBar->Display();
 }
 

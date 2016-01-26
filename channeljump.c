@@ -17,8 +17,7 @@ cChannelJump::~cChannelJump(void) {
 void cChannelJump::Draw(void) {
     channelJump->Clear();
     channelJump->ClearTokens();
-    string channelString = *BuildChannelString();
-    channelJump->AddStringToken("channel", channelString);
+    channelJump->AddStringToken((int)eChannelJumpST::channel, *BuildChannelString());
     channelJump->Display();
 }
 

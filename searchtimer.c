@@ -238,7 +238,7 @@ bool cTVGuideSearchTimer::Parse(bool readTemplate) {
                 } else if (useChannel == 1) {
                     char *channelMinbuffer = NULL;
                     char *channelMaxbuffer = NULL;
-                    int channels = sscanf(values[value].c_str(), "%a[^|]|%a[^|]", &channelMinbuffer, &channelMaxbuffer);
+                    int channels = sscanf(values[value].c_str(), "%m[^|]|%m[^|]", &channelMinbuffer, &channelMaxbuffer);
                     channelMin = Channels.GetByChannelID(tChannelID::FromString(channelMinbuffer), true, true);
                     if (!channelMin) {
                     	channelMin = channelMax = NULL;

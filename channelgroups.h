@@ -4,6 +4,7 @@
 #include <set>
 #include <vdr/tools.h>
 #include <libskindesignerapi/skindesignerosdbase.h>
+#include "definitions.h"
 #include "config.h"
 
 // --- cChannelGroup  -------------------------------------------------------------
@@ -22,7 +23,7 @@ public:
     int StartChannel(void) { return channelStart; };
     void SetChannelStop(int stop) { channelStop = stop; };
     int StopChannel(void) { return channelStop; };
-    string GetName(void) { return name; };
+    const char *GetName(void) { return name.c_str(); };
     void Debug(void);
 };
 

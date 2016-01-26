@@ -14,22 +14,22 @@ cEpgGrid::cEpgGrid(skindesignerapi::cOsdView *rootView, cTimeManager *timeManage
     
     channelsPerPage = (config.displayMode == eHorizontal) ? config.channelsPerPageHorizontal : config.channelsPerPageVertical;
 
-    back = rootView->GetViewElement(config.displayMode == eHorizontal ? verBackgroundHor : verBackgroundVer);
+    back = rootView->GetViewElement(config.displayMode == eHorizontal ? (int)eViewElementsRoot::backgroundHor : (int)eViewElementsRoot::backgroundVer);
     back->Display();
 
-    header = rootView->GetViewElement(config.displayMode == eHorizontal ? verHeaderHor : verHeaderVer);
-    footer = rootView->GetViewElement(config.displayMode == eHorizontal ? verFooterHor : verFooterVer);
-    watch = rootView->GetViewElement(config.displayMode == eHorizontal ? verTimeHor : verTimeVer);
+    header = rootView->GetViewElement(config.displayMode == eHorizontal ? (int)eViewElementsRoot::headerHor : (int)eViewElementsRoot::headerVer);
+    footer = rootView->GetViewElement(config.displayMode == eHorizontal ? (int)eViewElementsRoot::footerHor : (int)eViewElementsRoot::footerVer);
+    watch = rootView->GetViewElement(config.displayMode == eHorizontal ? (int)eViewElementsRoot::timeHor : (int)eViewElementsRoot::timeVer);
 
-    channelsGrid = rootView->GetViewGrid(config.displayMode == eHorizontal ? vgChannelsHor : vgChannelsVer);
-    epgGrid = rootView->GetViewGrid(config.displayMode == eHorizontal ? vgSchedulesHor : vgSchedulesVer);
+    channelsGrid = rootView->GetViewGrid(config.displayMode == eHorizontal ? (int)eViewGridsRoot::channelsHor : (int)eViewGridsRoot::channelsVer);
+    epgGrid = rootView->GetViewGrid(config.displayMode == eHorizontal ? (int)eViewGridsRoot::schedulesHor : (int)eViewGridsRoot::schedulesVer);
 
-    skindesignerapi::cViewElement *timelineDate = rootView->GetViewElement(config.displayMode == eHorizontal ? verDateTimelineHor : verDateTimelineVer);
-    skindesignerapi::cViewElement *timeIndicator = rootView->GetViewElement(config.displayMode == eHorizontal ? verTimeIndicatorHor : verTimeIndicatorVer);
-    skindesignerapi::cViewGrid *timelineGrid = rootView->GetViewGrid(config.displayMode == eHorizontal ? vgTimelineHor : vgTimelineVer);
+    skindesignerapi::cViewElement *timelineDate = rootView->GetViewElement(config.displayMode == eHorizontal ? (int)eViewElementsRoot::dateTimelineHor : (int)eViewElementsRoot::dateTimelineVer);
+    skindesignerapi::cViewElement *timeIndicator = rootView->GetViewElement(config.displayMode == eHorizontal ? (int)eViewElementsRoot::timeIndicatorHor : (int)eViewElementsRoot::timeIndicatorVer);
+    skindesignerapi::cViewGrid *timelineGrid = rootView->GetViewGrid(config.displayMode == eHorizontal ? (int)eViewGridsRoot::timelineHor : (int)eViewGridsRoot::timelineVer);
     timeline = new cTimeline(timelineGrid, timelineDate, timeIndicator, timeManager);
 
-    skindesignerapi::cViewGrid *channelgroupsGrid = rootView->GetViewGrid(config.displayMode == eHorizontal ? vgChannelGroupsHor : vgChannelGroupsVer);
+    skindesignerapi::cViewGrid *channelgroupsGrid = rootView->GetViewGrid(config.displayMode == eHorizontal ? (int)eViewGridsRoot::channelGroupsHor : (int)eViewGridsRoot::channelGroupsVer);
     channelGroups = new cChannelgroups(channelgroupsGrid);
     channelGroups->Init();    
 }
@@ -474,9 +474,9 @@ void cEpgGrid::DrawHeader(void) {
         return;
 
     int isDummy = 0;
-    string title = active->Title();
-    string shorttext = "";
-    string description = "";
+    const char *title = active->Title();
+    const char *shorttext = "";
+    const char *description = "";
     string start = "";
     string stop = "";
     string day = "";
@@ -548,30 +548,30 @@ void cEpgGrid::DrawHeader(void) {
             channellogoexists = header->ChannelLogoExists(channelid);
        }
     }
-    header->AddIntToken("isdummy", isDummy);
-    header->AddStringToken("title", title);
-    header->AddStringToken("shorttext", shorttext);
-    header->AddStringToken("description", description);
-    header->AddStringToken("start", start);
-    header->AddStringToken("stop", stop);
-    header->AddStringToken("day", day);
-    header->AddStringToken("date", date);
-    header->AddIntToken("daynumeric", daynumeric);
-    header->AddIntToken("month", month);
-    header->AddIntToken("year", year);
-    header->AddIntToken("running", running);
-    header->AddIntToken("elapsed", elapsed);
-    header->AddIntToken("duration", duration);
-    header->AddIntToken("durationhours", durationhours);
-    header->AddStringToken("durationminutes", durationminutes);
-    header->AddStringToken("channelname", channelname);
-    header->AddStringToken("channelid", channelid);
-    header->AddIntToken("channelnumber", channelnumber);
-    header->AddIntToken("channellogoexists", channellogoexists);
-    header->AddIntToken("hasposter", hasposter);
-    header->AddIntToken("posterwidth", posterwidth);
-    header->AddIntToken("posterheight", posterheight);
-    header->AddStringToken("posterpath", posterpath);
+    header->AddIntToken((int)eHeaderIT::isdummy, isDummy);
+    header->AddStringToken((int)eHeaderST::title, title);
+    header->AddStringToken((int)eHeaderST::shorttext, shorttext);
+    header->AddStringToken((int)eHeaderST::description, description);
+    header->AddStringToken((int)eHeaderST::start, start.c_str());
+    header->AddStringToken((int)eHeaderST::stop, stop.c_str());
+    header->AddStringToken((int)eHeaderST::day, day.c_str());
+    header->AddStringToken((int)eHeaderST::date, date.c_str());
+    header->AddIntToken((int)eHeaderIT::daynumeric, daynumeric);
+    header->AddIntToken((int)eHeaderIT::month, month);
+    header->AddIntToken((int)eHeaderIT::year, year);
+    header->AddIntToken((int)eHeaderIT::running, running);
+    header->AddIntToken((int)eHeaderIT::elapsed, elapsed);
+    header->AddIntToken((int)eHeaderIT::duration, duration);
+    header->AddIntToken((int)eHeaderIT::durationhours, durationhours);
+    header->AddStringToken((int)eHeaderST::durationminutes, durationminutes.c_str());
+    header->AddStringToken((int)eHeaderST::channelname, channelname.c_str());
+    header->AddStringToken((int)eHeaderST::channelid, channelid.c_str());
+    header->AddIntToken((int)eHeaderIT::channelnumber, channelnumber);
+    header->AddIntToken((int)eHeaderIT::channellogoexists, channellogoexists);
+    header->AddIntToken((int)eHeaderIT::hasposter, hasposter);
+    header->AddIntToken((int)eHeaderIT::posterwidth, posterwidth);
+    header->AddIntToken((int)eHeaderIT::posterheight, posterheight);
+    header->AddStringToken((int)eHeaderST::posterpath, posterpath.c_str());
     header->Display();
 }
     
@@ -608,21 +608,17 @@ void cEpgGrid::DrawFooter(void) {
     footer->Clear();
     footer->ClearTokens();
 
-    footer->AddStringToken("red", textRed);
-    footer->AddStringToken("green", textGreen);
-    footer->AddStringToken("yellow", textYellow);
-    footer->AddStringToken("blue", textBlue);
+    footer->AddStringToken((int)eFooterST::red, textRed.c_str());
+    footer->AddStringToken((int)eFooterST::green, textGreen.c_str());
+    footer->AddStringToken((int)eFooterST::yellow, textYellow.c_str());
+    footer->AddStringToken((int)eFooterST::blue, textBlue.c_str());
 
-    for (int button = 1; button < 5; button++) {
-        string red = *cString::sprintf("red%d", button);
-        string green = *cString::sprintf("green%d", button);
-        string yellow = *cString::sprintf("yellow%d", button);
-        string blue = *cString::sprintf("blue%d", button);
+    for (int button = 0; button < 4; button++) {
         bool isRed = false;
         bool isGreen = false;
         bool isYellow = false;
         bool isBlue = false;
-        switch (colorKeys[button-1]) {
+        switch (colorKeys[button]) {
             case 0:
                 isRed = true;
                 break;
@@ -638,10 +634,10 @@ void cEpgGrid::DrawFooter(void) {
             default:
                 break;
         }
-        footer->AddIntToken(red, isRed);
-        footer->AddIntToken(green, isGreen);
-        footer->AddIntToken(yellow, isYellow);
-        footer->AddIntToken(blue, isBlue);
+        footer->AddIntToken(0  + button, isRed);
+        footer->AddIntToken(4  + button, isGreen);
+        footer->AddIntToken(8  + button, isYellow);
+        footer->AddIntToken(12 + button, isBlue);
     }
 
     footer->Display();
@@ -665,19 +661,19 @@ bool cEpgGrid::DrawTime(void) {
 
     watch->Clear();
     watch->ClearTokens();
-    watch->AddIntToken("sec", sec);
-    watch->AddIntToken("min", min);
-    watch->AddIntToken("hour", hour);
-    watch->AddIntToken("hmins", hourMinutes);
-    watch->AddIntToken("year", now->tm_year + 1900);
-    watch->AddIntToken("day", now->tm_mday);
-    watch->AddStringToken("time", *TimeString(t));
-    watch->AddStringToken("monthname", monthname);
-    watch->AddStringToken("monthnameshort", monthshort);
-    watch->AddStringToken("month", *cString::sprintf("%02d", now->tm_mon + 1));
-    watch->AddStringToken("dayleadingzero", *cString::sprintf("%02d", now->tm_mday));
-    watch->AddStringToken("dayname", *WeekDayNameFull(now->tm_wday));
-    watch->AddStringToken("daynameshort", *WeekDayName(now->tm_wday));
+    watch->AddIntToken((int)eTimeIT::sec, sec);
+    watch->AddIntToken((int)eTimeIT::min, min);
+    watch->AddIntToken((int)eTimeIT::hour, hour);
+    watch->AddIntToken((int)eTimeIT::hmins, hourMinutes);
+    watch->AddIntToken((int)eTimeIT::year, now->tm_year + 1900);
+    watch->AddIntToken((int)eTimeIT::day, now->tm_mday);
+    watch->AddStringToken((int)eTimeST::time, *TimeString(t));
+    watch->AddStringToken((int)eTimeST::monthname, monthname);
+    watch->AddStringToken((int)eTimeST::monthnameshort, monthshort);
+    watch->AddStringToken((int)eTimeST::month, *cString::sprintf("%02d", now->tm_mon + 1));
+    watch->AddStringToken((int)eTimeST::dayleadingzero, *cString::sprintf("%02d", now->tm_mday));
+    watch->AddStringToken((int)eTimeST::dayname, *WeekDayNameFull(now->tm_wday));
+    watch->AddStringToken((int)eTimeST::daynameshort, *WeekDayName(now->tm_wday));
     watch->Display();
 
     lastSecond = sec;
@@ -685,7 +681,7 @@ bool cEpgGrid::DrawTime(void) {
 }
 
 cChannelJump *cEpgGrid::GetChannelJumper(void) {
-    skindesignerapi::cViewElement *channelJump = rootView->GetViewElement(verChannelJump);
+    skindesignerapi::cViewElement *channelJump = rootView->GetViewElement((int)eViewElementsRoot::channelJump);
     int lastValidChannel = GetLastValidChannel();
     return new cChannelJump(channelJump, lastValidChannel);
 }

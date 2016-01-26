@@ -122,10 +122,9 @@ double cChannelgroups::SetGroup(int groupId, int fields, double offset) {
         height = 1.0;
         offset += width;
     }
-    string groupName = channelGroups[groupId].GetName();
     channelgroupGrid->ClearTokens();
-    channelgroupGrid->AddIntToken("color", groupId % 2);
-    channelgroupGrid->AddStringToken("group", groupName);
+    channelgroupGrid->AddIntToken((int)eChannelgroupsGridIT::color, groupId % 2);
+    channelgroupGrid->AddStringToken((int)eChannelgroupsGridST::group, channelGroups[groupId].GetName());
     channelgroupGrid->SetGrid(groupId, x, y, width, height);
 
     return offset;

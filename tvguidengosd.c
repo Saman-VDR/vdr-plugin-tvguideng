@@ -1,6 +1,6 @@
 #include "tvguidengosd.h"
 
-cTVGuideOSD::cTVGuideOSD(void) {
+cTVGuideOSD::cTVGuideOSD(skindesignerapi::cPluginStructure *plugStruct) : cSkindesignerOsdObject(plugStruct) {
     timeManager = NULL;
     epgGrid = NULL;
     channelJumper = NULL;
@@ -9,6 +9,7 @@ cTVGuideOSD::cTVGuideOSD(void) {
 }
 
 cTVGuideOSD::~cTVGuideOSD(void) {
+    esyslog("tvguideng: closing");
     if (recMenuView && recMenuView->Active()) {
         recMenuView->Close();
     }
@@ -25,27 +26,26 @@ cTVGuideOSD::~cTVGuideOSD(void) {
 }
 
 void cTVGuideOSD::Show(void) {
-    bool skinDesignerAvailable = InitSkindesignerInterface("tvguideng");
-    if (!skinDesignerAvailable) {
-        return;
-        esyslog("tvguideng: skindesigner not available");
+    if (!SkindesignerAvailable()) {
+        esyslog("tvguideng: skindesigner not available but mandatorily needed - aborting");
+        return;        
     }
-
-    skindesignerapi::cOsdView *rootView = GetOsdView(viRootView);
+    skindesignerapi::cOsdView *rootView = GetOsdView();
     if (!rootView) {
         esyslog("tvguideng: used skindesigner skin does not support tvguideng");
         return;
     }
+
     SwitchTimers.Load(AddDirectory(cPlugin::ConfigDirectory("epgsearch"), "epgsearchswitchtimers.conf"));
     recMenuView = new cRecMenuView();
-    pRemoteTimers = cPluginManager::CallFirstService("RemoteTimers::RefreshTimers-v1.0", NULL);
+    pRemoteTimers = cPluginManager::GetPlugin("remotetimers");
     if (pRemoteTimers) {
         isyslog("tvguideng: remotetimers-plugin is available");
     }
     if (config.useRemoteTimers && pRemoteTimers) {
         cString errorMsg;
         if (!pRemoteTimers->Service("RemoteTimers::RefreshTimers-v1.0", &errorMsg)) {
-            esyslog("tvguideng: %s", *errorMsg);
+            esyslog("tvguideng: Remotetimers Error: %s", *errorMsg);
         }
     }
 
@@ -55,8 +55,8 @@ void cTVGuideOSD::Show(void) {
     epgGrid = new cEpgGrid(rootView, timeManager);
 
     cChannel *startChannel = Channels.GetByNumber(cDevice::CurrentChannel());
-    
     epgGrid->Init(startChannel);
+    epgGrid->Activate();
     epgGrid->DrawHeader();
     epgGrid->DrawTime();
     epgGrid->DrawFooter();
@@ -469,8 +469,9 @@ void cTVGuideOSD::DetailView(const cEvent *e) {
     epgGrid->Deactivate(true);
     if (recMenuView->Active())
         recMenuView->Hide(true);
-    skindesignerapi::cOsdView *dV = GetOsdView(viRootView, viDetailView);
+    skindesignerapi::cOsdView *dV = GetOsdView((int)eViews::detailView);
     detailView = new cDetailView(dV, e);
+    detailView->Activate();
     detailView->Draw();
     detailView->DrawTime();
     detailView->Flush();
@@ -492,20 +493,22 @@ void cTVGuideOSD::KeyRed(void) {
     if (!e)
         return;
     epgGrid->Deactivate(false);
-    skindesignerapi::cOsdView *recView = GetOsdView(viRootView, viRecMenu);
-    skindesignerapi::cOsdView *recViewBuffer = GetOsdView(viRootView, viRecMenu);
-    skindesignerapi::cOsdView *recViewBuffer2 = GetOsdView(viRootView, viRecMenu);
+    skindesignerapi::cOsdView *recView = GetOsdView((int)eViews::recMenu);
+    skindesignerapi::cOsdView *recViewBuffer = GetOsdView((int)eViews::recMenu2);
+    skindesignerapi::cOsdView *recViewBuffer2 = GetOsdView((int)eViews::recMenu3);
     recMenuView->Init(recView, recViewBuffer, recViewBuffer2);
+    recMenuView->Activate();
     recMenuView->DisplayRecMenu(e);
     recMenuView->Flush();
 }
 
 void cTVGuideOSD::Favorites(void) {
     epgGrid->Deactivate(false);
-    skindesignerapi::cOsdView *recView = GetOsdView(viRootView, viRecMenu);
-    skindesignerapi::cOsdView *recViewBuffer = GetOsdView(viRootView, viRecMenu);
-    skindesignerapi::cOsdView *recViewBuffer2 = GetOsdView(viRootView, viRecMenu);
+    skindesignerapi::cOsdView *recView = GetOsdView((int)eViews::recMenu);
+    skindesignerapi::cOsdView *recViewBuffer = GetOsdView((int)eViews::recMenu2);
+    skindesignerapi::cOsdView *recViewBuffer2 = GetOsdView((int)eViews::recMenu3);
     recMenuView->Init(recView, recViewBuffer, recViewBuffer2);
+    recMenuView->Activate();
     recMenuView->DisplayFavorites();
     recMenuView->Flush();
 }
@@ -530,10 +533,11 @@ void cTVGuideOSD::DisplaySearchRecordings(void) {
     if (!e)
         return;
     epgGrid->Deactivate(false);
-    skindesignerapi::cOsdView *recView = GetOsdView(viRootView, viRecMenu);
-    skindesignerapi::cOsdView *recViewBuffer = GetOsdView(viRootView, viRecMenu);
-    skindesignerapi::cOsdView *recViewBuffer2 = GetOsdView(viRootView, viRecMenu);
+    skindesignerapi::cOsdView *recView = GetOsdView((int)eViews::recMenu);
+    skindesignerapi::cOsdView *recViewBuffer = GetOsdView((int)eViews::recMenu2);
+    skindesignerapi::cOsdView *recViewBuffer2 = GetOsdView((int)eViews::recMenu3);
     recMenuView->Init(recView, recViewBuffer, recViewBuffer2);
+    recMenuView->Activate();
     recMenuView->DisplayRecSearch(e);
     recMenuView->Flush();
 }
@@ -543,10 +547,134 @@ void cTVGuideOSD::DisplaySearchEPG(void) {
     if (!e)
         return;
     epgGrid->Deactivate(false);
-    skindesignerapi::cOsdView *recView = GetOsdView(viRootView, viRecMenu);
-    skindesignerapi::cOsdView *recViewBuffer = GetOsdView(viRootView, viRecMenu);
-    skindesignerapi::cOsdView *recViewBuffer2 = GetOsdView(viRootView, viRecMenu);
+    skindesignerapi::cOsdView *recView = GetOsdView((int)eViews::recMenu);
+    skindesignerapi::cOsdView *recViewBuffer = GetOsdView((int)eViews::recMenu2);
+    skindesignerapi::cOsdView *recViewBuffer2 = GetOsdView((int)eViews::recMenu3);
     recMenuView->Init(recView, recViewBuffer, recViewBuffer2);
+    recMenuView->Activate();
     recMenuView->DisplaySearchEPG(e);
     recMenuView->Flush();
+}
+
+void cTVGuideOSD::DefineTokens(eViewElementsRoot ve, skindesignerapi::cTokenContainer *tk) {
+    switch (ve) {
+        case eViewElementsRoot::backgroundHor:
+        case eViewElementsRoot::backgroundVer:
+            break;
+        case eViewElementsRoot::headerHor:
+        case eViewElementsRoot::headerVer:
+            tk->DefineIntToken("{isdummy}", (int)eHeaderIT::isdummy);
+            tk->DefineIntToken("{daynumeric}", (int)eHeaderIT::daynumeric);
+            tk->DefineIntToken("{month}", (int)eHeaderIT::month);
+            tk->DefineIntToken("{year}", (int)eHeaderIT::year);
+            tk->DefineIntToken("{running}", (int)eHeaderIT::running);
+            tk->DefineIntToken("{elapsed}", (int)eHeaderIT::elapsed);
+            tk->DefineIntToken("{duration}", (int)eHeaderIT::duration);
+            tk->DefineIntToken("{durationhours}", (int)eHeaderIT::durationhours);
+            tk->DefineIntToken("{channelnumber}", (int)eHeaderIT::channelnumber);
+            tk->DefineIntToken("{channellogoexists}", (int)eHeaderIT::isdummy);
+            tk->DefineIntToken("{hasposter}", (int)eHeaderIT::hasposter);
+            tk->DefineIntToken("{posterwidth}", (int)eHeaderIT::posterwidth);
+            tk->DefineIntToken("{posterheight}", (int)eHeaderIT::posterheight);
+            tk->DefineStringToken("{title}", (int)eHeaderST::title);
+            tk->DefineStringToken("{shorttext}", (int)eHeaderST::shorttext);
+            tk->DefineStringToken("{description}", (int)eHeaderST::description);
+            tk->DefineStringToken("{start}", (int)eHeaderST::start);
+            tk->DefineStringToken("{stop}", (int)eHeaderST::stop);
+            tk->DefineStringToken("{day}", (int)eHeaderST::day);
+            tk->DefineStringToken("{date}", (int)eHeaderST::date);
+            tk->DefineStringToken("{durationminutes}", (int)eHeaderST::durationminutes);
+            tk->DefineStringToken("{channelname}", (int)eHeaderST::channelname);
+            tk->DefineStringToken("{channelid}", (int)eHeaderST::channelid);
+            tk->DefineStringToken("{posterpath}", (int)eHeaderST::posterpath);
+            break;
+        case eViewElementsRoot::footerHor:
+        case eViewElementsRoot::footerVer:
+            tk->DefineIntToken("{red1}", (int)eFooterIT::red1);
+            tk->DefineIntToken("{red2}", (int)eFooterIT::red2);
+            tk->DefineIntToken("{red3}", (int)eFooterIT::red3);
+            tk->DefineIntToken("{red4}", (int)eFooterIT::red4);
+            tk->DefineIntToken("{green1}", (int)eFooterIT::green1);
+            tk->DefineIntToken("{green2}", (int)eFooterIT::green2);
+            tk->DefineIntToken("{green3}", (int)eFooterIT::green3);
+            tk->DefineIntToken("{green4}", (int)eFooterIT::green4);
+            tk->DefineIntToken("{yellow1}", (int)eFooterIT::yellow1);
+            tk->DefineIntToken("{yellow2}", (int)eFooterIT::yellow2);
+            tk->DefineIntToken("{yellow3}", (int)eFooterIT::yellow3);
+            tk->DefineIntToken("{yellow4}", (int)eFooterIT::yellow4);
+            tk->DefineIntToken("{blue1}", (int)eFooterIT::blue1);
+            tk->DefineIntToken("{blue2}", (int)eFooterIT::blue2);
+            tk->DefineIntToken("{blue3}", (int)eFooterIT::blue3);
+            tk->DefineIntToken("{blue4}", (int)eFooterIT::blue4);
+            tk->DefineStringToken("{red}", (int)eFooterST::red);
+            tk->DefineStringToken("{green}", (int)eFooterST::green);
+            tk->DefineStringToken("{yellow}", (int)eFooterST::yellow);
+            tk->DefineStringToken("{blue}", (int)eFooterST::blue);
+            break;
+        case eViewElementsRoot::timeHor:
+        case eViewElementsRoot::timeVer:
+            tk->DefineIntToken("{sec}", (int)eTimeIT::sec);
+            tk->DefineIntToken("{min}", (int)eTimeIT::min);
+            tk->DefineIntToken("{hour}", (int)eTimeIT::hour);
+            tk->DefineIntToken("{hmins}", (int)eTimeIT::hmins);
+            tk->DefineIntToken("{year}", (int)eTimeIT::year);
+            tk->DefineIntToken("{day}", (int)eTimeIT::day);
+            tk->DefineStringToken("{time}", (int)eTimeST::time);
+            tk->DefineStringToken("{monthname}", (int)eTimeST::monthname);
+            tk->DefineStringToken("{monthnameshort}", (int)eTimeST::monthnameshort);
+            tk->DefineStringToken("{month}", (int)eTimeST::month);
+            tk->DefineStringToken("{dayleadingzero}", (int)eTimeST::dayleadingzero);
+            tk->DefineStringToken("{dayname}", (int)eTimeST::dayname);
+            tk->DefineStringToken("{daynameshort}", (int)eTimeST::daynameshort);
+            break;
+        case eViewElementsRoot::dateTimelineHor:
+        case eViewElementsRoot::dateTimelineVer:
+            tk->DefineStringToken("{weekday}", (int)eDateTimeST::weekday);
+            tk->DefineStringToken("{date}", (int)eDateTimeST::date);
+            break;
+        case eViewElementsRoot::timeIndicatorHor:
+        case eViewElementsRoot::timeIndicatorVer:
+            tk->DefineIntToken("{percenttotal}", (int)eTimeIndicatorIT::percenttotal);
+            break;
+        case eViewElementsRoot::channelJump:
+            tk->DefineStringToken("{channel}", (int)eChannelJumpST::channel);
+            break;
+        default:
+            break;
+    }
+}
+
+void cTVGuideOSD::DefineTokens(eViewGridsRoot vg, skindesignerapi::cTokenContainer *tk) {
+    switch (vg) {
+        case eViewGridsRoot::channelsHor:
+        case eViewGridsRoot::channelsVer:
+            tk->DefineIntToken("{number}", (int)eChannelGridIT::number);
+            tk->DefineIntToken("{channellogoexists}", (int)eChannelGridIT::channellogoexists);
+            tk->DefineStringToken("{name}", (int)eChannelGridST::name);
+            tk->DefineStringToken("{channelid}", (int)eChannelGridST::channelid);
+            break;
+        case eViewGridsRoot::schedulesHor:
+        case eViewGridsRoot::schedulesVer:
+            tk->DefineIntToken("{color}", (int)eSchedulesGridIT::color);
+            tk->DefineIntToken("{dummy}", (int)eSchedulesGridIT::dummy);
+            tk->DefineIntToken("{timer}", (int)eSchedulesGridIT::timer);
+            tk->DefineIntToken("{switchtimer}", (int)eSchedulesGridIT::switchtimer);
+            tk->DefineStringToken("{title}", (int)eSchedulesGridST::title);
+            tk->DefineStringToken("{shorttext}", (int)eSchedulesGridST::shorttext);
+            tk->DefineStringToken("{start}", (int)eSchedulesGridST::start);
+            tk->DefineStringToken("{stop}", (int)eSchedulesGridST::stop);
+            break;
+        case eViewGridsRoot::channelGroupsHor:
+        case eViewGridsRoot::channelGroupsVer:
+            tk->DefineIntToken("{color}", (int)eChannelgroupsGridIT::color);
+            tk->DefineStringToken("{group}", (int)eChannelgroupsGridST::group);
+            break;
+        case eViewGridsRoot::timelineHor:
+        case eViewGridsRoot::timelineVer:
+            tk->DefineStringToken("{timestring}", (int)eTimelineGridST::timestring);
+            tk->DefineIntToken("{fullhour}", (int)eTimelineGridIT::fullhour);
+            break;
+        default:
+            break;
+    }
 }

@@ -57,12 +57,12 @@ cRecMenuItemInfo::~cRecMenuItemInfo(void) {
 
 void cRecMenuItemInfo::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
-    menu->AddIntToken("info", 1);
-    menu->AddIntToken("lines", numLines);
-    menu->AddStringToken("line1", line1);
-    menu->AddStringToken("line2", line2);
-    menu->AddStringToken("line3", line3);
-    menu->AddStringToken("line4", line4);
+    menu->AddIntToken((int)eRecMenuIT::info, 1);
+    menu->AddIntToken((int)eRecMenuIT::lines, numLines);
+    menu->AddStringToken((int)eRecMenuST::line1, line1.c_str());
+    menu->AddStringToken((int)eRecMenuST::line2, line2.c_str());
+    menu->AddStringToken((int)eRecMenuST::line3, line3.c_str());
+    menu->AddStringToken((int)eRecMenuST::line4, line4.c_str());
 }
 
 // --- cRecMenuItemButton  -------------------------------------------------------
@@ -80,8 +80,8 @@ cRecMenuItemButton::~cRecMenuItemButton(void) {
 
 void cRecMenuItemButton::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
-    menu->AddIntToken("button", 1);
-    menu->AddStringToken("buttontext", text);
+    menu->AddIntToken((int)eRecMenuIT::button, 1);
+    menu->AddStringToken((int)eRecMenuST::buttontext, text.c_str());
 }
 
 eRecMenuState cRecMenuItemButton::ProcessKey(eKeys Key) {
@@ -116,10 +116,10 @@ cRecMenuItemButtonYesNo::~cRecMenuItemButtonYesNo(void) {
 
 void cRecMenuItemButtonYesNo::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
-    menu->AddIntToken("buttonyesno", 1);
-    menu->AddIntToken("yes", yesActive);
-    menu->AddStringToken("textyes", textYes);
-    menu->AddStringToken("textno", textNo);
+    menu->AddIntToken((int)eRecMenuIT::buttonyesno, 1);
+    menu->AddIntToken((int)eRecMenuIT::yes, yesActive);
+    menu->AddStringToken((int)eRecMenuST::textyes, textYes.c_str());
+    menu->AddStringToken((int)eRecMenuST::textno, textNo.c_str());
 }
 
 eRecMenuState cRecMenuItemButtonYesNo::ProcessKey(eKeys Key) {
@@ -176,9 +176,9 @@ cRecMenuItemInt::~cRecMenuItemInt(void) {
 
 void cRecMenuItemInt::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
-    menu->AddIntToken("intselector", 1);
-    menu->AddIntToken("value", currentVal);
-    menu->AddStringToken("text", text);    
+    menu->AddIntToken((int)eRecMenuIT::intselector, 1);
+    menu->AddIntToken((int)eRecMenuIT::value, currentVal);
+    menu->AddStringToken((int)eRecMenuST::text, text.c_str());    
 }
 
 eRecMenuState cRecMenuItemInt::ProcessKey(eKeys Key) {
@@ -242,9 +242,9 @@ cRecMenuItemBool::~cRecMenuItemBool(void) {
 
 void cRecMenuItemBool::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
-    menu->AddIntToken("boolselector", 1);
-    menu->AddIntToken("value", yes);
-    menu->AddStringToken("text", text);    
+    menu->AddIntToken((int)eRecMenuIT::boolselector, 1);
+    menu->AddIntToken((int)eRecMenuIT::value, yes);
+    menu->AddStringToken((int)eRecMenuST::text, text.c_str());    
 }
 
 eRecMenuState cRecMenuItemBool::ProcessKey(eKeys Key) {
@@ -290,9 +290,9 @@ cRecMenuItemSelect::~cRecMenuItemSelect(void) {
 
 void cRecMenuItemSelect::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
-    menu->AddIntToken("stringselector", 1);
-    menu->AddStringToken("text", text);    
-    menu->AddStringToken("value", strings[currentVal]);
+    menu->AddIntToken((int)eRecMenuIT::stringselector, 1);
+    menu->AddStringToken((int)eRecMenuST::text, text.c_str());    
+    menu->AddStringToken((int)eRecMenuST::value, strings[currentVal].c_str());
 }
 
 eRecMenuState cRecMenuItemSelect::ProcessKey(eKeys Key) {
@@ -502,13 +502,13 @@ void cRecMenuItemText::SetText(void) {
 
 void cRecMenuItemText::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
-    menu->AddIntToken("textinput", 1);
-    menu->AddIntToken("editmode", InEditMode());
-    menu->AddStringToken("text", text);
+    menu->AddIntToken((int)eRecMenuIT::textinput, 1);
+    menu->AddIntToken((int)eRecMenuIT::editmode, InEditMode());
+    menu->AddStringToken((int)eRecMenuST::text, text.c_str());
     if (buffer.size() > 0) {
-        menu->AddStringToken("value", buffer);
+        menu->AddStringToken((int)eRecMenuST::value, buffer.c_str());
     } else {        
-        menu->AddStringToken("value", value);
+        menu->AddStringToken((int)eRecMenuST::value, value);
     }
 }
 
@@ -720,9 +720,9 @@ void cRecMenuItemTime::SetTokens(skindesignerapi::cViewGrid *menu) {
         default: snprintf(buf, sizeof(buf), "%02d:%02d", hh, mm);
     }
     menu->ClearTokens();
-    menu->AddIntToken("timeselector", 1);
-    menu->AddStringToken("text", text);
-    menu->AddStringToken("value", buf);
+    menu->AddIntToken((int)eRecMenuIT::timeselector, 1);
+    menu->AddStringToken((int)eRecMenuST::text, text.c_str());
+    menu->AddStringToken((int)eRecMenuST::value, buf);
 }
 
 eRecMenuState cRecMenuItemTime::ProcessKey(eKeys Key) {
@@ -822,9 +822,9 @@ cRecMenuItemDay::~cRecMenuItemDay(void) {
 
 void cRecMenuItemDay::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
-    menu->AddIntToken("dayselector", 1);
-    menu->AddStringToken("text", text);
-    menu->AddStringToken("value", *DateString(currentVal));
+    menu->AddIntToken((int)eRecMenuIT::dayselector, 1);
+    menu->AddStringToken((int)eRecMenuST::text, text.c_str());
+    menu->AddStringToken((int)eRecMenuST::value, *DateString(currentVal));
 }
 
 eRecMenuState cRecMenuItemDay::ProcessKey(eKeys Key) {
@@ -876,19 +876,19 @@ cRecMenuItemChannelChooser::~cRecMenuItemChannelChooser(void) {
 
 void cRecMenuItemChannelChooser::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
-    menu->AddIntToken("channelselector", 1);
-    menu->AddStringToken("text", text);
+    menu->AddIntToken((int)eRecMenuIT::channelselector, 1);
+    menu->AddStringToken((int)eRecMenuST::text, text.c_str());
     if (channel) {
-        menu->AddIntToken("channelnumber", channel->Number());
-        menu->AddStringToken("channelname", channel->Name());
-        string channelId = *(channel->GetChannelID().ToString());
-        menu->AddStringToken("channelid", channelId);
-        menu->AddIntToken("channellogoexisis", menu->ChannelLogoExists(channelId));
+        menu->AddIntToken((int)eRecMenuIT::channelnumber, channel->Number());
+        menu->AddStringToken((int)eRecMenuST::channelname, channel->Name());
+        cString channelId = channel->GetChannelID().ToString();
+        menu->AddStringToken((int)eRecMenuST::channelid, *channelId);
+        menu->AddIntToken((int)eRecMenuIT::channellogoexisis, menu->ChannelLogoExists(*channelId));
     } else {
-        menu->AddIntToken("channelnumber", 0);
-        menu->AddStringToken("channelname", tr("all Channels"));
-        menu->AddStringToken("channelid", "");
-        menu->AddIntToken("channellogoexisis", false);        
+        menu->AddIntToken((int)eRecMenuIT::channelnumber, 0);
+        menu->AddStringToken((int)eRecMenuST::channelname, tr("all Channels"));
+        menu->AddStringToken((int)eRecMenuST::channelid, "");
+        menu->AddIntToken((int)eRecMenuIT::channellogoexisis, false);        
     }
 }
 
@@ -987,19 +987,15 @@ cRecMenuItemDayChooser::~cRecMenuItemDayChooser(void) {
 
 void cRecMenuItemDayChooser::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
-    menu->AddIntToken("weekdayselector", 1);
-    menu->AddStringToken("text", text);
-    menu->AddIntToken("dayselected", selectedDay);
+    menu->AddIntToken((int)eRecMenuIT::weekdayselector, 1);
+    menu->AddStringToken((int)eRecMenuST::text, text.c_str());
+    menu->AddIntToken((int)eRecMenuIT::dayselected, selectedDay);
 
     string days = trVDR("MTWTFSS");
     for (unsigned day=0; day<days.length(); ++day) {
-        string strDay = *cString::sprintf("%c", days.at(day));
-        stringstream nameWeekday;
-        nameWeekday << "day" << day << "abbr";
-        stringstream nameWeekdaySet;
-        nameWeekdaySet << "day" << day << "set";
-        menu->AddStringToken(nameWeekday.str(), strDay);
-        menu->AddIntToken(nameWeekdaySet.str(), WeekDaySet(day));
+        cString strDay = cString::sprintf("%c", days.at(day));
+        menu->AddStringToken((int)eRecMenuST::day0abbr + day, *strDay);
+        menu->AddIntToken((int)eRecMenuIT::day0set + day, WeekDaySet(day));
     }
 }
 
@@ -1067,9 +1063,9 @@ cRecMenuItemSelectDirectory::cRecMenuItemSelectDirectory(string text,
 
 void cRecMenuItemSelectDirectory::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
-    menu->AddIntToken("directoryselector", 1);
-    menu->AddStringToken("text", text);
-    menu->AddStringToken("folder", folders[currentVal]);
+    menu->AddIntToken((int)eRecMenuIT::directoryselector, 1);
+    menu->AddStringToken((int)eRecMenuST::text, text.c_str());
+    menu->AddStringToken((int)eRecMenuST::folder, folders[currentVal].c_str());
 }
 
 eRecMenuState cRecMenuItemSelectDirectory::ProcessKey(eKeys Key) {
@@ -1135,17 +1131,17 @@ cRecMenuItemTimerConflictHeader::~cRecMenuItemTimerConflictHeader(void) {
 
 void cRecMenuItemTimerConflictHeader::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
-    menu->AddIntToken("timerconflictheader", 1);
-    menu->AddStringToken("text", tr("Timer Conflict"));
-    menu->AddStringToken("conflictstart", *TimeString(conflictStart));
-    menu->AddStringToken("conflictstop", *TimeString(conflictStop));
-    menu->AddStringToken("overlapstart", *TimeString(overlapStart));
-    menu->AddStringToken("overlapstop", *TimeString(overlapStop));
+    menu->AddIntToken((int)eRecMenuIT::timerconflictheader, 1);
+    menu->AddStringToken((int)eRecMenuST::text, tr("Timer Conflict"));
+    menu->AddStringToken((int)eRecMenuST::conflictstart, *TimeString(conflictStart));
+    menu->AddStringToken((int)eRecMenuST::conflictstop, *TimeString(conflictStop));
+    menu->AddStringToken((int)eRecMenuST::overlapstart, *TimeString(overlapStart));
+    menu->AddStringToken((int)eRecMenuST::overlapstop, *TimeString(overlapStop));
 
     int olStart = (double)(overlapStart - conflictStart) / (double)(conflictStop - conflictStart) * 100; 
     int olWidth = (double)(overlapStop - overlapStart) / (double)(conflictStop - conflictStart) * 100;
-    menu->AddIntToken("overlapstartpercent", olStart);
-    menu->AddIntToken("overlapwidthpercent", olWidth);
+    menu->AddIntToken((int)eRecMenuIT::overlapstartpercent, olStart);
+    menu->AddIntToken((int)eRecMenuIT::overlapwidthpercent, olWidth);
 }
 
 // --- cRecMenuItemTimer  -------------------------------------------------------
@@ -1179,36 +1175,36 @@ cRecMenuItemTimer::~cRecMenuItemTimer(void) {
 
 void cRecMenuItemTimer::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
-    menu->AddIntToken("timerconflict", 1);
+    menu->AddIntToken((int)eRecMenuIT::timerconflict, 1);
     
     const cChannel *channel = timer->Channel();
     int channelTransponder = 0;
-    string channelName = "";
-    string channelId = "";
+    const char *channelName = NULL;
+    cString channelId = "";
     if (channel) {
         channelTransponder = channel->Transponder();
         channelName = channel->Name() ? channel->Name() : "";
-        channelId = *(channel->GetChannelID().ToString());
+        channelId = channel->GetChannelID().ToString();
     }
-    menu->AddIntToken("transponder", channelTransponder);
-    menu->AddStringToken("channelname", channelName);    
-    menu->AddStringToken("channelid", channelId);
+    menu->AddIntToken((int)eRecMenuIT::channeltransponder, channelTransponder);
+    menu->AddStringToken((int)eRecMenuST::channelname, channelName);    
+    menu->AddStringToken((int)eRecMenuST::channelid, *channelId);
 
     const cEvent *event = timer->Event();
     string timerTitle = "";
     if (event && event->Title()) {
         timerTitle = event->Title();
     }
-    menu->AddStringToken("timertitle", timerTitle);
-    menu->AddStringToken("starttime", *TimeString(timer->StartTime()));
-    menu->AddStringToken("stoptime", *TimeString(timer->StopTime()));
-    menu->AddStringToken("date", *ShortDateString(timer->StartTime()));
-    menu->AddStringToken("weekday", *WeekDayName(timer->StartTime()));
+    menu->AddStringToken((int)eRecMenuST::timertitle, timerTitle.c_str());
+    menu->AddStringToken((int)eRecMenuST::starttime, *TimeString(timer->StartTime()));
+    menu->AddStringToken((int)eRecMenuST::stoptime, *TimeString(timer->StopTime()));
+    menu->AddStringToken((int)eRecMenuST::date, *ShortDateString(timer->StartTime()));
+    menu->AddStringToken((int)eRecMenuST::weekday, *WeekDayName(timer->StartTime()));
 
-    menu->AddIntToken("infoactive", (iconActive==0)?true:false);
-    menu->AddIntToken("deleteactive", (iconActive==1)?true:false);
-    menu->AddIntToken("editactive", (iconActive==2)?true:false);
-    menu->AddIntToken("searchactive", (iconActive==3)?true:false);
+    menu->AddIntToken((int)eRecMenuIT::infoactive, (iconActive==0)?true:false);
+    menu->AddIntToken((int)eRecMenuIT::deleteactive, (iconActive==1)?true:false);
+    menu->AddIntToken((int)eRecMenuIT::editactive, (iconActive==2)?true:false);
+    menu->AddIntToken((int)eRecMenuIT::searchactive, (iconActive==3)?true:false);
 
 
     int conflictTime = conflictStop - conflictStart;
@@ -1216,10 +1212,10 @@ void cRecMenuItemTimer::SetTokens(skindesignerapi::cViewGrid *menu) {
     int timerWidth = (double)(timer->StopTime() - timer->StartTime()) / (double)conflictTime * 100;
     int olStart = (double)(overlapStart - conflictStart) / (double)(conflictStop - conflictStart) * 100; 
     int olWidth = (double)(overlapStop - overlapStart) / (double)(conflictStop - conflictStart) * 100;
-    menu->AddIntToken("timerstartpercent", timerStart);
-    menu->AddIntToken("timerwidthpercent", timerWidth);
-    menu->AddIntToken("overlapstartpercent", olStart);
-    menu->AddIntToken("overlapwidthpercent", olWidth);
+    menu->AddIntToken((int)eRecMenuIT::timerstartpercent, timerStart);
+    menu->AddIntToken((int)eRecMenuIT::timerwidthpercent, timerWidth);
+    menu->AddIntToken((int)eRecMenuIT::overlapstartpercent, olStart);
+    menu->AddIntToken((int)eRecMenuIT::overlapwidthpercent, olWidth);
 }
 
 eRecMenuState cRecMenuItemTimer::ProcessKey(eKeys Key) {
@@ -1273,27 +1269,27 @@ cRecMenuItemEvent::~cRecMenuItemEvent(void) {
 
 void cRecMenuItemEvent::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
-    menu->AddIntToken("event", 1);
+    menu->AddIntToken((int)eRecMenuIT::event, 1);
     
     const cChannel *channel = Channels.GetByChannelID(event->ChannelID());
-    string channelName = "";
-    string channelId = "";
-    if (channel && channel->Name()) {
+    const char *channelName = NULL;
+    cString channelId = "";
+    if (channel) {
         channelName = channel->Name();
-        channelId = *(channel->GetChannelID().ToString());
-        menu->AddIntToken("channelnumber", channel->Number());
+        channelId = channel->GetChannelID().ToString();
+        menu->AddIntToken((int)eRecMenuIT::channelnumber, channel->Number());
     }
 
-    menu->AddStringToken("channelname", channelName);    
-    menu->AddStringToken("channelid", channelId);
-    menu->AddIntToken("channellogoexisis", menu->ChannelLogoExists(channelId));
-    menu->AddStringToken("title", event->Title() ? event->Title() : "");
-    menu->AddStringToken("shorttext", event->ShortText() ? event->ShortText() : "");
-    menu->AddStringToken("date", *ShortDateString(event->StartTime()));
-    menu->AddStringToken("weekday", *WeekDayName(event->StartTime()));
-    menu->AddStringToken("starttime", *TimeString(event->StartTime()));
-    menu->AddStringToken("stoptime", *TimeString(event->EndTime()));
-    menu->AddIntToken("hastimer", event->HasTimer());
+    menu->AddStringToken((int)eRecMenuST::channelname, channelName);    
+    menu->AddStringToken((int)eRecMenuST::channelid, *channelId);
+    menu->AddIntToken((int)eRecMenuIT::channellogoexisis, menu->ChannelLogoExists(*channelId));
+    menu->AddStringToken((int)eRecMenuST::title, event->Title());
+    menu->AddStringToken((int)eRecMenuST::shorttext, event->ShortText());
+    menu->AddStringToken((int)eRecMenuST::date, *ShortDateString(event->StartTime()));
+    menu->AddStringToken((int)eRecMenuST::weekday, *WeekDayName(event->StartTime()));
+    menu->AddStringToken((int)eRecMenuST::starttime, *TimeString(event->StartTime()));
+    menu->AddStringToken((int)eRecMenuST::stoptime, *TimeString(event->EndTime()));
+    menu->AddIntToken((int)eRecMenuIT::hastimer, event->HasTimer());
 }
 
 eRecMenuState cRecMenuItemEvent::ProcessKey(eKeys Key) {
@@ -1321,7 +1317,7 @@ cRecMenuItemRecording::cRecMenuItemRecording(cRecording *recording, bool active)
 
 void cRecMenuItemRecording::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
-    menu->AddIntToken("recording", 1);
+    menu->AddIntToken((int)eRecMenuIT::recording, 1);
     if (!recording)
         return;
     const cRecordingInfo *recInfo = recording->Info();
@@ -1333,21 +1329,21 @@ void cRecMenuItemRecording::SetTokens(skindesignerapi::cViewGrid *menu) {
     if (channel && channel->Name()) {
         channelName = channel->Name();
         channelId = *(channel->GetChannelID().ToString());
-        menu->AddIntToken("channelnumber", channel->Number());
+        menu->AddIntToken((int)eRecMenuIT::channelnumber, channel->Number());
     }
-    menu->AddStringToken("channelname", channelName);    
-    menu->AddStringToken("channelid", channelId);
-    menu->AddIntToken("channellogoexisis", menu->ChannelLogoExists(channelId));
+    menu->AddStringToken((int)eRecMenuST::channelname, channelName.c_str());    
+    menu->AddStringToken((int)eRecMenuST::channelid, channelId.c_str());
+    menu->AddIntToken((int)eRecMenuIT::channellogoexisis, menu->ChannelLogoExists(channelId));
 
     string recName = recording->Name() ? recording->Name() : "";
     string recDate = *ShortDateString(recording->Start());
     string recStartTime = *TimeString(recording->Start());
     int recDuration = recording->LengthInSeconds() / 60;
 
-    menu->AddStringToken("recname", recName);
-    menu->AddStringToken("recdate", recDate);
-    menu->AddStringToken("recstarttime", recStartTime);
-    menu->AddIntToken("recduration", recDuration);
+    menu->AddStringToken((int)eRecMenuST::recname, recName.c_str());
+    menu->AddStringToken((int)eRecMenuST::recdate, recDate.c_str());
+    menu->AddStringToken((int)eRecMenuST::recstarttime, recStartTime.c_str());
+    menu->AddIntToken((int)eRecMenuIT::recduration, recDuration);
 }
 
 // --- cRecMenuItemSearchTimer  -------------------------------------------------------
@@ -1371,14 +1367,14 @@ cRecMenuItemSearchTimer::~cRecMenuItemSearchTimer(void) {
 
 void cRecMenuItemSearchTimer::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
-    menu->AddIntToken("searchtimer", 1);
-    menu->AddIntToken("timeractive", timer.Active());
-    menu->AddStringToken("searchstring", timer.SearchString());
-    menu->AddIntToken("activetimers", timer.GetNumTimers());
-    menu->AddIntToken("recordingsdone", timer.GetNumRecordings());
-    menu->AddIntToken("searchactive", (iconActive==0)?true:false);
-    menu->AddIntToken("editactive", (iconActive==1)?true:false);
-    menu->AddIntToken("deleteactive", (iconActive==2)?true:false);
+    menu->AddIntToken((int)eRecMenuIT::searchtimer, 1);
+    menu->AddIntToken((int)eRecMenuIT::timeractive, timer.Active());
+    menu->AddStringToken((int)eRecMenuST::searchstring, timer.SearchString().c_str());
+    menu->AddIntToken((int)eRecMenuIT::activetimers, timer.GetNumTimers());
+    menu->AddIntToken((int)eRecMenuIT::recordingsdone, timer.GetNumRecordings());
+    menu->AddIntToken((int)eRecMenuIT::searchactive, (iconActive==0)?true:false);
+    menu->AddIntToken((int)eRecMenuIT::editactive, (iconActive==1)?true:false);
+    menu->AddIntToken((int)eRecMenuIT::deleteactive, (iconActive==2)?true:false);
 }
 
 eRecMenuState cRecMenuItemSearchTimer::ProcessKey(eKeys Key) {
@@ -1425,50 +1421,50 @@ cRecMenuItemTimelineHeader::~cRecMenuItemTimelineHeader(void) {
 
 void cRecMenuItemTimelineHeader::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
-    menu->AddIntToken("timelineheader", 1);
+    menu->AddIntToken((int)eRecMenuIT::timelineheader, 1);
     string daydate = *DateString(day);
-    menu->AddStringToken("date", daydate);
+    menu->AddStringToken((int)eRecMenuST::date, daydate.c_str());
     if (!timer) {
-        menu->AddIntToken("timerset", false);
+        menu->AddIntToken((int)eRecMenuIT::timerset, false);
         return;
     }
-    menu->AddIntToken("timerset", true);
+    menu->AddIntToken((int)eRecMenuIT::timerset, true);
 
     const cChannel *channel = timer->Channel();
-    string channelName = "";
-    string channelId = "";
+    const char *channelName = NULL;
+    cString channelId = "";
     int channelNumber = 0;
     int transponder = 0;
     if (channel) {
-        channelName = channel->Name() ? channel->Name() : "";
-        channelId = *(channel->GetChannelID().ToString());
+        channelName = channel->Name();
+        channelId = channel->GetChannelID().ToString();
         channelNumber = channel->Number();
         transponder = channel->Transponder();
     }
-    menu->AddStringToken("channelname", channelName);
-    menu->AddStringToken("channelid", channelId);
-    menu->AddIntToken("channelnumber", channelNumber);
-    menu->AddIntToken("channeltransponder", transponder);
-    menu->AddIntToken("channellogoexisis", menu->ChannelLogoExists(channelId));
+    menu->AddStringToken((int)eRecMenuST::channelname, channelName);
+    menu->AddStringToken((int)eRecMenuST::channelid, *channelId);
+    menu->AddIntToken((int)eRecMenuIT::channelnumber, channelNumber);
+    menu->AddIntToken((int)eRecMenuIT::channeltransponder, transponder);
+    menu->AddIntToken((int)eRecMenuIT::channellogoexisis, menu->ChannelLogoExists(*channelId));
 
-    menu->AddStringToken("timerstart", *TimeString(timer->StartTime()));
-    menu->AddStringToken("timerstop", *TimeString(timer->StopTime()));
+    menu->AddStringToken((int)eRecMenuST::timerstart, *TimeString(timer->StartTime()));
+    menu->AddStringToken((int)eRecMenuST::timerstop, *TimeString(timer->StopTime()));
 
     const cEvent *event = timer->Event();
-    string eventTitle = "";
-    string eventShortText = "";
-    string eventStart = "";
-    string eventStop = "";
+    const char *eventTitle = NULL;
+    const char *eventShortText = "";
+    cString eventStart = "";
+    cString eventStop = "";
     if (event) {
-        eventTitle = event->Title() ? event->Title() : "";
-        eventShortText = event->ShortText() ? event->ShortText() : "";
-        eventStart = *event->GetTimeString();
-        eventStop = *event->GetEndTimeString();
+        eventTitle = event->Title();
+        eventShortText = event->ShortText();
+        eventStart = event->GetTimeString();
+        eventStop = event->GetEndTimeString();
     }
-    menu->AddStringToken("eventtitle", eventTitle);
-    menu->AddStringToken("eventshorttext", eventShortText);
-    menu->AddStringToken("eventstart", eventStart);
-    menu->AddStringToken("eventstop", eventStop);
+    menu->AddStringToken((int)eRecMenuST::eventtitle, eventTitle);
+    menu->AddStringToken((int)eRecMenuST::eventshorttext, eventShortText);
+    menu->AddStringToken((int)eRecMenuST::eventstart, *eventStart);
+    menu->AddStringToken((int)eRecMenuST::eventstop, *eventStop);
 }
 
 // --- cRecMenuItemTimelineTimer  -------------------------------------------------------
@@ -1486,7 +1482,7 @@ cRecMenuItemTimelineTimer::~cRecMenuItemTimelineTimer(void) {
 
 void cRecMenuItemTimelineTimer::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
-    menu->AddIntToken("timelinetimer", 1);
+    menu->AddIntToken((int)eRecMenuIT::timelinetimer, 1);
 
     int secsPerDay = 24*60*60;    
     time_t timerStart = timer->StartTime() - start;
@@ -1498,8 +1494,8 @@ void cRecMenuItemTimelineTimer::SetTokens(skindesignerapi::cViewGrid *menu) {
 
     int percentStart = ((double)timerStart / (double)secsPerDay) * 1000;
     int percentWidth = ((double)(timerStop - timerStart) / (double)secsPerDay) * 1000;
-    menu->AddIntToken("timerstart", percentStart);
-    menu->AddIntToken("timerwidth", percentWidth);
+    menu->AddIntToken((int)eRecMenuIT::timerstart, percentStart);
+    menu->AddIntToken((int)eRecMenuIT::timerwidth, percentWidth);
 }
 
 cTimer *cRecMenuItemTimelineTimer::GetTimer(void) {
@@ -1529,8 +1525,8 @@ cRecMenuItemFavorite::cRecMenuItemFavorite(cTVGuideSearchTimer favorite,
 
 void cRecMenuItemFavorite::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
-    menu->AddIntToken("favorite", 1);
-    menu->AddStringToken("favdesc", favorite.SearchString());
+    menu->AddIntToken((int)eRecMenuIT::favorite, 1);
+    menu->AddStringToken((int)eRecMenuST::favdesc, favorite.SearchString().c_str());
 }
 
 eRecMenuState cRecMenuItemFavorite::ProcessKey(eKeys Key) {
@@ -1554,8 +1550,8 @@ cRecMenuItemFavoriteStatic::cRecMenuItemFavoriteStatic(string text, eRecMenuStat
 
 void cRecMenuItemFavoriteStatic::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
-    menu->AddIntToken("favorite", 1);
-    menu->AddStringToken("favdesc", text);
+    menu->AddIntToken((int)eRecMenuIT::favorite, 1);
+    menu->AddStringToken((int)eRecMenuST::favdesc, text.c_str());
 }
 
 eRecMenuState cRecMenuItemFavoriteStatic::ProcessKey(eKeys Key) {

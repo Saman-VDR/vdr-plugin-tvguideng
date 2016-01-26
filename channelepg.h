@@ -4,6 +4,7 @@
 #include <set>
 #include <vdr/tools.h>
 #include <libskindesignerapi/skindesignerosdbase.h>
+#include "definitions.h"
 #include "config.h"
 #include "gridelement.h"
 #include "epgelement.h"

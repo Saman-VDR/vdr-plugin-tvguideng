@@ -3,6 +3,7 @@
 
 #include <list>
 #include <libskindesignerapi/skindesignerosdbase.h>
+#include "definitions.h"
 #include "recmenuitem.h"
 
 // --- cRecMenu  -------------------------------------------------------------
@@ -52,11 +53,14 @@ public:
     cRecMenu(void);
     virtual ~cRecMenu(void);
     void Init(skindesignerapi::cOsdView *osdView);
+    void Activate(void) { osdView->Activate(); };
     void DrawBackground(void);
     void Draw(void);
     void Hide(void) { hidden = true; osdView->Deactivate(true); };
     void Show(void) { hidden = false; osdView->Activate(); };
     void Flush(void) { osdView->Display(); };
     virtual eRecMenuState ProcessKey(eKeys Key);
+    static void DefineTokens(eViewElementsRecMenu ve, skindesignerapi::cTokenContainer *tk);
+    static void DefineTokens(eViewGridsRecMenu vg, skindesignerapi::cTokenContainer *tk);
 };
 #endif //__TVGUIDE_RECMENU_H

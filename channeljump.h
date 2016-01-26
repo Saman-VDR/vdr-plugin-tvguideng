@@ -2,6 +2,7 @@
 #define __TVGUIDE_CHANNELJUMP_H
 
 #include <libskindesignerapi/skindesignerosdbase.h>
+#include "definitions.h"
 
 // --- cChannelJump  -------------------------------------------------------------
 

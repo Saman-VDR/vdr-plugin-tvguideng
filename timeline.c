@@ -1,8 +1,12 @@
 #include "timeline.h"
 
+long cTimelineElement::idCounter;
+
 // --- cTimelineElement  -------------------------------------------------------------
 
 cTimelineElement::cTimelineElement(time_t elementTime) {
+    id = idCounter;
+    idCounter++;
     init = true;
     this->elementTime = elementTime;
 }
@@ -108,8 +112,8 @@ void cTimeline::Draw(void) {
     for (cTimelineElement *e = grids.First(); e; e = grids.Next(e)) {
         if (e->IsNew()) {
             timelineGrid->ClearTokens();
-            timelineGrid->AddIntToken("fullhour", e->IsFullHour());
-            timelineGrid->AddStringToken("timestring", e->ToString());
+            timelineGrid->AddIntToken((int)eTimelineGridIT::fullhour, e->IsFullHour());
+            timelineGrid->AddStringToken((int)eTimelineGridST::timestring, e->ToString().c_str());
             timelineGrid->SetGrid(e->Id(), x, y, width, height);
         } else {
             timelineGrid->MoveGrid(e->Id(), x, y, width, height);
@@ -129,9 +133,8 @@ void cTimeline::DrawDate(void) {
     weekday = weekdayNew;
     timelineDate->Clear();
     timelineDate->ClearTokens();
-    string date = *(timeManager->GetDate());
-    timelineDate->AddStringToken("weekday", weekday);
-    timelineDate->AddStringToken("date", date);
+    timelineDate->AddStringToken((int)eDateTimeST::weekday, weekday.c_str());
+    timelineDate->AddStringToken((int)eDateTimeST::date, *(timeManager->GetDate()));
     timelineDate->Display();
 }
 
@@ -142,7 +145,7 @@ void cTimeline::DrawTimeIndicator(void) {
         int percentTotal = distance*1000/(config.displayHours*60);
         timeIndicator->Clear();
         timeIndicator->ClearTokens();
-        timeIndicator->AddIntToken("percenttotal", percentTotal);
+        timeIndicator->AddIntToken((int)eTimeIndicatorIT::percenttotal, percentTotal);
         timeIndicator->Display();
     } else if (timeIndicatorShown) {
         timeIndicatorShown = false;

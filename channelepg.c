@@ -330,12 +330,12 @@ void cChannelEpg::DrawHeader(skindesignerapi::cViewGrid *channelsGrid) {
     int id = channel->Number();
     if (init) {
         channelsGrid->ClearTokens();
-        channelsGrid->AddIntToken("number", id);
-        channelsGrid->AddStringToken("name", channel->Name());
-        string channelId = *(channel->GetChannelID().ToString());
-        bool channelLogoExisis = channelsGrid->ChannelLogoExists(channelId);
-        channelsGrid->AddStringToken("channelid", channelId);
-        channelsGrid->AddIntToken("channellogoexists", channelLogoExisis);
+        channelsGrid->AddIntToken((int)eChannelGridIT::number, id);
+        channelsGrid->AddStringToken((int)eChannelGridST::name, channel->Name());
+        cString channelId = channel->GetChannelID().ToString();
+        bool channelLogoExisis = channelsGrid->ChannelLogoExists(*channelId);
+        channelsGrid->AddStringToken((int)eChannelGridST::channelid, *channelId);
+        channelsGrid->AddIntToken((int)eChannelGridIT::channellogoexists, channelLogoExisis);
         channelsGrid->SetGrid(id, x, y, width, height);
         init = false;
     } else {
@@ -365,14 +365,14 @@ void cChannelEpg::DrawGrids(skindesignerapi::cViewGrid *epgGrid) {
         time_t gridStop = grid->EndTime();
         if (grid->IsNew()) {
             epgGrid->ClearTokens();
-            epgGrid->AddIntToken("color", grid->Id() % 2);
-            epgGrid->AddIntToken("dummy", grid->IsDummy());
-            epgGrid->AddIntToken("timer", grid->HasTimer());
-            epgGrid->AddIntToken("switchtimer", grid->HasSwitchTimer());
-            epgGrid->AddStringToken("title", grid->Title());
-            epgGrid->AddStringToken("shorttext", grid->ShortText());
-            epgGrid->AddStringToken("start", *TimeString(gridStart));
-            epgGrid->AddStringToken("stop", *TimeString(gridStop));
+            epgGrid->AddIntToken((int)eSchedulesGridIT::color, grid->Id() % 2);
+            epgGrid->AddIntToken((int)eSchedulesGridIT::dummy, grid->IsDummy());
+            epgGrid->AddIntToken((int)eSchedulesGridIT::timer, grid->HasTimer());
+            epgGrid->AddIntToken((int)eSchedulesGridIT::switchtimer, grid->HasSwitchTimer());
+            epgGrid->AddStringToken((int)eSchedulesGridST::title, grid->Title());
+            epgGrid->AddStringToken((int)eSchedulesGridST::shorttext, grid->ShortText());
+            epgGrid->AddStringToken((int)eSchedulesGridST::start, *TimeString(gridStart));
+            epgGrid->AddStringToken((int)eSchedulesGridST::stop, *TimeString(gridStop));
         }
 
         if (gridStart < startTime) {

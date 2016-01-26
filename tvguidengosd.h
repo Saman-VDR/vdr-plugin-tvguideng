@@ -5,6 +5,7 @@
 #include <vdr/plugin.h>
 #include <libskindesignerapi/skindesignerapi.h>
 #include <libskindesignerapi/skindesignerosdbase.h>
+#include "definitions.h"
 #include "config.h"
 #include "timemanager.h"
 #include "epggrid.h"
@@ -12,52 +13,6 @@
 #include "detailview.h"
 #include "recmenuview.h"
 #include "recmanager.h"
-
-enum eViews {
-    viRootView,
-    viDetailView,
-    viRecMenu
-};
-
-enum eViewElementsRoot {
-    verBackgroundHor,
-    verBackgroundVer,
-    verHeaderHor,
-    verHeaderVer,
-    verFooterHor,
-    verFooterVer,
-    verTimeHor,
-    verTimeVer,
-    verDateTimelineHor,
-    verDateTimelineVer,
-    verTimeIndicatorHor,
-    verTimeIndicatorVer,
-    verChannelJump
-};
-
-enum eViewGrids {
-    vgChannelsHor,
-    vgChannelsVer,
-    vgSchedulesHor,
-    vgSchedulesVer,
-    vgChannelGroupsHor,
-    vgChannelGroupsVer,
-    vgTimelineHor,
-    vgTimelineVer,
-    vgRecordingMenu
-};
-
-enum eViewElementsDetail {
-    vedBackground,
-    vedHeader,
-    vedFooter,
-    vedTime
-};
-
-enum eViewElementsRecMenu {
-    vemBackground,
-    vemScrollbar
-};
 
 class cTVGuideOSD : public skindesignerapi::cSkindesignerOsdObject {
 private:
@@ -92,10 +47,12 @@ private:
     void DisplaySearchRecordings(void);
     void DisplaySearchEPG(void);
 public:
-    cTVGuideOSD(void);
+    cTVGuideOSD(skindesignerapi::cPluginStructure *plugStruct);
     virtual ~cTVGuideOSD(void);
     virtual void Show(void);
   	virtual eOSState ProcessKey(eKeys Key);
+    static void DefineTokens(eViewElementsRoot ve, skindesignerapi::cTokenContainer *tk);
+    static void DefineTokens(eViewGridsRoot vg, skindesignerapi::cTokenContainer *tk);
 };
 
 #endif //__TVGUIDENGOSD_H
