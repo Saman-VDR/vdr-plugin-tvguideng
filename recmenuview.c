@@ -158,9 +158,15 @@ void cRecMenuView::DisplaySearchTimerList(void) {
     DisplayMenu();
 }
 
-bool cRecMenuView::DisplayTimerConflict(cTimer *timer) {
+bool cRecMenuView::DisplayTimerConflict(const cTimer *timer) {
     int timerID = 0;
-    for (cTimer *t = Timers.First(); t; t = Timers.Next(t)) {
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+   LOCK_TIMERS_READ;
+   const cTimers* timers = Timers;
+#else
+   const cTimers* timers = &Timers;
+#endif
+    for (const cTimer *t = timers->First(); t; t = timers->Next(t)) {
         if (t == timer)
             return DisplayTimerConflict(timerID);
         timerID++;
@@ -248,7 +254,7 @@ eOSState cRecMenuView::StateMachine(eRecMenuState nextState) {
             break; }
         case rmsEditTimer: {
             //edit timer for active event
-            cTimer *timer = recManager->GetTimerForEvent(event);
+           const cTimer *timer = recManager->GetTimerForEvent(event);
             if (timer) {
                 delete activeMenu;
                 activeMenu = new cRecMenuEditTimer(timer, rmsSaveTimer);
@@ -258,8 +264,8 @@ eOSState cRecMenuView::StateMachine(eRecMenuState nextState) {
         case rmsSaveTimer: {
             //caller: cRecMenuEditTimer
             //save timer for active event
-            cTimer timerModified;
-            cTimer *originalTimer;
+           cTimer timerModified;
+            const cTimer *originalTimer;
             if (cRecMenuEditTimer *menu = dynamic_cast<cRecMenuEditTimer*>(activeMenu)) {
                 timerModified = menu->GetTimer();
                 originalTimer = menu->GetOriginalTimer();
@@ -282,7 +288,13 @@ eOSState cRecMenuView::StateMachine(eRecMenuState nextState) {
                 timerIndex = menu->GetTimerConflictIndex();
             } else break;
             int timerID = timerConflicts->GetCurrentConflictTimerID(timerIndex);
-            cTimer *t = Timers.Get(timerID);
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+            LOCK_TIMERS_READ;
+            const cTimers* timers = Timers;
+#else
+            const cTimers* timers = &Timers;
+#endif
+            const cTimer *t = timers->Get(timerID);
             if (t) {
                 displayEvent = t->Event();
                 if (displayEvent) {
@@ -313,7 +325,13 @@ eOSState cRecMenuView::StateMachine(eRecMenuState nextState) {
                 timerIndex = menu->GetTimerConflictIndex();
             } else break;
             int timerID = timerConflicts->GetCurrentConflictTimerID(timerIndex);
-            cTimer *timer = Timers.Get(timerID);
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+            LOCK_TIMERS_READ;
+            const cTimers* timers = Timers;
+#else
+            const cTimers* timers = &Timers;
+#endif
+            const cTimer *timer = timers->Get(timerID);
             if (timer) {
                 delete activeMenu;
                 activeMenu = new cRecMenuEditTimer(timer, rmsSaveTimerConflictMenu);
@@ -324,7 +342,7 @@ eOSState cRecMenuView::StateMachine(eRecMenuState nextState) {
             //caller: cRecMenuEditTimer
             //save timer from current timer conflict
             cTimer timerModified;
-            cTimer *originalTimer;
+            const cTimer *originalTimer;
             if (cRecMenuEditTimer *menu = dynamic_cast<cRecMenuEditTimer*>(activeMenu)) {
                 timerModified = menu->GetTimer();
                 originalTimer = menu->GetOriginalTimer();
@@ -346,7 +364,14 @@ eOSState cRecMenuView::StateMachine(eRecMenuState nextState) {
                 recFolder = menu->GetFolder();
             }
             delete activeMenu;
-            cChannel *channel = Channels.GetByChannelID(event->ChannelID());
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+            LOCK_CHANNELS_READ;
+            const cChannels* channels = Channels;
+#else
+            cChannels* channels = &Channels;
+#endif
+            
+            const cChannel *channel = channels->GetByChannelID(event->ChannelID());
             activeMenu = new cRecMenuSeriesTimer(channel, event, recFolder);
             DisplayMenu();
             break; }
@@ -680,7 +705,13 @@ eOSState cRecMenuView::StateMachine(eRecMenuState nextState) {
                 timerConflict = menu->GetTimerConflictIndex();
             } else break;
             int timerID = timerConflicts->GetCurrentConflictTimerID(timerConflict);
-            cTimer *timer = Timers.Get(timerID);
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+            LOCK_TIMERS_READ;
+            const cTimers* timers = Timers;
+#else
+            const cTimers* timers = &Timers;
+#endif
+            const cTimer *timer = timers->Get(timerID);
             if (timer) {
                 const cEvent *event = timer->Event();
                 if (event) {
@@ -715,7 +746,13 @@ eOSState cRecMenuView::StateMachine(eRecMenuState nextState) {
                 originalConflictIndex = menu->GetTimerConflictIndex();
             } else break;
             int originalTimerID = timerConflicts->GetCurrentConflictTimerID(originalConflictIndex);
-            cTimer *timerOriginal = Timers.Get(originalTimerID);
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+            LOCK_TIMERS_READ;
+            const cTimers* timers = Timers;
+#else
+            const cTimers* timers = &Timers;
+#endif
+            const cTimer *timerOriginal = timers->Get(originalTimerID);
             if (replace && timerOriginal) {
                 recManager->DeleteTimer(timerOriginal->Event());
                 recManager->createTimer(replace);
@@ -736,7 +773,7 @@ eOSState cRecMenuView::StateMachine(eRecMenuState nextState) {
             DisplayMenu();
             break; } 
         case rmsTimelineTimerEdit: {
-            cTimer *timer;
+            const cTimer *timer;
             if (cRecMenuTimeline *menu = dynamic_cast<cRecMenuTimeline*>(activeMenu)) {
                 timer = menu->GetTimer();
             } else break;
@@ -748,7 +785,7 @@ eOSState cRecMenuView::StateMachine(eRecMenuState nextState) {
             break;}
         case rmsTimelineTimerSave: {
             cTimer timerModified;
-            cTimer *originalTimer;
+            const cTimer *originalTimer;
             if (cRecMenuEditTimer *menu = dynamic_cast<cRecMenuEditTimer*>(activeMenu)) {
                 timerModified = menu->GetTimer();
                 originalTimer = menu->GetOriginalTimer();
@@ -759,7 +796,7 @@ eOSState cRecMenuView::StateMachine(eRecMenuState nextState) {
             DisplayMenu();
             break; }
         case rmsTimelineTimerDelete: {
-            cTimer *timer;
+            const cTimer *timer;
             if (cRecMenuEditTimer *menu = dynamic_cast<cRecMenuEditTimer*>(activeMenu)) {
                 timer = menu->GetOriginalTimer();
             } else break;
@@ -794,7 +831,7 @@ eOSState cRecMenuView::StateMachine(eRecMenuState nextState) {
                 activeMenu = new cRecMenuRecordingSearch(searchString);
             } else {
                 int numSearchResults = 0;
-                cRecording **searchResult = recManager->SearchForRecordings(searchString, numSearchResults);
+                const cRecording **searchResult = recManager->SearchForRecordings(searchString, numSearchResults);
                 if (numSearchResults == 0) {
                     activeMenu = new cRecMenuRecordingSearchNotFound(searchString);
                 } else {

@@ -16,8 +16,14 @@ cTVGuideSearchTimer::cTVGuideSearchTimer(void) {
     startTime = 0000;
     stopTime = 2359;
     useChannel = false;
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    channelMin = Channels->GetByNumber(cDevice::CurrentChannel());
+    channelMax = Channels->GetByNumber(cDevice::CurrentChannel());
+#else
     channelMin = Channels.GetByNumber(cDevice::CurrentChannel());
     channelMax = Channels.GetByNumber(cDevice::CurrentChannel());
+#endif
     channelGroup = "";
     useCase = false;
     mode = 0;
@@ -239,7 +245,13 @@ bool cTVGuideSearchTimer::Parse(bool readTemplate) {
                     char *channelMinbuffer = NULL;
                     char *channelMaxbuffer = NULL;
                     int channels = sscanf(values[value].c_str(), "%m[^|]|%m[^|]", &channelMinbuffer, &channelMaxbuffer);
-                    channelMin = Channels.GetByChannelID(tChannelID::FromString(channelMinbuffer), true, true);
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+                    LOCK_CHANNELS_READ;
+		            const cChannels* channelsP = Channels;
+#else
+                    cChannels* channelsP = &Channels;
+#endif
+		            channelMin = channelsP->GetByChannelID(tChannelID::FromString(channelMinbuffer), true, true);
                     if (!channelMin) {
                     	channelMin = channelMax = NULL;
                         useChannel = 0;
@@ -247,7 +259,7 @@ bool cTVGuideSearchTimer::Parse(bool readTemplate) {
                     if (channels == 1)
                         channelMax = channelMin;
                     else {
-                        channelMax = Channels.GetByChannelID(tChannelID::FromString(channelMaxbuffer), true, true);
+                        channelMax = channelsP->GetByChannelID(tChannelID::FromString(channelMaxbuffer), true, true);
                         if (!channelMax) {
                             channelMin = channelMax = NULL;
                             useChannel = 0;
@@ -506,12 +518,35 @@ bool cTVGuideSearchTimer::Active(void) {
     return false;
 }
 
+void cTVGuideSearchTimer::SetStartChannel(int startChannel) { 
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    channelMin = Channels->GetByNumber(startChannel); 
+#else
+    channelMin = Channels.GetByNumber(startChannel); 
+#endif
+}
+
+void cTVGuideSearchTimer::SetStopChannel(int stopChannel) { 
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    channelMax = Channels->GetByNumber(stopChannel); 
+#else
+    channelMax = Channels.GetByNumber(stopChannel); 
+#endif
+}
 
 int cTVGuideSearchTimer::GetNumTimers(void) {
     int numTimers = 0;
     if (ID < 0)
     	return numTimers;
-    for (cTimer *timer = Timers.First(); timer; timer = Timers.Next(timer)) {
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+     LOCK_TIMERS_READ;
+     const cTimers* timers = Timers;
+#else
+     const cTimers* timers = &Timers;
+#endif
+    for (const cTimer *timer = timers->First(); timer; timer = timers->Next(timer)) {
         char* searchID = GetAuxValue(timer, "s-id");
         if (!searchID) continue;
       	if (ID == atoi(searchID))
@@ -525,7 +560,13 @@ int cTVGuideSearchTimer::GetNumRecordings(void) {
     int numRecordings = 0;
     if (ID < 0)
         return numRecordings;
-    for (cRecording *recording = Recordings.First(); recording; recording = Recordings.Next(recording)) {
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_RECORDINGS_READ;
+    const cRecordings* recordings = Recordings;
+#else
+    cRecordings* recordings = &Recordings;
+#endif
+    for (const cRecording *recording = recordings->First(); recording; recording = recordings->Next(recording)) {
         if (recording->IsEdited()) 
             continue;
         if (!recording->Info()) 

@@ -31,12 +31,18 @@ void cChannelgroups::Init(void) {
     bool setStart = false;
     int lastChannelNumber = 0;
     int id = 0;
-    const cChannel *first = Channels.First();
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    const cChannels* channels = Channels;
+#else
+    const cChannels* channels = &Channels;
+#endif
+    const cChannel *first = channels->First();
     if (!first->GroupSep()) {
         channelGroups.push_back(cChannelGroup(tr("Main Program"), id++));
         setStart = true;
     }    
-    for (const cChannel *channel = Channels.First(); channel; channel = Channels.Next(channel)) {
+    for (const cChannel *channel = channels->First(); channel; channel = channels->Next(channel)) {
         if (setStart && (channelGroups.size() > 0)) {
             channelGroups[channelGroups.size()-1].SetChannelStart(channel->Number());
             setStart = false;
@@ -82,7 +88,14 @@ void cChannelgroups::Draw(const cChannel *start, const cChannel *stop) {
     int fields = 1;
     double offset = 0.0;
 
-    for (const cChannel *channel = Channels.Next(start); channel; channel = Channels.Next(channel)) {
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    const cChannels* channels = Channels;
+#else
+    const cChannels* channels = &Channels;
+#endif
+
+    for (const cChannel *channel = channels->Next(start); channel; channel = channels->Next(channel)) {
         if (channel->GroupSep())
             continue;
         if (config.hideLastChannelGroup && IsInLastGroup(channel)) {
@@ -200,5 +213,12 @@ int cChannelgroups::GetLastValidChannel(void) {
     if (config.hideLastChannelGroup && channelGroups.size() > 1) {
         return channelGroups[channelGroups.size()-2].StopChannel();
     }
-    return Channels.MaxNumber();
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+   LOCK_CHANNELS_READ;
+   return Channels->MaxNumber();
+#else
+   return Channels.MaxNumber();
+#endif
+
+   
 }

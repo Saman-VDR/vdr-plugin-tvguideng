@@ -57,7 +57,14 @@ void cEpgGrid::Init(const cChannel *startChannel) {
     int numBack = channelsPerPage / 2;
     int offset = 0;
     const cChannel *newStartChannel = startChannel;
-    for (; newStartChannel ; newStartChannel = Channels.Prev(newStartChannel)) {
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    const cChannels* channels = Channels;
+#else
+    const cChannels* channels = &Channels;
+#endif
+
+    for (; newStartChannel ; newStartChannel = channels->Prev(newStartChannel)) {
         if (newStartChannel && !newStartChannel->GroupSep()) {
             offset++;
         }
@@ -65,7 +72,7 @@ void cEpgGrid::Init(const cChannel *startChannel) {
             break;
     }
     if (!newStartChannel)
-        newStartChannel = Channels.First();
+        newStartChannel = channels->First();
     offset--;
     if (offset < 0)
         offset = 0;
@@ -79,7 +86,15 @@ void cEpgGrid::CreateChannels(const cChannel *startChannel, int activeChannel) {
     channels.Clear();
     if (!startChannel)
         return;
-    for (const cChannel *channel = startChannel; channel; channel = Channels.Next(channel)) {
+
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+   LOCK_CHANNELS_READ;
+   const cChannels* chls = Channels;
+#else
+   cChannels* chls = &Channels;
+#endif
+
+    for (const cChannel *channel = startChannel; channel; channel = chls->Next(channel)) {
         if (config.hideLastChannelGroup && channelGroups->IsInLastGroup(channel)) {
             break;
         }
@@ -110,7 +125,7 @@ void cEpgGrid::CreateChannels(const cChannel *startChannel, int activeChannel) {
         int newChannelNumber = 1;
         if (first)
             newChannelNumber = first->GetChannelNumber() - numBack;
-        const cChannel *newStart = Channels.GetByNumber(newChannelNumber);
+        const cChannel *newStart = chls->GetByNumber(newChannelNumber);
         CreateChannels(newStart, pos+1);
     }
 }
@@ -253,7 +268,15 @@ bool cEpgGrid::ChannelForward(void) {
         return false;
     //insert new channels at end
     int numInserted = 0;
-    for (const cChannel *channel = (const cChannel*)currentChannel->Next(); channel ; channel = Channels.Next(channel)) {
+
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    const cChannels* chls = Channels;
+#else
+    const cChannels* chls = &Channels;
+#endif
+
+    for (const cChannel *channel = (const cChannel*)currentChannel->Next(); channel ; channel = chls->Next(channel)) {
         if (channel->GroupSep()) {
             continue;
         }
@@ -312,7 +335,13 @@ bool cEpgGrid::ChannelBack(void) {
         return false;
     //insert new channels at start
     int numInserted = 0;
-    for (const cChannel *channel = (const cChannel*)currentChannel->Prev(); channel ; channel = Channels.Prev(channel)) {
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    const cChannels* chls = Channels;
+#else
+    const cChannels* chls = &Channels;
+#endif
+    for (const cChannel *channel = (const cChannel*)currentChannel->Prev(); channel ; channel = chls->Prev(channel)) {
         if (channel->GroupSep()) {
             continue;
         }
@@ -352,39 +381,67 @@ bool cEpgGrid::ChannelBack(void) {
 const cChannel *cEpgGrid::GetNextChannelNumJump(void) {
     const cChannel *newFirst = SeekChannelForward(channelsPerPage);
     if (!newFirst)
-        newFirst = Channels.Last();
+    {
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    newFirst = Channels->Last();
+#else
+    newFirst = Channels.Last();
+#endif
+    }
+    
     return newFirst;
 }
 
 const cChannel *cEpgGrid::GetPrevChannelNumJump(void) {
     const cChannel *newFirst = SeekChannelBack(channelsPerPage);
     if (!newFirst)
-        newFirst = Channels.First();
+    {
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    newFirst = Channels->First();
+#else
+    newFirst = Channels.First();
+#endif
+    }
     return newFirst;
 }
 
 const cChannel *cEpgGrid::GetNextChannelGroupJump(void) {
-    if (!active) {
-        return Channels.Last();
-    }
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    const cChannels* chls = Channels;
+#else
+    cChannels* chls = &Channels;
+#endif
+
+    if (!active)
+        return chls->Last();
+
     int currentGroup = channelGroups->GetGroup(active->Channel());
     int nextChannelNumber = channelGroups->GetNextGroupFirstChannel(currentGroup);
-    const cChannel *next = Channels.GetByNumber(nextChannelNumber);
+    const cChannel *next = chls->GetByNumber(nextChannelNumber);
     if (next)
         return next;
-    return Channels.Last();
+    return chls->Last();
 }
 
 const cChannel *cEpgGrid::GetPrevChannelGroupJump(void) {
-    if (!active) {
-        return Channels.First();
-    }
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    const cChannels* chls = Channels;
+#else
+    cChannels* chls = &Channels;
+#endif
+    if (!active)
+        return chls->First();
+
     int currentGroup = channelGroups->GetGroup(active->Channel());
     int prevChannelNumber = channelGroups->GetPrevGroupFirstChannel(currentGroup);
-    const cChannel *prev = Channels.GetByNumber(prevChannelNumber);
+    const cChannel *prev = chls->GetByNumber(prevChannelNumber);
     if (prev)
         return prev;
-    return Channels.First();
+    return chls->First();
 }
 
 bool cEpgGrid::IsFirstGroup(void) {
@@ -715,15 +772,22 @@ const cChannel *cEpgGrid::SeekChannelForward(int num) {
         return NULL;
     const cChannel *currentChannel = active->Channel();
     const cChannel *destChannel;
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    const cChannels* chls = Channels;
+#else
+    const cChannels* chls = &Channels;
+#endif
+
     int found = 0;
-    for (destChannel = currentChannel; destChannel ; destChannel = Channels.Next(destChannel)) {
+    for (destChannel = currentChannel; destChannel ; destChannel = chls->Next(destChannel)) {
         if (destChannel->GroupSep()) {
             continue;
         }
         if (config.hideLastChannelGroup && channelGroups->IsInLastGroup(destChannel)) {
-            destChannel = Channels.Prev(destChannel);
+            destChannel = chls->Prev(destChannel);
             while (destChannel && destChannel->GroupSep()) {
-                destChannel = Channels.Prev(destChannel);
+                destChannel = chls->Prev(destChannel);
             }
             break;
         }
@@ -732,9 +796,9 @@ const cChannel *cEpgGrid::SeekChannelForward(int num) {
         found++;
     }
     if (!destChannel)
-        destChannel = Channels.Last();
+        destChannel = chls->Last();
     while (destChannel && destChannel->GroupSep()) {
-        destChannel = Channels.Prev(destChannel);
+        destChannel = chls->Prev(destChannel);
     }
     return destChannel;
 }
@@ -745,7 +809,13 @@ const cChannel *cEpgGrid::SeekChannelBack(int num) {
     const cChannel *currentChannel = active->Channel();
     const cChannel *destChannel;
     int found = 0;
-    for (destChannel = currentChannel; destChannel ; destChannel = Channels.Prev(destChannel)) {
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    const cChannels* chls = Channels;
+#else
+    const cChannels* chls = &Channels;
+#endif
+    for (destChannel = currentChannel; destChannel ; destChannel = chls->Prev(destChannel)) {
         if (destChannel->GroupSep()) {
             continue;
         }
@@ -754,9 +824,9 @@ const cChannel *cEpgGrid::SeekChannelBack(int num) {
         found++;
     }
     if (!destChannel)
-        destChannel = Channels.First();
+        destChannel = chls->First();
     while (destChannel && destChannel->GroupSep()) {
-        destChannel = Channels.Next(destChannel);
+        destChannel = chls->Next(destChannel);
     }
     return destChannel;
 }

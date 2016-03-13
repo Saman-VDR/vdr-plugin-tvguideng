@@ -23,8 +23,6 @@ private:
     const cChannel *channel;
     cList<cGridElement> grids;
     set<long> deletedElements;
-    cSchedulesLock *schedulesLock;
-    const cSchedules *schedules;
     bool hasTimer;
     bool hasSwitchTimer;
     cGridElement *AddEpgGrid(const cEvent *event, cGridElement *after = NULL);
@@ -47,7 +45,7 @@ public:
     void ClearOutdatedStart(void);
     void ClearOutdatedEnd(void);
     void SetTimers(void);
-    void SetTimer(void) { hasTimer = channel->HasTimer(); };
+    void SetTimer(void);
     bool HasTimer(void) { return hasTimer; };
     void SetSwitchTimer() {hasSwitchTimer = SwitchTimers.ChannelInSwitchList(channel);};
     bool HasSwitchTimer() { return hasSwitchTimer; };

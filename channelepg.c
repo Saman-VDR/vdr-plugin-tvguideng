@@ -8,12 +8,10 @@ cChannelEpg::cChannelEpg(int position, const cChannel *channel, cTimeManager *ti
     channelsPerPage = (config.displayMode == eHorizontal) ? config.channelsPerPageHorizontal : config.channelsPerPageVertical;
     SetTimer();
     SetSwitchTimer();
-    schedulesLock = new cSchedulesLock(false, 100);
 }
 
 cChannelEpg::~cChannelEpg(void) {
     grids.Clear();
-    delete schedulesLock;
 }
 
 void cChannelEpg::ClearGrids(void) {
@@ -21,8 +19,19 @@ void cChannelEpg::ClearGrids(void) {
 }
 
 bool cChannelEpg::ReadGrids(void) {
-    schedules = cSchedules::Schedules(*schedulesLock);
+    
     const cSchedule *Schedule = NULL;
+
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_SCHEDULES_READ;
+    const cSchedules* schedules = Schedules;
+#else
+    cSchedulesLock schedulesLock;
+    const cSchedules* schedules = (cSchedules*)cSchedules::Schedules(schedulesLock);
+#endif
+    if (!schedules)
+       return false;
+
     Schedule = schedules->GetSchedule(channel);
     if (!Schedule) {
         AddDummyGrid(timeManager->GetStart(), timeManager->GetEnd());
@@ -162,7 +171,15 @@ void cChannelEpg::AddNewGridsAtStart(void) {
         return;
     }
     //if not, i have to add new ones to the list
-    schedules = cSchedules::Schedules(*schedulesLock);
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_SCHEDULES_READ;
+    const cSchedules* schedules = Schedules;
+#else
+    cSchedulesLock schedulesLock;
+    const cSchedules* schedules = (cSchedules*)cSchedules::Schedules(schedulesLock);
+#endif
+    if (!schedules)
+       return ;
     const cSchedule *Schedule = NULL;
     Schedule = schedules->GetSchedule(channel);
     if (!Schedule) {
@@ -208,7 +225,15 @@ void cChannelEpg::AddNewGridsAtEnd(void) {
         return;
     }
     //if not, i have to add new ones to the list
-    schedules = cSchedules::Schedules(*schedulesLock);
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_SCHEDULES_READ;
+    const cSchedules* schedules = Schedules;
+#else
+    cSchedulesLock schedulesLock;
+    const cSchedules* schedules = (cSchedules*)cSchedules::Schedules(schedulesLock);
+#endif
+    if (!schedules)
+       return ;
     const cSchedule *Schedule = NULL;
     Schedule = schedules->GetSchedule(channel);
     if (!Schedule) {
@@ -440,3 +465,12 @@ void cChannelEpg::Debug(void) {
         grid->Debug();
     }
 }
+
+void cChannelEpg::SetTimer() 
+{ 
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+#else
+   hasTimer = channel->HasTimer(); 
+#endif
+   
+};

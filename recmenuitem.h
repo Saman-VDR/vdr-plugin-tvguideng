@@ -291,14 +291,14 @@ public:
 // --- cRecMenuItemChannelChooser -------------------------------------------------------
 class cRecMenuItemChannelChooser : public cRecMenuItem {
 private:
-    cChannel *channel;
+    const cChannel *channel;
     int channelNumber;
     int *callback;
     bool initialChannelSet;
     bool fresh;
 public:
     cRecMenuItemChannelChooser (string text,
-                                cChannel *initialChannel,
+                                const cChannel *initialChannel,
                                 bool active = false,
                                 int *callback = NULL,
                                 eRecMenuState action = rmsNotConsumed);
@@ -412,9 +412,9 @@ public:
 // --- cRecMenuItemRecording  -------------------------------------------------------
 class cRecMenuItemRecording : public cRecMenuItem {
 private:
-    cRecording *recording;
+    const cRecording *recording;
 public:
-    cRecMenuItemRecording(cRecording *recording, bool active);
+    cRecMenuItemRecording(const cRecording *recording, bool active);
     virtual ~cRecMenuItemRecording(void) {};
     void SetTokens(skindesignerapi::cViewGrid *menu);
 };
@@ -443,27 +443,27 @@ public:
 class cRecMenuItemTimelineHeader : public cRecMenuItem {
 private:
     time_t day;
-    cTimer *timer;
+    const cTimer *timer;
 public:
     cRecMenuItemTimelineHeader(time_t day);
     virtual ~cRecMenuItemTimelineHeader(void);
     void SetTokens(skindesignerapi::cViewGrid *menu);
     void SetDay(time_t day) { this->day = day; };
-    void SetCurrentTimer(cTimer *timer) { this->timer = timer; };
+    void SetCurrentTimer(const cTimer *timer) { this->timer = timer; };
     void UnsetCurrentTimer(void) { timer = NULL; };
 };
 
 // --- cRecMenuItemTimelineTimer  -------------------------------------------------------
 class cRecMenuItemTimelineTimer : public cRecMenuItem {
 private:
-    cTimer *timer;
+    const cTimer *timer;
     time_t start;
     time_t stop;
 public:
-    cRecMenuItemTimelineTimer(cTimer *timer, time_t start, time_t stop, bool active);
+    cRecMenuItemTimelineTimer(const cTimer *timer, time_t start, time_t stop, bool active);
     virtual ~cRecMenuItemTimelineTimer(void);
     void SetTokens(skindesignerapi::cViewGrid *menu);
-    cTimer *GetTimer(void);
+    const cTimer *GetTimer(void);
     eRecMenuState ProcessKey(eKeys Key);
 };
 

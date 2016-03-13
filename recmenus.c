@@ -74,7 +74,12 @@ cRecMenuConfirmTimer::cRecMenuConfirmTimer(const cEvent *event) {
     } else {
         message = tr("Timer NOT created");
     }
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    cString channelName = Channels->GetByChannelID(event->ChannelID())->Name();
+#else
     cString channelName = Channels.GetByChannelID(event->ChannelID())->Name();
+#endif
     string datetime = *cString::sprintf("%s %s - %s", *event->GetDateString(), *event->GetTimeString(), *event->GetEndTimeString());
     string eventTitle = event->Title() ? event->Title() : "";
     AddHeader(new cRecMenuItemInfo(message, 4, *channelName, datetime, eventTitle));
@@ -109,7 +114,12 @@ string cRecMenuAskFolder::GetFolder(void) {
 cRecMenuConfirmDeleteTimer::cRecMenuConfirmDeleteTimer(const cEvent *event) {
     SetMenuWidth(50);
     string message = tr("Timer deleted");
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    cString channelName = Channels->GetByChannelID(event->ChannelID())->Name();
+#else
     cString channelName = Channels.GetByChannelID(event->ChannelID())->Name();
+#endif
     string datetime = *cString::sprintf("%s %s - %s", *event->GetDateString(), *event->GetTimeString(), *event->GetEndTimeString());
     string eventTitle = event->Title() ? event->Title() : "";
 
@@ -121,7 +131,12 @@ cRecMenuConfirmDeleteTimer::cRecMenuConfirmDeleteTimer(const cEvent *event) {
 cRecMenuAskDeleteTimer::cRecMenuAskDeleteTimer(const cEvent *event) {
     SetMenuWidth(50);
     string message = tr("Timer");
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    cString channelName = Channels->GetByChannelID(event->ChannelID())->Name();
+#else
     cString channelName = Channels.GetByChannelID(event->ChannelID())->Name();
+#endif
     string eventTitle = event->Title() ? event->Title() : "";
     string message2 = tr("still recording - really delete?");
 
@@ -169,9 +184,15 @@ cRecMenuTimerConflict::cRecMenuTimerConflict(cTVGuideTimerConflict *conflict) {
                                                   conflict->overlapStart, 
                                                   conflict->overlapStop));
     
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_TIMERS_READ;
+    const cTimers* timers = Timers;
+#else
+    const cTimers* timers = &Timers;
+#endif
     int i=0;
     for(vector<int>::iterator it = conflict->timerIDs.begin(); it != conflict->timerIDs.end(); it++) {
-        const cTimer *timer = Timers.Get(*it);
+        const cTimer *timer = timers->Get(*it);
         if (timer) {
             AddMenuItem(new cRecMenuItemTimer(timer,
                                               rmsTimerConflictShowInfo,
@@ -249,8 +270,14 @@ cRecMenuNoRerunsFound::cRecMenuNoRerunsFound(string searchString) {
 // --- cRecMenuConfirmRerunUsed  ---------------------------------------------------------
 cRecMenuConfirmRerunUsed::cRecMenuConfirmRerunUsed(const cEvent *original, const cEvent *replace) {
     SetMenuWidth(70);
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    cString channelOrig = Channels->GetByChannelID(original->ChannelID())->Name();
+    cString channelReplace = Channels->GetByChannelID(replace->ChannelID())->Name();
+#else
     cString channelOrig = Channels.GetByChannelID(original->ChannelID())->Name();
     cString channelReplace = Channels.GetByChannelID(replace->ChannelID())->Name();
+#endif
     string line1 = *cString::sprintf("%s \"%s\"", tr("Timer for"), original->Title());
     string line2 = *cString::sprintf("%s %s %s", *original->GetDateString(), *original->GetTimeString(), *channelOrig);
     string line3 = *cString::sprintf("%s \"%s\"", tr("replaced by rerun"), replace->Title());
@@ -261,7 +288,7 @@ cRecMenuConfirmRerunUsed::cRecMenuConfirmRerunUsed(const cEvent *original, const
 }
 
 // --- cRecMenuEditTimer  ---------------------------------------------------------
-cRecMenuEditTimer::cRecMenuEditTimer(cTimer *timer, eRecMenuState nextState) {
+cRecMenuEditTimer::cRecMenuEditTimer(const cTimer *timer, eRecMenuState nextState) {
     SetMenuWidth(70);
     if (!timer)
         return;
@@ -310,7 +337,7 @@ cRecMenuEditTimer::cRecMenuEditTimer(cTimer *timer, eRecMenuState nextState) {
     }
 }
 
-cTimer *cRecMenuEditTimer::GetOriginalTimer(void) {
+const cTimer *cRecMenuEditTimer::GetOriginalTimer(void) {
     return originalTimer;
 }
 
@@ -348,7 +375,7 @@ cTimer cRecMenuEditTimer::GetTimer(void) {
 ******************************************************************************************/
 
 // --- cRecMenuSeriesTimer ---------------------------------------------------------
-cRecMenuSeriesTimer::cRecMenuSeriesTimer(cChannel *initialChannel, const cEvent *event, string folder) {
+cRecMenuSeriesTimer::cRecMenuSeriesTimer(const cChannel *initialChannel, const cEvent *event, string folder) {
     if (!initialChannel)
         return;
     timerActive = true;
@@ -365,7 +392,7 @@ cRecMenuSeriesTimer::cRecMenuSeriesTimer(cChannel *initialChannel, const cEvent 
     AddHeader(new cRecMenuItemInfo(line1, 2, line2));
 
     AddMenuItem(new cRecMenuItemBool(tr("Timer Active"), timerActive, false, &timerActive));
-    AddMenuItem(new cRecMenuItemChannelChooser(tr("Channel"), initialChannel, false, &channel));
+    AddMenuItem(new cRecMenuItemChannelChooser(tr("Channel"), (cChannel*)initialChannel, false, &channel));
     AddMenuItem(new cRecMenuItemTime(tr("Series Timer start time"), start, false, &start));
     AddMenuItem(new cRecMenuItemTime(tr("Series Timer stop time"), stop, false, &stop));
     AddMenuItem(new cRecMenuItemDayChooser(tr("Days to record"), dayOfWeek, false, &dayOfWeek));
@@ -377,8 +404,12 @@ cRecMenuSeriesTimer::cRecMenuSeriesTimer(cChannel *initialChannel, const cEvent 
 }
 
 cTimer *cRecMenuSeriesTimer::GetTimer(void) {
-    cChannel *chan = Channels.GetByNumber(channel);
-    cTimer *seriesTimer = new cTimer(NULL, NULL, chan);
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    cTimer *seriesTimer = new cTimer(NULL, NULL, Channels->GetByNumber(channel));
+#else
+    cTimer *seriesTimer = new cTimer(NULL, NULL, Channels.GetByNumber(channel));
+#endif
     cString fileName = "TITLE EPISODE";
     if (folder.size() > 0) {
         std::replace(folder.begin(), folder.end(), '/', '~');
@@ -558,8 +589,14 @@ void cRecMenuSearchTimerEdit::CreateMenuItems(void) {
         startChannel = 1;
     if (stopChannel == 0)
         stopChannel = 1;
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    AddMenuItem(new cRecMenuItemChannelChooser(tr("Start Channel"), Channels->GetByNumber(startChannel), false, &startChannel, rmsSearchTimerSave));
+    AddMenuItem(new cRecMenuItemChannelChooser(tr("Stop Channel"), Channels->GetByNumber(stopChannel), false, &stopChannel, rmsSearchTimerSave));
+#else
     AddMenuItem(new cRecMenuItemChannelChooser(tr("Start Channel"), Channels.GetByNumber(startChannel), false, &startChannel, rmsSearchTimerSave));
     AddMenuItem(new cRecMenuItemChannelChooser(tr("Stop Channel"), Channels.GetByNumber(stopChannel), false, &stopChannel, rmsSearchTimerSave));
+#endif
     AddMenuItem(new cRecMenuItemBool(tr("Use Time"), useTime, false, &useTime, rmsSearchTimerSave));
     AddMenuItem(new cRecMenuItemTime(tr("Start after"), startTime, false, &startTime, rmsSearchTimerSave));
     AddMenuItem(new cRecMenuItemTime(tr("Start before"), stopTime, false, &stopTime, rmsSearchTimerSave));
@@ -879,7 +916,12 @@ cRecMenuSearchConfirmTimer::cRecMenuSearchConfirmTimer(const cEvent *event) {
     SetMenuWidth(50);
 
     string message = tr("Timer created");
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    cString channelName = Channels->GetByChannelID(event->ChannelID())->Name();
+#else
     cString channelName = Channels.GetByChannelID(event->ChannelID())->Name();
+#endif
     string line3 = *cString::sprintf("%s %s - %s", *event->GetDateString(), *event->GetTimeString(), *event->GetEndTimeString());
     string line4 = event->Title() ? event->Title() : ""; 
 
@@ -906,7 +948,7 @@ cRecMenuTimeline::cRecMenuTimeline(void) {
 }
 
 void cRecMenuTimeline::SetHeaderTimer(void) {
-    cTimer *currentTimer = NULL;
+    const cTimer *currentTimer = NULL;
     cRecMenuItem *currentItem = GetActive();
     if (!currentItem) {
         timelineHeader->UnsetCurrentTimer();
@@ -929,7 +971,13 @@ void cRecMenuTimeline::SetStartStop(void) {
 
 void cRecMenuTimeline::GetTimersForDay(void) {
     timersToday.clear();
-    for (cTimer *t = Timers.First(); t; t = Timers.Next(t)) {
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_TIMERS_READ;
+    const cTimers* timers = Timers;
+#else
+    const cTimers* timers = &Timers;
+#endif
+    for (const cTimer *t = timers->First(); t; t = timers->Next(t)) {
         if (((t->StartTime() > timeStart) && (t->StartTime() <= timeStop)) || ((t->StopTime() > timeStart) && (t->StopTime() <= timeStop))) {
             timersToday.push_back(t);
         }
@@ -975,7 +1023,7 @@ void cRecMenuTimeline::NextDay(void) {
     timelineHeader->SetNew();
 }
 
-cTimer *cRecMenuTimeline::GetTimer(void) {
+const cTimer *cRecMenuTimeline::GetTimer(void) {
     if (cRecMenuItemTimelineTimer *activeItem = dynamic_cast<cRecMenuItemTimelineTimer*>(GetActive()))
         return activeItem->GetTimer();
     return NULL;
@@ -1032,7 +1080,7 @@ cRecMenuRecordingSearch::cRecMenuRecordingSearch(string search) {
 }
 
 // --- cRecMenuRecordingSearchResults  ---------------------------------------------------------
-cRecMenuRecordingSearchResults::cRecMenuRecordingSearchResults(string searchString, cRecording **searchResults, int numResults) {
+cRecMenuRecordingSearchResults::cRecMenuRecordingSearchResults(string searchString, const cRecording **searchResults, int numResults) {
     SetMenuWidth(80);
     this->searchString = searchString;
     this->searchResults = searchResults;

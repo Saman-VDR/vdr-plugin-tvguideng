@@ -6,6 +6,7 @@
 #include <algorithm>
 
 #include <vdr/menu.h>
+#include <vdr/timers.h>
 #include "recmanager.h"
 
 static int CompareRecording(const void *p1, const void *p2) {
@@ -51,15 +52,23 @@ bool cRecManager::CheckEventForTimer(const cEvent *event) {
     return hasTimer;
 }
 
-cTimer *cRecManager::GetTimerForEvent(const cEvent *event) {
-    cTimer *timer = NULL;
+const cTimer *cRecManager::GetTimerForEvent(const cEvent *event) {
+    const cTimer *timer = NULL;
     if (config.useRemoteTimers && pRemoteTimers) {
         RemoteTimers_GetMatch_v1_0 rtMatch;
         rtMatch.event = event;
         pRemoteTimers->Service("RemoteTimers::GetMatch-v1.0", &rtMatch);
         timer = rtMatch.timer;
-    } else
-        timer = Timers.GetMatch(event);    
+        return timer;
+    } 
+
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_TIMERS_READ;
+    timer = Timers->GetMatch(event);
+#else
+    timer = Timers.GetMatch(event);
+#endif
+    
     return timer;
 }
 
@@ -74,20 +83,32 @@ cTimer *cRecManager::createTimer(const cEvent *event, std::string path) {
 }
 
 cTimer *cRecManager::createLocalTimer(const cEvent *event, std::string path) {
-    cTimer *timer = new cTimer(event);
-    cTimer *t = Timers.GetTimer(timer);
+   cTimer *timer = new cTimer(event);
+
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_TIMERS_WRITE;
+    cTimers* timers = Timers;
+#else
+    cTimers* timers = &Timers;
+#endif
+
+    cTimer* t = timers->GetTimer(timer);
+
     if (t) {
         t->OnOff();
-        t->SetEventFromSchedule();
+
+        // #TODO ist das richtig?
+        t->SetEvent(event);         // t->SetEventFromSchedule();
+
         delete timer;
         timer = t;
         isyslog("timer %s reactivated", *t->ToDescr());
     } else {
-        Timers.Add(timer);
+        timers->Add(timer);
         isyslog("timer %s added (active)", *timer->ToDescr());
     }
     SetTimerPath(timer, event, path);
-    Timers.SetModified();
+    timers->SetModified();
     return timer;
 }
 
@@ -144,7 +165,13 @@ void cRecManager::SetTimerPath(cTimer *timer, const cEvent *event, std::string p
 }
 
 void cRecManager::DeleteTimer(int timerID) {
-    cTimer *t = Timers.Get(timerID);
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+   LOCK_TIMERS_READ;
+   const cTimer *t = Timers->Get(timerID);
+#else
+   const cTimer *t = Timers.Get(timerID);
+#endif
+
     if (!t)
         return;
     DeleteTimer(t);
@@ -161,21 +188,40 @@ void cRecManager::DeleteTimer(const cEvent *event) {
 }
 
 void cRecManager::DeleteLocalTimer(const cEvent *event) {
-    cTimer *t = Timers.GetMatch(event);
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+   LOCK_TIMERS_READ;
+   const cTimer *t = Timers->GetMatch(event);
+#else
+   const cTimer *t = Timers.GetMatch(event);
+#endif
+
     if (!t)
         return;
     DeleteTimer(t);
 }
 
 
-void cRecManager::DeleteTimer(cTimer *timer) {
-    if (timer->Recording()) {
-        timer->Skip();
-        cRecordControls::Process(time(NULL));
-    }
+void cRecManager::DeleteTimer(const cTimer *timer) {
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+   LOCK_TIMERS_WRITE;
+   cTimers* timers = Timers;
+#else
+   cTimers* timers = &Timers;
+#endif
+
+   cTimer* t = timers->GetTimer((cTimer*)timer);  // #TODO dirty cast
+   
+   if (t->Recording()) {
+      t->Skip();
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+      cRecordControls::Process(timers, time(NULL));
+#else
+      cRecordControls::Process(time(NULL));
+#endif
+   }
     isyslog("timer %s deleted", *timer->ToDescr());
-    Timers.Del(timer, true);
-    Timers.SetModified();
+    timers->Del(t, true);
+    timers->SetModified();
 }
 
 void cRecManager::DeleteRemoteTimer(const cEvent *event) {
@@ -184,7 +230,7 @@ void cRecManager::DeleteRemoteTimer(const cEvent *event) {
     pRemoteTimers->Service("RemoteTimers::GetMatch-v1.0", &rtMatch);
     if (rtMatch.timer) {
         RemoteTimers_Timer_v1_0 rt;
-        rt.timer = rtMatch.timer;
+        rt.timer = (cTimer*)rtMatch.timer;  // #TODO - dirty cast
         isyslog("remotetimer %s deleted", *rt.timer->ToDescr());
         if (!pRemoteTimers->Service("RemoteTimers::DelTimer-v1.0", &rt))
             isyslog("remotetimer error");
@@ -192,7 +238,7 @@ void cRecManager::DeleteRemoteTimer(const cEvent *event) {
     }
 }
 
-void cRecManager::SaveTimer(cTimer *timer, cTimer newTimerSettings) {
+void cRecManager::SaveTimer(const cTimer *timer, cTimer newTimerSettings) {
     if (!timer)
         return;
     
@@ -204,33 +250,45 @@ void cRecManager::SaveTimer(cTimer *timer, cTimer newTimerSettings) {
     int stop = newTimerSettings.Stop();
     std::string fileName = newTimerSettings.File();
 
-    timer->SetDay(day);
-    timer->SetStart(start);
-    timer->SetStop(stop);
-    timer->SetPriority(prio);
-    timer->SetLifetime(lifetime);
-    timer->SetFile(fileName.c_str());
-    
+    // #TODO - very dirty cast from const !!
+    ((cTimer*)timer)->SetDay(day);
+    ((cTimer*)timer)->SetStart(start);
+    ((cTimer*)timer)->SetStop(stop);
+    ((cTimer*)timer)->SetPriority(prio);
+    ((cTimer*)timer)->SetLifetime(lifetime);
+    ((cTimer*)timer)->SetFile(fileName.c_str());
+
     if (timer->HasFlags(tfActive) && !active)
-        timer->ClrFlags(tfActive);
+        ((cTimer*)timer)->ClrFlags(tfActive);
     else if (!timer->HasFlags(tfActive) && active)
-        timer->SetFlags(tfActive);
+        ((cTimer*)timer)->SetFlags(tfActive);
     
-    timer->SetEventFromSchedule();
+// #TODO  to be implemented    timer->SetEventFromSchedule();
     if (config.useRemoteTimers && pRemoteTimers) {
         RemoteTimers_Timer_v1_0 rt;
-        rt.timer = timer;
+        rt.timer = (cTimer*)timer; // #TODO - dirty cast
         if (!pRemoteTimers->Service("RemoteTimers::ModTimer-v1.0", &rt))
             rt.timer = NULL;
         RefreshRemoteTimers();
     } else {
-        Timers.SetModified();
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+   LOCK_TIMERS_WRITE;
+   Timers->SetModified();
+#else
+   Timers.SetModified();
+#endif
     }          
 }
 
 
 bool cRecManager::IsRecorded(const cEvent *event) {
-    cTimer *timer = Timers.GetMatch(event);
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+   LOCK_TIMERS_WRITE;
+   cTimers* timers = Timers;
+#else
+   cTimers* timers = &Timers;
+#endif
+    cTimer *timer = timers->GetMatch(event);
     if (!timer)
         return false;
     return timer->Recording();
@@ -256,7 +314,7 @@ cTVGuideTimerConflicts *cRecManager::CheckTimerConflict(void) {
 }
 
 void cRecManager::CreateSeriesTimer(cTimer *seriesTimer) {
-    seriesTimer->SetEventFromSchedule();
+// #TOSO    seriesTimer->SetEventFromSchedule();
     if (config.useRemoteTimers && pRemoteTimers) {
         RemoteTimers_Timer_v1_0 rt;
         rt.timer = seriesTimer;
@@ -264,8 +322,15 @@ void cRecManager::CreateSeriesTimer(cTimer *seriesTimer) {
             isyslog("%s", *rt.errorMsg);
         RefreshRemoteTimers();
     } else {
-        Timers.Add(seriesTimer);
-        Timers.SetModified();
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+       LOCK_TIMERS_WRITE;
+       cTimers* timers = Timers;
+#else
+       cTimers* timers = &Timers;
+#endif
+       
+       timers->Add(seriesTimer);
+       timers->SetModified();
     }
 }
 
@@ -312,9 +377,15 @@ const cEvent **cRecManager::PerformSearchTimerSearch(std::string epgSearchString
         numResults = results.size();
         if (numResults > 0) {
             searchResults = new const cEvent *[numResults];
+
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+            LOCK_SCHEDULES_READ;
+            const cSchedules* schedules = Schedules;
+#else
             cSchedulesLock schedulesLock;
-            const cSchedules *schedules;
-            schedules = cSchedules::Schedules(schedulesLock);
+            const cSchedules* schedules = (cSchedules*)cSchedules::Schedules(schedulesLock);
+#endif
+
             const cEvent *event = NULL;
             int index=0;
             for (std::list<std::string>::iterator it=results.begin(); it != results.end(); ++it) {
@@ -324,7 +395,15 @@ const cEvent **cRecManager::PerformSearchTimerSearch(std::string epgSearchString
                     int eventID = atoi(flds[1].c_str());
                     std::string channelID = flds[7];
                     tChannelID chanID = tChannelID::FromString(channelID.c_str());
-                    cChannel *channel = Channels.GetByChannelID(chanID);
+
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+                    LOCK_CHANNELS_READ;
+                    const cChannels* channels = Channels;
+#else
+                    cChannels* channels = &Channels;
+#endif
+
+                    const cChannel *channel = channels->GetByChannelID(chanID);
                     if (channel) {
                         const cSchedule *Schedule = NULL;
                         Schedule = schedules->GetSchedule(channel);
@@ -431,24 +510,30 @@ void cRecManager::DeleteSearchTimer(cTVGuideSearchTimer *searchTimer, bool delTi
         return;
     int searchTimerID = searchTimer->GetID();
     if (delTimers) {
-        cTimer *timer = Timers.First();
-        while(timer) {
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+       LOCK_TIMERS_WRITE;
+       cTimers* timers = Timers;
+#else
+       cTimers* timers = &Timers;
+#endif
+       cTimer *timer = timers->First();
+       while (timer) {
             if (!timer->Recording()) {
                 char* searchID = GetAuxValue(timer, "s-id");
                 if (searchID) {
                     if (searchTimerID == atoi(searchID)) {
-                        cTimer* timerNext = Timers.Next(timer);
+                        cTimer* timerNext = timers->Next(timer);
                         DeleteTimer(timer);
                         timer = timerNext;
                     } else {
-                        timer = Timers.Next(timer);
+                        timer = timers->Next(timer);
                     }
                     free(searchID);
                 } else {
-                    timer = Timers.Next(timer);
+                    timer = timers->Next(timer);
                 }
             } else {
-                timer = Timers.Next(timer);
+                timer = timers->Next(timer);
             }
         }
     }
@@ -501,13 +586,20 @@ void cRecManager::DeleteSwitchTimer(const cEvent *event) {
     }
 }
 
-cRecording **cRecManager::SearchForRecordings(std::string searchString, int &numResults) {
+const cRecording **cRecManager::SearchForRecordings(std::string searchString, int &numResults) {
     
-    cRecording **matchingRecordings = NULL;
+    const cRecording **matchingRecordings = NULL;
     int num = 0;
     numResults = 0;
+
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_RECORDINGS_READ;
+    const cRecordings* recordings = Recordings;
+#else
+    const cRecordings* recordings = &Recordings;
+#endif
     
-    for (cRecording *recording = Recordings.First(); recording; recording = Recordings.Next(recording)) {
+    for (const cRecording *recording = recordings->First(); recording; recording = recordings->Next(recording)) {
         std::string s1 = recording->Name();
         std::string s2 = searchString;
         if (s1.empty() || s2.empty()) continue;
@@ -538,7 +630,7 @@ cRecording **cRecManager::SearchForRecordings(std::string searchString, int &num
         }
         
         if (match) {
-            matchingRecordings = (cRecording **)realloc(matchingRecordings, (num + 1) * sizeof(cRecording *));
+            matchingRecordings = (const cRecording **)realloc(matchingRecordings, (num + 1) * sizeof(cRecording *));
             matchingRecordings[num++] = recording;
         }
     }
@@ -615,17 +707,31 @@ void cRecManager::GetFavorites(std::vector<cTVGuideSearchTimer> *favorites) {
 
 const cEvent **cRecManager::WhatsOnNow(bool nowOrNext, int &numResults) {
     std::vector<const cEvent*> tmpResults;
+
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+   LOCK_CHANNELS_READ;
+   const cChannels* channels = Channels;
+#else
+   cChannels* channels = &Channels;
+#endif
+
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_SCHEDULES_READ;
+    const cSchedules* schedules = Schedules;
+#else
     cSchedulesLock schedulesLock;
-    const cSchedules *schedules = cSchedules::Schedules(schedulesLock);
+    const cSchedules* schedules = (cSchedules*)cSchedules::Schedules(schedulesLock);
+#endif
+
     const cChannel *startChannel = NULL, *stopChannel = NULL;
     if (config.favLimitChannels) {
-        startChannel = Channels.GetByNumber(config.favStartChannel);
-        stopChannel = Channels.GetByNumber(config.favStopChannel);
+        startChannel = channels->GetByNumber(config.favStartChannel);
+        stopChannel = channels->GetByNumber(config.favStopChannel);
     }
     if (!startChannel)
-        startChannel = Channels.First();
+        startChannel = channels->First();
 
-    for (const cChannel *channel = startChannel; channel; channel = Channels.Next(channel)) {
+    for (const cChannel *channel = startChannel; channel; channel = channels->Next(channel)) {
         if (channel->GroupSep()) continue;
         const cSchedule *Schedule = schedules->GetSchedule(channel);
         if (!Schedule) continue;
@@ -675,17 +781,30 @@ const cEvent **cRecManager::UserDefinedTime(int userTime, int &numResults) {
     if (searchTime < now)
         searchTime += 24*60*60;
 
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    const cChannels* channels = Channels;
+#else
+    cChannels* channels = &Channels;
+#endif
+    
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_SCHEDULES_READ;
+    const cSchedules* schedules = Schedules;
+#else
     cSchedulesLock schedulesLock;
-    const cSchedules *schedules = cSchedules::Schedules(schedulesLock);
+    const cSchedules* schedules = (cSchedules*)cSchedules::Schedules(schedulesLock);
+#endif
+
     const cChannel *startChannel = NULL, *stopChannel = NULL;
     if (config.favLimitChannels) {
-        startChannel = Channels.GetByNumber(config.favStartChannel);
-        stopChannel = Channels.GetByNumber(config.favStopChannel);
+        startChannel = channels->GetByNumber(config.favStartChannel);
+        stopChannel = channels->GetByNumber(config.favStopChannel);
     }
     if (!startChannel)
-        startChannel = Channels.First();
+        startChannel = channels->First();
 
-    for (const cChannel *channel = startChannel; channel; channel = Channels.Next(channel)) {
+    for (const cChannel *channel = startChannel; channel; channel = channels->Next(channel)) {
         if (channel->GroupSep()) continue;
         const cSchedule *Schedule = schedules->GetSchedule(channel);
         if (!Schedule) continue;

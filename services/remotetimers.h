@@ -9,7 +9,7 @@ struct RemoteTimers_Event_v1_0 {
     //in
     const cEvent *event;
     //out
-    cTimer *timer;
+    const cTimer *timer;
     cString errorMsg;
 };
 
@@ -17,7 +17,7 @@ struct RemoteTimers_GetMatch_v1_0 {
     //in
     const cEvent *event;
     //out
-    cTimer *timer;
+    const cTimer *timer;
     int timerMatch;
     int timerType;
     bool isRemote;

@@ -310,8 +310,12 @@ void cDetailView::DrawHeader(void) {
     header->AddIntToken((int)eDetailedHeaderIT::year, sStartTime->tm_year + 1900);
     header->AddIntToken((int)eDetailedHeaderIT::daynumeric, sStartTime->tm_mday);
     header->AddIntToken((int)eDetailedHeaderIT::month, sStartTime->tm_mon+1);
-
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    const cChannel *channel = Channels->GetByChannelID(event->ChannelID());
+#else
     const cChannel *channel = Channels.GetByChannelID(event->ChannelID());
+#endif
     if (channel) {
         header->AddStringToken((int)eDetailedHeaderST::channelname, channel->Name());
         header->AddIntToken((int)eDetailedHeaderIT::channelnumber, channel->Number());
@@ -535,7 +539,12 @@ int cDetailView::NumReruns(cList<Epgsearch_searchresults_v1_0::cServiceSearchRes
     for (Epgsearch_searchresults_v1_0::cServiceSearchResult *r = reruns->First(); r && i < maxNumReruns; r = reruns->Next(r)) {
         time_t eventStart = event->StartTime();
         time_t rerunStart = r->event->StartTime();
-        cChannel *channel = Channels.GetByChannelID(r->event->ChannelID(), true, true);
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+        LOCK_CHANNELS_READ;
+        const cChannel *channel = Channels->GetByChannelID(r->event->ChannelID(), true, true);
+#else
+        const cChannel *channel = Channels.GetByChannelID(r->event->ChannelID(), true, true);
+#endif
         //check for identical event
         if ((event->ChannelID() == r->event->ChannelID()) && (eventStart == rerunStart))
             continue;
@@ -565,7 +574,12 @@ void cDetailView::SetReruns(cList<Epgsearch_searchresults_v1_0::cServiceSearchRe
     for (Epgsearch_searchresults_v1_0::cServiceSearchResult *r = reruns->First(); r && i < maxNumReruns; r = reruns->Next(r)) {
         time_t eventStart = event->StartTime();
         time_t rerunStart = r->event->StartTime();
-        cChannel *channel = Channels.GetByChannelID(r->event->ChannelID(), true, true);
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+        LOCK_CHANNELS_READ;
+        const cChannel *channel = Channels->GetByChannelID(r->event->ChannelID(), true, true);
+#else
+        const cChannel *channel = Channels.GetByChannelID(r->event->ChannelID(), true, true);
+#endif
         //check for identical event
         if ((event->ChannelID() == r->event->ChannelID()) && (eventStart == rerunStart))
             continue;

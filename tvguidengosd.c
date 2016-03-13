@@ -53,8 +53,12 @@ void cTVGuideOSD::Show(void) {
     timeManager->Now();
 
     epgGrid = new cEpgGrid(rootView, timeManager);
-
-    cChannel *startChannel = Channels.GetByNumber(cDevice::CurrentChannel());
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    const cChannel *startChannel = Channels->GetByNumber(cDevice::CurrentChannel());
+#else
+    const cChannel *startChannel = Channels.GetByNumber(cDevice::CurrentChannel());
+#endif
     epgGrid->Init(startChannel);
     epgGrid->Activate();
     epgGrid->DrawHeader();
@@ -338,7 +342,13 @@ void cTVGuideOSD::CheckTimeout(void) {
     int newChannelNum = channelJumper->GetChannel(); 
     delete channelJumper;
     channelJumper = NULL;
-    const cChannel *newChannel = Channels.GetByNumber(newChannelNum);
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+   LOCK_CHANNELS_READ;
+   const cChannels* channels = Channels;
+#else
+   cChannels* channels = &Channels;
+#endif
+    const cChannel *newChannel = channels->GetByNumber(newChannelNum);
     if (!newChannel) {
         return;
     }

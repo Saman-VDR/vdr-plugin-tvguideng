@@ -83,8 +83,15 @@ void cTVGuideTimerConflicts::CalculateConflicts(void) {
     for (int i=0; i < numConflicts; i++) {
         cTimeInterval *unionSet = NULL;
         int numTimers = conflicts[i]->timerIDs.size();
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+        LOCK_TIMERS_READ;
+        const cTimers* timers = Timers;
+#else
+        const cTimers* timers = &Timers;
+#endif
+
         for (int j=0; j < numTimers; j++) {
-            const cTimer *timer = Timers.Get(conflicts[i]->timerIDs[j]);
+            const cTimer *timer = timers->Get(conflicts[i]->timerIDs[j]);
             if (timer) {
                 if (!unionSet) {
                     unionSet = new cTimeInterval(timer->StartTime(), timer->StopTime());
@@ -103,7 +110,7 @@ void cTVGuideTimerConflicts::CalculateConflicts(void) {
         
         cTimeInterval *intersect = NULL;
         for (int j=0; j < numTimers; j++) {
-            const cTimer *timer = Timers.Get(conflicts[i]->timerIDs[j]);
+            const cTimer *timer = timers->Get(conflicts[i]->timerIDs[j]);
             if (timer) {
                 if (!intersect) {
                     intersect = new cTimeInterval(timer->StartTime(), timer->StopTime());

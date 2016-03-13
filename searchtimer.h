@@ -11,8 +11,8 @@ private:
     int         startTime;
     int      	stopTime;
     int         useChannel;
-    cChannel 	*channelMin;
-    cChannel 	*channelMax;
+    const cChannel 	*channelMin;
+    const cChannel 	*channelMax;
     std::string channelGroup;
     int      	useCase;
     int      	mode;
@@ -106,8 +106,8 @@ public:
     void SetUseSubtitle(bool useSubtitle) { this->useSubtitle = useSubtitle; };
     void SetUseDesription(bool useDescription) { this->useDescription = useDescription; };
     void SetUseChannel(bool useChannel) { this->useChannel = useChannel; };
-    void SetStartChannel(int startChannel) { channelMin = Channels.GetByNumber(startChannel); };
-    void SetStopChannel(int stopChannel) { channelMax = Channels.GetByNumber(stopChannel); };
+    void SetStartChannel(int startChannel);
+    void SetStopChannel(int stopChannel);
     void SetUseTime(bool useTime) { this->useTime = useTime; };
     void SetStartTime(int startTime) { this->startTime = startTime; };
     void SetStopTime(int stopTime) { this->stopTime = stopTime; };

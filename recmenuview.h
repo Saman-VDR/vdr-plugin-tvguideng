@@ -22,7 +22,7 @@ private:
     void DrawBackground(int menuWidth, int menuHeight, bool scrolling);
     void DisplayMenu(bool buffer = false, bool buffer2 = false);
     void DisplaySearchTimerList(void);
-    bool DisplayTimerConflict(cTimer *timer);
+    bool DisplayTimerConflict(const cTimer *timer);
     bool DisplayTimerConflict(int timerID);
     void DisplayFavoriteResults(string header, const cEvent **result, int numResults);
     eOSState StateMachine(eRecMenuState nextState);

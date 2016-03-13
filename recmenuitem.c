@@ -851,7 +851,7 @@ eRecMenuState cRecMenuItemDay::ProcessKey(eKeys Key) {
 
 // --- cRecMenuItemChannelChooser -------------------------------------------------------
 cRecMenuItemChannelChooser::cRecMenuItemChannelChooser(string text,
-                                                       cChannel *initialChannel,
+                                                       const cChannel *initialChannel,
                                                        bool active,
                                                        int *callback,
                                                        eRecMenuState action) {
@@ -898,15 +898,21 @@ eRecMenuState cRecMenuItemChannelChooser::ProcessKey(eKeys Key) {
             fresh = true;
             if (!channel)
                 return rmsConsumed;
-            cChannel *prev = channel;
-            cChannel *firstChannel = Channels.First();
-            if(firstChannel->GroupSep())
-                firstChannel = Channels.Next(firstChannel);
+            const cChannel *prev = channel;
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+            LOCK_CHANNELS_READ;
+            const cChannels* channels = Channels;
+#else
+            const cChannels* channels = &Channels;
+#endif
+            const cChannel *firstChannel = channels->First();
+            if (firstChannel->GroupSep())
+                firstChannel = channels->Next(firstChannel);
             if (prev == firstChannel) {
                 if (!initialChannelSet)
                     channel = NULL;
             } else {
-                while (prev = Channels.Prev(prev)) {
+                while (prev = channels->Prev(prev)) {
                     if(!prev->GroupSep()) {
                         channel = prev;
                         break;
@@ -923,13 +929,19 @@ eRecMenuState cRecMenuItemChannelChooser::ProcessKey(eKeys Key) {
             break; }
         case kRight: {
             fresh = true;
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+            LOCK_CHANNELS_READ;
+            const cChannels* channels = Channels;
+#else
+            const cChannels* channels = &Channels;
+#endif
             if (!channel) {
-                channel = Channels.First();
+                channel = channels->First();
                 if(channel->GroupSep())
-                    channel = Channels.Next(channel);
+                    channel = channels->Next(channel);
             } else {
-                cChannel *next = channel;
-                while (next = Channels.Next(next)) {
+                const cChannel *next = channel;
+                while (next = channels->Next(next)) {
                     if(!next->GroupSep()) {
                         channel = next;
                         break;
@@ -950,7 +962,12 @@ eRecMenuState cRecMenuItemChannelChooser::ProcessKey(eKeys Key) {
                fresh = false;
             }
             channelNumber = channelNumber * 10 + (Key - k0);
-            cChannel *chanNew = Channels.GetByNumber(channelNumber);
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+            LOCK_CHANNELS_READ;
+            const cChannel *chanNew = Channels->GetByNumber(channelNumber);
+#else
+            const cChannel *chanNew = Channels.GetByNumber(channelNumber);
+#endif
             if (chanNew) {
                 channel = chanNew;
                 if (callback)
@@ -1270,8 +1287,12 @@ cRecMenuItemEvent::~cRecMenuItemEvent(void) {
 void cRecMenuItemEvent::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->ClearTokens();
     menu->AddIntToken((int)eRecMenuIT::event, 1);
-    
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    LOCK_CHANNELS_READ;
+    const cChannel *channel = Channels->GetByChannelID(event->ChannelID());
+#else
     const cChannel *channel = Channels.GetByChannelID(event->ChannelID());
+#endif
     const char *channelName = NULL;
     cString channelId = "";
     if (channel) {
@@ -1308,7 +1329,7 @@ eRecMenuState cRecMenuItemEvent::ProcessKey(eKeys Key) {
 }
 
 // --- cRecMenuItemRecording  -------------------------------------------------------
-cRecMenuItemRecording::cRecMenuItemRecording(cRecording *recording, bool active) {
+cRecMenuItemRecording::cRecMenuItemRecording(const cRecording *recording, bool active) {
     height = 8;
     selectable = true;
     this->recording = recording;
@@ -1321,9 +1342,15 @@ void cRecMenuItemRecording::SetTokens(skindesignerapi::cViewGrid *menu) {
     if (!recording)
         return;
     const cRecordingInfo *recInfo = recording->Info();
-    cChannel *channel = NULL;
-    if (recInfo)
+    const cChannel *channel = NULL;
+    if (recInfo) {
+#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+        LOCK_CHANNELS_READ;
+        channel = Channels->GetByChannelID(recInfo->ChannelID());
+#else
         channel = Channels.GetByChannelID(recInfo->ChannelID());
+#endif
+    }
     string channelName = tr("unknown channel");
     string channelId = "";
     if (channel && channel->Name()) {
@@ -1468,7 +1495,7 @@ void cRecMenuItemTimelineHeader::SetTokens(skindesignerapi::cViewGrid *menu) {
 }
 
 // --- cRecMenuItemTimelineTimer  -------------------------------------------------------
-cRecMenuItemTimelineTimer::cRecMenuItemTimelineTimer(cTimer *timer, time_t start, time_t stop, bool active) {
+cRecMenuItemTimelineTimer::cRecMenuItemTimelineTimer(const cTimer *timer, time_t start, time_t stop, bool active) {
     height = 8;
     this->timer = timer;
     this->start = start;
@@ -1498,7 +1525,7 @@ void cRecMenuItemTimelineTimer::SetTokens(skindesignerapi::cViewGrid *menu) {
     menu->AddIntToken((int)eRecMenuIT::timerwidth, percentWidth);
 }
 
-cTimer *cRecMenuItemTimelineTimer::GetTimer(void) {
+const cTimer *cRecMenuItemTimelineTimer::GetTimer(void) {
     return timer;    
 }
 

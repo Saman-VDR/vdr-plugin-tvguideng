@@ -115,7 +115,7 @@ public:
 // --- cRecMenuEditTimer  ---------------------------------------------------------
 class cRecMenuEditTimer: public cRecMenu {
 private:
-    cTimer *originalTimer;
+    const cTimer *originalTimer;
     bool timerActive;
     time_t day;
     int start;
@@ -124,10 +124,10 @@ private:
     int lifetime;
     char folder[TEXTINPUTLENGTH];
 public:
-    cRecMenuEditTimer(cTimer *timer, eRecMenuState nextState);
+    cRecMenuEditTimer(const cTimer *timer, eRecMenuState nextState);
     virtual ~cRecMenuEditTimer(void) {};
     cTimer GetTimer(void);
-    cTimer *GetOriginalTimer(void);
+    const cTimer *GetOriginalTimer(void);
 };
 
 /******************************************************************************************
@@ -147,7 +147,7 @@ class cRecMenuSeriesTimer: public cRecMenu {
     int lifetime;
     void CalculateTimes(const cEvent *event);
 public:
-    cRecMenuSeriesTimer(cChannel *initialChannel, const cEvent *event, string folder);
+    cRecMenuSeriesTimer(const cChannel *initialChannel, const cEvent *event, string folder);
     virtual ~cRecMenuSeriesTimer(void) {};
     cTimer *GetTimer(void);
 };
@@ -375,7 +375,7 @@ public:
 // --- cRecMenuTimeline  ---------------------------------------------------------
 class cRecMenuTimeline: public cRecMenu {
 private:
-    vector<cTimer*> timersToday;
+    vector<const cTimer*> timersToday;
     int numTimersToday;
     time_t today;
     time_t timeStart;
@@ -393,7 +393,7 @@ public:
     virtual ~cRecMenuTimeline(void) {};
     eRecMenuState ProcessKey(eKeys Key);
     void SetHeaderTimer(void);
-    cTimer *GetTimer(void);
+    const cTimer *GetTimer(void);
 };
 
 /******************************************************************************************
@@ -414,10 +414,10 @@ public:
 class cRecMenuRecordingSearchResults: public cRecMenu {
 private:
     string searchString;
-    cRecording **searchResults;
+    const cRecording **searchResults;
     int numResults;
 public:
-    cRecMenuRecordingSearchResults(string searchString, cRecording **searchResults, int numResults);
+    cRecMenuRecordingSearchResults(string searchString, const cRecording **searchResults, int numResults);
     virtual ~cRecMenuRecordingSearchResults(void) {
         delete[] searchResults;
     };
