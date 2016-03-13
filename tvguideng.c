@@ -14,7 +14,7 @@
 #include "definitions.h"
 #include "tvguidengosd.h"
 
-static const char *VERSION        = "0.2.0";
+static const char *VERSION        = "0.3.0";
 static const char *DESCRIPTION    = "TV Guide for Skindesigner Skins";
 static const char *MAINMENUENTRY  = "TV Guide NG";
 
