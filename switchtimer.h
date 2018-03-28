@@ -11,6 +11,20 @@ public:
     tChannelID channelID;
     int switchMinsBefore;
     int announceOnly;
+    cSwitchTimer(const cSwitchTimer &SwitchTimer)
+	{
+    	*this = SwitchTimer;
+	};
+    cSwitchTimer& operator= (const cSwitchTimer &SwitchTimer)
+    {
+    	this->eventID = SwitchTimer.eventID;
+    	this->startTime = SwitchTimer.startTime;
+    	this->channelID = SwitchTimer.channelID;
+    	this->switchMinsBefore = SwitchTimer.switchMinsBefore;
+    	this->announceOnly = SwitchTimer.announceOnly;
+
+    	return *this;
+    };
     cSwitchTimer(void);
     cSwitchTimer(const cEvent* Event);
     bool Parse(const char *s);

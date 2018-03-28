@@ -16,6 +16,19 @@ private:
     int channelStop;
     string name;
 public:
+    cChannelGroup(const cChannelGroup &ChannelGroup)
+	{
+    	*this = ChannelGroup;
+	};
+    cChannelGroup& operator= (const cChannelGroup &ChannelGroup)
+    {
+    	this->id = ChannelGroup.id;
+    	this->channelStart = ChannelGroup.channelStart;
+    	this->channelStop = ChannelGroup.channelStop;
+    	this->name = ChannelGroup.name;
+
+    	return *this;
+    };
     cChannelGroup(string name, int id);
     virtual ~cChannelGroup(void);
     int GetId(void) { return id; };
