@@ -86,6 +86,9 @@ cTimer *cRecManager::createLocalTimer(const cEvent *event, std::string path) {
    cTimer *timer = new cTimer(event);
 
 #if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    if (Setup.SVDRPPeering && *Setup.SVDRPDefaultHost)
+        ((cTimer*)timer)->SetRemote(Setup.SVDRPDefaultHost);
+
     LOCK_TIMERS_WRITE;
     cTimers* timers = Timers;
 #else
