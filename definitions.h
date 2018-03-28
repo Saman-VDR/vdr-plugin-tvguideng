@@ -234,7 +234,7 @@ enum class eScraperHeaderIT {
 };
 
 enum class eDetailedHeaderST {
-    title = eScraperHeaderST::count,
+    title = (int)eScraperHeaderST::count,
     shorttext,
     start,
     stop,
@@ -249,7 +249,7 @@ enum class eDetailedHeaderST {
 };
 
 enum class eDetailedHeaderIT {
-    daynumeric = eScraperHeaderIT::count,
+    daynumeric = (int)eScraperHeaderIT::count,
     month,
     year,
     running,
@@ -375,7 +375,7 @@ enum class eScraperLT {
 };
 
 enum class eDetailedEpgST {
-    title = eScraperST::count,
+    title = (int)eScraperST::count,
     shorttext,
     description,
     start,
@@ -393,7 +393,7 @@ enum class eDetailedEpgST {
 };
 
 enum class eDetailedEpgIT {
-    daynumeric = eScraperIT::count,
+    daynumeric = (int)eScraperIT::count,
     month,
     year,
     running,
