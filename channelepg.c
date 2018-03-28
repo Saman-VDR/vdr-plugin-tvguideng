@@ -466,11 +466,21 @@ void cChannelEpg::Debug(void) {
     }
 }
 
-void cChannelEpg::SetTimer() 
-{ 
+void cChannelEpg::SetTimer() {
 #if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+    const cSchedule *Schedule = NULL;
+    LOCK_SCHEDULES_READ;
+    const cSchedules* schedules = Schedules;
+    if (!schedules)
+        hasTimer = false;
+    else {
+        Schedule = schedules->GetSchedule(channel);
+        if (!Schedule)
+           hasTimer = false;
+        else
+           hasTimer = Schedule->HasTimer();
+    }
 #else
-   hasTimer = channel->HasTimer(); 
+    hasTimer = channel->HasTimer();
 #endif
-   
-};
+}

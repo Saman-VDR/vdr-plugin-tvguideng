@@ -169,15 +169,25 @@ void cRecManager::SetTimerPath(cTimer *timer, const cEvent *event, std::string p
 
 void cRecManager::DeleteTimer(int timerID) {
 #if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
-   LOCK_TIMERS_READ;
-   const cTimer *t = Timers->Get(timerID);
-#else
-   const cTimer *t = Timers.Get(timerID);
-#endif
+    LOCK_TIMERS_WRITE;
+    cTimer *t = Timers->Get(timerID);
 
     if (!t)
         return;
+
+    if (t->Recording()) {
+        t->Skip();
+        cRecordControls::Process(Timers, time(NULL));
+    }
+    
+    isyslog("deleting timer %s", *t->ToDescr());
+    Timers->Del(t, true);
+#else
+    cTimer *t = Timers.Get(timerID);
+    if (!t)
+        return;
     DeleteTimer(t);
+#endif
 }
 
 void cRecManager::DeleteTimer(const cEvent *event) {
@@ -192,39 +202,50 @@ void cRecManager::DeleteTimer(const cEvent *event) {
 
 void cRecManager::DeleteLocalTimer(const cEvent *event) {
 #if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
-   LOCK_TIMERS_READ;
-   const cTimer *t = Timers->GetMatch(event);
-#else
-   const cTimer *t = Timers.GetMatch(event);
-#endif
+    LOCK_TIMERS_WRITE;
+    cTimer *t = Timers->GetMatch(event);
 
     if (!t)
         return;
-    DeleteTimer(t);
-}
 
+    if (t->Recording()) {
+        t->Skip();
+        cRecordControls::Process(Timers, time(NULL));
+    }
+    
+    isyslog("deleting timer %s", *t->ToDescr());
+    Timers->Del(t, true);
+#else
+    cTimer *t = Timers.GetMatch(event);
+    if (!t)
+        return;
+    DeleteTimer(t);
+#endif
+}
 
 void cRecManager::DeleteTimer(const cTimer *timer) {
 #if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
-   LOCK_TIMERS_WRITE;
-   cTimers* timers = Timers;
+    LOCK_TIMERS_WRITE;
+    cTimer *t = Timers->GetTimer(timer);
+    if (!t)
+        return;
+    
+    if (t->Recording()) {
+        t->Skip();
+        cRecordControls::Process(Timers, time(NULL));
+    }
+    
+    isyslog("deleting timer %s", *t->ToDescr());
+    Timers->Del(t, true);
 #else
-   cTimers* timers = &Timers;
-#endif
-
-   cTimer* t = timers->GetTimer((cTimer*)timer);  // #TODO dirty cast
-   
-   if (t->Recording()) {
-      t->Skip();
-#if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
-      cRecordControls::Process(timers, time(NULL));
-#else
-      cRecordControls::Process(time(NULL));
-#endif
-   }
+    if (timer->Recording()) {
+        timer->Skip();
+        cRecordControls::Process(time(NULL));
+    }
     isyslog("timer %s deleted", *timer->ToDescr());
-    timers->Del(t, true);
-    timers->SetModified();
+    Timers.Del(timer, true);
+    Timers.SetModified();
+#endif
 }
 
 void cRecManager::DeleteRemoteTimer(const cEvent *event) {
@@ -275,10 +296,10 @@ void cRecManager::SaveTimer(const cTimer *timer, cTimer newTimerSettings) {
         RefreshRemoteTimers();
     } else {
 #if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
-   LOCK_TIMERS_WRITE;
-   Timers->SetModified();
+        LOCK_TIMERS_WRITE;
+        Timers->SetModified();
 #else
-   Timers.SetModified();
+        Timers.SetModified();
 #endif
     }          
 }
@@ -287,6 +308,7 @@ void cRecManager::SaveTimer(const cTimer *timer, cTimer newTimerSettings) {
 bool cRecManager::IsRecorded(const cEvent *event) {
 #if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
    LOCK_TIMERS_WRITE;
+   Timers->SetExplicitModify();
    cTimers* timers = Timers;
 #else
    cTimers* timers = &Timers;
@@ -326,14 +348,13 @@ void cRecManager::CreateSeriesTimer(cTimer *seriesTimer) {
         RefreshRemoteTimers();
     } else {
 #if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
-       LOCK_TIMERS_WRITE;
-       cTimers* timers = Timers;
+        LOCK_TIMERS_WRITE;
+        cTimers* timers = Timers;
+        timers->Add(seriesTimer);
 #else
-       cTimers* timers = &Timers;
+        Timers.Add(seriesTimer);
+        Timers.SetModified();
 #endif
-       
-       timers->Add(seriesTimer);
-       timers->SetModified();
     }
 }
 
@@ -515,6 +536,7 @@ void cRecManager::DeleteSearchTimer(cTVGuideSearchTimer *searchTimer, bool delTi
     if (delTimers) {
 #if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
        LOCK_TIMERS_WRITE;
+       Timers->SetExplicitModify();
        cTimers* timers = Timers;
 #else
        cTimers* timers = &Timers;
